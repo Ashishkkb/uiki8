@@ -1,12 +1,13 @@
 
 import { ComponentItem } from "@/types/component";
 
-export const reactComponents: ComponentItem[] = [
+const reactComponents: ComponentItem[] = [
   {
     id: 1,
     name: "Button",
     category: "Buttons",
     framework: "React",
+    price: "Free",
     description: "A customizable button component with different variants and sizes",
     code: `import React from 'react';
 
@@ -56,6 +57,7 @@ export default Button;`,
     name: "Card",
     category: "Cards",
     framework: "React",
+    price: 5,
     description: "A versatile card component for displaying content with optional image, title, and footer",
     code: `import React from 'react';
 
@@ -100,6 +102,7 @@ export default Card;`,
     name: "Alert",
     category: "Feedback",
     framework: "React",
+    price: 5,
     description: "Alert component for displaying important messages to users",
     code: `import React from 'react';
 import { CheckCircle, XCircle, AlertCircle, Info, X } from 'lucide-react';
@@ -163,6 +166,7 @@ export default Alert;`,
     name: "Badge",
     category: "Display",
     framework: "React",
+    price: "Free",
     description: "Small status descriptors for UI elements",
     code: `import React from 'react';
 
@@ -213,6 +217,7 @@ export default Badge;`,
     name: "Avatar",
     category: "Display",
     framework: "React",
+    price: 10,
     description: "User profile pictures or placeholders",
     code: `import React from 'react';
 
@@ -288,6 +293,7 @@ export default Avatar;`,
     name: "Modal",
     category: "Overlay",
     framework: "React",
+    price: 15,
     description: "A dialog component for displaying content in a layer above the app",
     code: `import React, { Fragment, useRef } from 'react';
 import { createPortal } from 'react-dom';
@@ -363,6 +369,7 @@ export default Modal;`,
     name: "Tooltip",
     category: "Overlay",
     framework: "React",
+    price: 8,
     description: "Display additional information on hover",
     code: `import React, { useState, useRef, useEffect } from 'react';
 
@@ -454,6 +461,7 @@ export default Tooltip;`,
     name: "Tabs",
     category: "Navigation",
     framework: "React",
+    price: 12,
     description: "Switch between different content sections",
     code: `import React, { useState } from 'react';
 
@@ -522,6 +530,7 @@ export default Tabs;`,
     name: "Dropdown",
     category: "Navigation",
     framework: "React",
+    price: 10,
     description: "Display a list of actions or options in a contextual overlay",
     code: `import React, { useState, useRef, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
@@ -633,6 +642,7 @@ export default Dropdown;`,
     name: "Progress Bar",
     category: "Feedback",
     framework: "React",
+    price: 8,
     description: "Display progress of an operation or task",
     code: `import React from 'react';
 

@@ -6,6 +6,7 @@ export interface ComponentItem {
   framework: string;
   description: string;
   code: string;
+  price?: number | string;
   language?: string;
   previewBg?: string;
   previewHtml?: string;

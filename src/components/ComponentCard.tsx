@@ -1,12 +1,13 @@
 
 import { useState } from "react";
-import { Eye, Code, Download, Copy, Check } from "lucide-react";
+import { Eye, Code, Download, Copy, Check, Tag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { ComponentItem } from "@/types/component";
 import CodeSnippet from "@/components/CodeSnippet";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 
 interface ComponentCardProps {
   component: ComponentItem;
@@ -45,82 +46,93 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
   };
 
   return (
-    <div className="border border-gray-200 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
-      <div className="p-4 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
+    <Card className="overflow-hidden bg-white border shadow-sm transition-all hover:shadow-md">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2 border-b">
         <div>
-          <h3 className="font-medium">{component.name}</h3>
-          <div className="flex gap-2 mt-1 items-center">
-            <Badge variant="outline" className="capitalize">{component.category}</Badge>
+          <h3 className="font-medium text-lg">{component.name}</h3>
+          <div className="flex items-center gap-2 mt-1">
+            <Badge variant="outline" className="capitalize text-xs">{component.category}</Badge>
             <span className="text-xs text-gray-500">{component.framework}</span>
           </div>
         </div>
-        <div className="flex gap-2">
-          <Button
-            variant={viewMode === "preview" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setViewMode("preview")}
-            className={viewMode === "preview" ? "bg-purple-600" : ""}
-          >
-            <Eye className="h-4 w-4 mr-1" />
-            Preview
-          </Button>
-          <Button
-            variant={viewMode === "code" ? "default" : "outline"}
-            size="sm"
-            onClick={() => setViewMode("code")}
-            className={viewMode === "code" ? "bg-purple-600" : ""}
-          >
-            <Code className="h-4 w-4 mr-1" />
-            Code
-          </Button>
+        <div className="flex items-center gap-2">
+          <Badge variant="secondary" className="flex items-center gap-1">
+            <Tag className="h-3 w-3" />
+            <span>${component.price || "Free"}</span>
+          </Badge>
         </div>
-      </div>
+      </CardHeader>
 
-      <div className="p-5">
-        {viewMode === "preview" ? (
-          <div className="flex items-center justify-center min-h-[200px] border border-dashed border-gray-200 rounded-lg overflow-hidden">
-            <div className={`${component.previewBg || "bg-gray-50"} p-6 rounded-lg w-full h-full flex items-center justify-center`}>
-              <div dangerouslySetInnerHTML={{ __html: component.previewHtml || '<p class="text-gray-500">Preview not available</p>' }} />
-            </div>
+      <div className="p-4">
+        <div className="flex items-center justify-between mb-3">
+          <p className="text-sm text-gray-600 line-clamp-2">{component.description}</p>
+          <div className="flex gap-1 ml-2">
+            <Button
+              variant={viewMode === "preview" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setViewMode("preview")}
+              className="h-8 px-2 text-xs"
+            >
+              <Eye className="h-3 w-3 mr-1" />
+              Preview
+            </Button>
+            <Button
+              variant={viewMode === "code" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setViewMode("code")}
+              className="h-8 px-2 text-xs"
+            >
+              <Code className="h-3 w-3 mr-1" />
+              Code
+            </Button>
           </div>
-        ) : (
-          <div className="min-h-[200px]">
-            <CodeSnippet code={component.code} language={component.language || "tsx"} />
+        </div>
+
+        <div className={`p-3 ${viewMode === "preview" ? "block" : "hidden"} rounded-lg border ${component.previewBg || "bg-gray-50"}`}>
+          <div className="flex items-center justify-center min-h-[180px]">
+            {component.previewHtml ? (
+              <div dangerouslySetInnerHTML={{ __html: component.previewHtml }} />
+            ) : (
+              <p className="text-gray-500">Preview not available</p>
+            )}
+          </div>
+        </div>
+
+        <div className={`${viewMode === "code" ? "block" : "hidden"} min-h-[180px] max-h-[180px] overflow-auto rounded-lg border`}>
+          <CodeSnippet code={component.code} language={component.language || "tsx"} />
+        </div>
+
+        {component.tags && component.tags.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-3">
+            {component.tags.map((tag) => (
+              <Badge key={tag} variant="outline" className="text-xs bg-gray-100">
+                {tag}
+              </Badge>
+            ))}
           </div>
         )}
       </div>
 
-      <div className="p-4 border-t border-gray-200 bg-gray-50 flex justify-between items-center">
-        <p className="text-sm text-gray-600 line-clamp-1">{component.description}</p>
-        <div className="flex gap-2">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button size="sm" variant="outline" onClick={handleCopy}>
-                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{copied ? "Copied!" : "Copy code"}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button size="sm" variant="outline" onClick={handleDownload}>
-                  <Download className="h-4 w-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Download component</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </div>
-      </div>
-    </div>
+      <CardFooter className="flex justify-between items-center p-4 bg-gray-50 border-t">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button size="sm" variant="outline" onClick={handleCopy} className="h-8 w-8 p-0">
+                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{copied ? "Copied!" : "Copy code"}</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        
+        <Button size="sm" onClick={handleDownload} className="gap-1">
+          <Download className="h-4 w-4" />
+          Download
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 
