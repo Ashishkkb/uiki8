@@ -1,4 +1,5 @@
 
+import React from 'react';
 import DummyModel from './DummyModel';
 import InteractiveCube from './InteractiveCube';
 import ProductViewer from './ProductViewer';
