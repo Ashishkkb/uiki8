@@ -22,7 +22,7 @@ const ComponentsShowcase = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const componentsPerPage = 5;
   
-  // Get all components from the new registry
+  // Get all components from the registry
   const allComponents = getAllComponents();
 
   // Filter components based on category and search query

@@ -15,4 +15,21 @@ export interface ComponentItem {
   isNew?: boolean;
   fileSize?: string;
   is3D?: boolean;
+  complexity?: 'simple' | 'medium' | 'complex';
+  lastUpdated?: string;
+  author?: string;
+  license?: string;
+  dependencies?: string[];
 }
+
+export type ComponentCategory = 
+  | 'UI' 
+  | '3D'
+  | 'Layout'
+  | 'Navigation'
+  | 'Form'
+  | 'Feedback'
+  | 'Data Display'
+  | 'Chart'
+  | 'Animation'
+  | 'Media';
