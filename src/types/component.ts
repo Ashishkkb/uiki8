@@ -13,4 +13,5 @@ export interface ComponentItem {
   tags?: string[];
   isNew?: boolean;
   fileSize?: string;
+  is3D?: boolean;
 }

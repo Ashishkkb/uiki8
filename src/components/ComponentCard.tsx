@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Copy, Check, Eye, Code, Download } from "lucide-react";
+import { Copy, Check, Eye, Code, Download, Boxes } from "lucide-react";
 import { Card, CardHeader, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -58,6 +58,11 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
             {component.isNew && (
               <Badge className="ml-2 text-xs bg-gradient-to-r from-[#6A9D80] to-[#87B5A2] text-white">
                 New
+              </Badge>
+            )}
+            {component.is3D && (
+              <Badge className="ml-2 text-xs bg-gradient-to-r from-[#4F46E5] to-[#7C3AED] text-white flex items-center gap-1">
+                <Boxes className="h-3 w-3" /> 3D
               </Badge>
             )}
           </div>

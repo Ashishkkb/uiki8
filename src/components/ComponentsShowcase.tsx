@@ -6,13 +6,17 @@ import { Input } from "@/components/ui/input";
 import ComponentFilters from "./ComponentFilters";
 import ComponentCard from "./ComponentCard";
 import componentsList from "@/data/reactComponents";
+import threeDComponents from "@/data/threeDComponents";
 
 const ComponentsShowcase = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  
+  // Combine regular components with 3D components
+  const allComponents = [...componentsList, ...threeDComponents];
 
   // Filter components based on category and search query
-  const filteredComponents = componentsList.filter((component) => {
+  const filteredComponents = allComponents.filter((component) => {
     // Filter by category
     if (selectedCategory && component.category !== selectedCategory) {
       return false;
@@ -33,7 +37,7 @@ const ComponentsShowcase = () => {
 
   // Get unique categories
   const categories = Array.from(
-    new Set(componentsList.map((component) => component.category))
+    new Set(allComponents.map((component) => component.category))
   );
 
   return (
