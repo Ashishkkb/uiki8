@@ -5,28 +5,29 @@
 
 @layer base {
   :root {
-    --background: 210 33% 99%;
-    --foreground: 212 92% 10%;
+    /* GitHub light theme inspired variables */
+    --background: 210 33% 98%;
+    --foreground: 212 92% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 212 92% 10%;
+    --card-foreground: 212 92% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 212 92% 10%;
+    --popover-foreground: 212 92% 12%;
 
     --primary: 212 92% 45%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 220 14% 96%;
-    --secondary-foreground: 212 92% 10%;
+    --secondary-foreground: 212 92% 12%;
 
     --muted: 220 14% 96%;
     --muted-foreground: 215 14% 45%;
 
-    --accent: 213 14% 95%;
-    --accent-foreground: 212 92% 10%;
+    --accent: 210 30% 95%;
+    --accent-foreground: 212 92% 12%;
 
-    --destructive: 0 80% 47%;
+    --destructive: 0 72% 51%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214 32% 91%;
@@ -46,7 +47,8 @@
   }
 
   .dark {
-    --background: 222 47% 11%;
+    /* GitHub dark theme inspired variables */
+    --background: 215 25% 12%;
     --foreground: 210 40% 98%;
 
     --card: 222 47% 11%;
@@ -55,24 +57,24 @@
     --popover: 222 47% 11%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222 47% 11.2%;
+    --primary: 212 92% 45%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 217 32% 17%;
+    --secondary: 215 25% 18%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 217 32% 17%;
-    --muted-foreground: 215 20% 65.1%;
+    --muted: 215 25% 18%;
+    --muted-foreground: 217 20% 65%;
 
-    --accent: 217 32% 17%;
+    --accent: 215 25% 18%;
     --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 63% 31%;
+    --destructive: 0 63% 43%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 217 32% 17%;
-    --input: 217 32% 17%;
-    --ring: 212.7 26.8% 83.9%;
+    --border: 215 25% 20%;
+    --input: 215 25% 20%;
+    --ring: 212 92% 45%;
     
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;

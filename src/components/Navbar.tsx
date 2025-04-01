@@ -42,7 +42,7 @@ const Navbar = () => {
               <NavigationMenuItem>
                 <Link to="/">
                   <NavigationMenuLink className={cn(
-                    "px-4 py-2 text-sm font-medium text-github-gray-700 hover:text-github-gray-900",
+                    "px-3 py-2 text-sm font-medium text-github-gray-700 hover:text-github-gray-900",
                     isActive("/") ? "text-github-blue" : ""
                   )}>
                     Home
@@ -84,7 +84,7 @@ const Navbar = () => {
               
               <NavigationMenuItem>
                 <Link to="#features">
-                  <NavigationMenuLink className="px-4 py-2 text-sm font-medium text-github-gray-700 hover:text-github-gray-900">
+                  <NavigationMenuLink className="px-3 py-2 text-sm font-medium text-github-gray-700 hover:text-github-gray-900">
                     Features
                   </NavigationMenuLink>
                 </Link>
@@ -92,7 +92,7 @@ const Navbar = () => {
               
               <NavigationMenuItem>
                 <Link to="#pricing">
-                  <NavigationMenuLink className="px-4 py-2 text-sm font-medium text-github-gray-700 hover:text-github-gray-900">
+                  <NavigationMenuLink className="px-3 py-2 text-sm font-medium text-github-gray-700 hover:text-github-gray-900">
                     Pricing
                   </NavigationMenuLink>
                 </Link>
