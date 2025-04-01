@@ -20,36 +20,23 @@ const plans = [
     popular: false
   },
   {
-    name: "Pro",
-    price: "$49",
-    description: "Everything you need for professional projects",
-    buttonText: "Buy Pro License",
+    name: "Enterprise",
+    price: "Contact Us",
+    description: "Custom solutions for large organizations",
+    buttonText: "Contact Sales",
     buttonVariant: "default" as const,
     features: [
       "All core components",
       "Advanced components",
       "Premium themes",
       "Figma design files",
-      "1 year of updates",
-      "Priority support"
-    ],
-    popular: true
-  },
-  {
-    name: "Enterprise",
-    price: "Contact Us",
-    description: "Custom solutions for large organizations",
-    buttonText: "Contact Sales",
-    buttonVariant: "outline" as const,
-    features: [
-      "All Pro features",
       "Custom branding",
       "Dedicated support",
       "SLA agreement",
       "Team training",
       "Extended license"
     ],
-    popular: false
+    popular: true
   }
 ];
 
@@ -66,7 +53,7 @@ const PricingSection = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 max-w-5xl mx-auto">
           {plans.map((plan, index) => (
             <div 
               key={index} 
@@ -78,7 +65,7 @@ const PricingSection = () => {
             >
               {plan.popular && (
                 <div className="bg-[#6A9D80] text-white py-1 px-4 text-xs font-medium text-center">
-                  MOST POPULAR
+                  RECOMMENDED
                 </div>
               )}
               
@@ -87,7 +74,7 @@ const PricingSection = () => {
                 <div className="mt-4 mb-2">
                   <span className="text-3xl font-bold">{plan.price}</span>
                   {plan.price !== "Contact Us" && (
-                    <span className="text-gray-500 ml-2">one-time payment</span>
+                    <span className="text-gray-500 ml-2">forever free</span>
                   )}
                 </div>
                 <p className="text-[#666] mb-6">{plan.description}</p>
