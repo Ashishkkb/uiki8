@@ -5,14 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ComponentFilters from "./ComponentFilters";
 import ComponentCard from "./ComponentCard";
-import reactComponents from "@/data/reactComponents";
+import { componentsList } from "@/data/components-list";
 
 const ComponentsShowcase = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Filter components based on category and search query
-  const filteredComponents = reactComponents.filter((component) => {
+  const filteredComponents = componentsList.filter((component) => {
     // Filter by category
     if (selectedCategory && component.category !== selectedCategory) {
       return false;
@@ -33,7 +33,7 @@ const ComponentsShowcase = () => {
 
   // Get unique categories
   const categories = Array.from(
-    new Set(reactComponents.map((component) => component.category))
+    new Set(componentsList.map((component) => component.category))
   );
 
   return (
