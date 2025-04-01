@@ -1956,7 +1956,7 @@ const PricingTier = ({
         <h3 className="text-lg font-medium text-gray-900">{name}</h3>
         <p className="mt-2 text-sm text-gray-500">{description}</p>
         <div className="mt-4">
-          <span className="text-3xl font-extrabold text-gray-900">${price}</span>
+          <span className="text-3xl font-extrabold text-gray-900">{price}</span>
           <span className="text-sm font-medium text-gray-500">/{billing}</span>
         </div>
         

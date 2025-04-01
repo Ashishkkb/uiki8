@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ComponentFilters from "./ComponentFilters";
 import ComponentCard from "./ComponentCard";
-import { componentsList } from "@/data/components-list";
+import  componentsList  from "@/data/reactComponents";
 
 const ComponentsShowcase = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
