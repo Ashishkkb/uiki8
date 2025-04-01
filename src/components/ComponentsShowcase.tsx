@@ -38,7 +38,7 @@ const ComponentsShowcase = () => {
 
   return (
     <div className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F2FCE2] to-[#FEF7CD]">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-[#555]">Enchanted Components</h2>
           <p className="mt-4 text-xl text-[#666]">
@@ -82,7 +82,7 @@ const ComponentsShowcase = () => {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="flex flex-col space-y-6">
             {filteredComponents.map((component) => (
               <ComponentCard key={component.id} component={component} />
             ))}

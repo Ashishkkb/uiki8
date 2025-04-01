@@ -47,7 +47,7 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
   };
 
   return (
-    <Card className="overflow-hidden border border-[#D3E4FD] shadow-sm transition-all hover:shadow-md h-[480px] flex flex-col bg-white/80 backdrop-blur-sm">
+    <Card className="overflow-hidden border border-[#D3E4FD] shadow-sm transition-all hover:shadow-md flex flex-col bg-white/80 backdrop-blur-sm">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2 border-b border-[#F1F0FB]">
         <div>
           <h3 className="font-medium text-lg text-[#555]">{component.name}</h3>
@@ -87,7 +87,7 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
           </div>
         </div>
 
-        <div className={`${viewMode === "preview" ? "flex" : "hidden"} rounded-lg border border-[#F1F0FB] ${component.previewBg || "bg-[#f3f3f3]"} flex-grow h-[220px] overflow-hidden`}>
+        <div className={`${viewMode === "preview" ? "flex" : "hidden"} rounded-lg border border-[#F1F0FB] ${component.previewBg || "bg-[#f3f3f3]"} flex-grow h-[300px] overflow-hidden`}>
           <ScrollArea className="w-full h-full">
             <div className="flex items-center justify-center w-full h-full p-3">
               {component.previewHtml ? (
@@ -99,7 +99,7 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
           </ScrollArea>
         </div>
 
-        <div className={`${viewMode === "code" ? "block" : "hidden"} h-[220px] overflow-hidden rounded-lg border border-[#F1F0FB] flex-grow`}>
+        <div className={`${viewMode === "code" ? "block" : "hidden"} h-[300px] overflow-hidden rounded-lg border border-[#F1F0FB] flex-grow`}>
           <ScrollArea className="w-full h-full">
             <CodeSnippet code={component.code} language={component.language || "tsx"} />
           </ScrollArea>
