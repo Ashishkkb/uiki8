@@ -3,9 +3,16 @@ import { Suspense, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, useGLTF, Environment, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
+import { GLTF } from 'three-stdlib';
+
+// Define the proper type for the GLTF result
+type GLTFResult = GLTF & {
+  nodes: { [key: string]: THREE.Mesh };
+  materials: { [key: string]: THREE.Material };
+};
 
 function Model({ url, position = [0, 0, 0], ...props }: any) {
-  const { scene } = useGLTF(url);
+  const { scene } = useGLTF(url) as GLTFResult;
   const groupRef = useRef<THREE.Group>(null!);
   const [materialColor, setMaterialColor] = useState('#ffffff');
 
