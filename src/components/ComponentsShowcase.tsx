@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import ComponentFilters from "./ComponentFilters";
 import ComponentCard from "./ComponentCard";
-import  componentsList  from "@/data/reactComponents";
+import componentsList from "@/data/reactComponents";
 
 const ComponentsShowcase = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -77,7 +77,7 @@ const ComponentsShowcase = () => {
             }}>Clear filters</Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredComponents.map((component) => (
               <ComponentCard key={component.id} component={component} />
             ))}

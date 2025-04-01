@@ -46,7 +46,7 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
   };
 
   return (
-    <Card className="overflow-hidden bg-white border shadow-sm transition-all hover:shadow-md">
+    <Card className="overflow-hidden bg-white border shadow-sm transition-all hover:shadow-md h-[480px] flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2 border-b">
         <div>
           <h3 className="font-medium text-lg">{component.name}</h3>
@@ -63,7 +63,7 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
         </div>
       </CardHeader>
 
-      <div className="p-4">
+      <div className="p-4 flex-grow flex flex-col">
         <div className="flex items-center justify-between mb-3">
           <p className="text-sm text-gray-600 line-clamp-2">{component.description}</p>
           <div className="flex gap-1 ml-2">
@@ -88,17 +88,17 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
           </div>
         </div>
 
-        <div className={`p-3 ${viewMode === "preview" ? "block" : "hidden"} rounded-lg border ${component.previewBg || "bg-gray-50"}`}>
-          <div className="flex items-center justify-center min-h-[180px]">
+        <div className={`${viewMode === "preview" ? "flex" : "hidden"} rounded-lg border ${component.previewBg || "bg-gray-50"} flex-grow items-center justify-center h-[220px]`}>
+          <div className="flex items-center justify-center w-full h-full overflow-hidden p-3">
             {component.previewHtml ? (
-              <div dangerouslySetInnerHTML={{ __html: component.previewHtml }} />
+              <div dangerouslySetInnerHTML={{ __html: component.previewHtml }} className="max-w-full max-h-full" />
             ) : (
               <p className="text-gray-500">Preview not available</p>
             )}
           </div>
         </div>
 
-        <div className={`${viewMode === "code" ? "block" : "hidden"} min-h-[180px] max-h-[180px] overflow-auto rounded-lg border`}>
+        <div className={`${viewMode === "code" ? "block" : "hidden"} h-[220px] overflow-auto rounded-lg border flex-grow`}>
           <CodeSnippet code={component.code} language={component.language || "tsx"} />
         </div>
 
@@ -113,7 +113,7 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
         )}
       </div>
 
-      <CardFooter className="flex justify-between items-center p-4 bg-gray-50 border-t">
+      <CardFooter className="flex justify-between items-center p-4 bg-gray-50 border-t mt-auto">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
