@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { ComponentItem } from "@/types/component";
+import { ModelViewer } from "@/lib/components/3d";
 
 const ModelViewerComponent: ComponentItem = {
   id: 108,
@@ -269,6 +269,7 @@ export default function ModelViewer({
     </div>
   );
 }`,
+  component: ModelViewer,
   tags: ["3D", "Model Viewer", "GLTF", "Professional", "AR/VR"],
   isNew: true,
   fileSize: "17.8 KB",

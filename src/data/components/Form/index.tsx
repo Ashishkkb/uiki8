@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { ComponentItem } from "@/types/component";
+import FormPreview from "@/components/ui/FormPreview";
 
 const FormComponent: ComponentItem = {
   id: 6,
@@ -253,11 +253,6 @@ const Form = ({ fields, onSubmit, submitText = 'Submit', cancelText = 'Cancel', 
   );
 };
 
-export default Form;`,
-  tags: ["UI", "form", "validation", "input"],
-  isNew: true,
-  fileSize: "7.5 KB",
-  price: "14.99"
-};
+export default Form;
 
 export default FormComponent;

@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { ComponentItem } from "@/types/component";
+import { RotatingCube } from "@/lib/components/3d";
 
 const RotatingCubeComponent: ComponentItem = {
   id: 101,
@@ -47,6 +47,7 @@ export default function RotatingCube() {
     </Canvas>
   );
 }`,
+  component: RotatingCube,
   tags: ["3D", "interactive", "three.js", "animation"],
   is3D: true,
   fileSize: "1.2 KB",

@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { ComponentItem } from "@/types/component";
+import { ProductViewer } from "@/lib/components/3d";
 
 const ProductViewerComponent: ComponentItem = {
   id: 102,
@@ -41,6 +41,7 @@ export default function ProductViewer(props) {
     </Canvas>
   );
 }`,
+  component: ProductViewer,
   tags: ["3D", "product", "viewer", "three.js"],
   is3D: true,
   fileSize: "1.5 KB",

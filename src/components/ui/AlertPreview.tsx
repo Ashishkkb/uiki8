@@ -1,14 +1,5 @@
-import React from 'react';
-import { ComponentItem } from "@/types/component";
-import AlertPreview from "@/components/ui/AlertPreview";
 
-const AlertComponent: ComponentItem = {
-  id: 3,
-  name: "Alert",
-  category: "UI",
-  framework: "React",
-  description: "An alert component to display important messages to users",
-  code: `import React from 'react';
+import React from 'react';
 
 type AlertProps = {
   children: React.ReactNode;
@@ -17,7 +8,7 @@ type AlertProps = {
   onClose?: () => void;
 };
 
-const Alert = ({ children, title, variant = 'info', onClose }: AlertProps) => {
+const AlertPreview = ({ children = "This is an alert message", title = "Alert Title", variant = 'info', onClose }: AlertProps) => {
   // Variant styles
   const variantStyles = {
     info: "bg-blue-50 text-blue-800 border-blue-200",
@@ -50,7 +41,7 @@ const Alert = ({ children, title, variant = 'info', onClose }: AlertProps) => {
   };
 
   return (
-    <div className={\`flex p-4 mb-4 border rounded-lg \${variantStyles[variant]}\`} role="alert">
+    <div className={`flex p-4 mb-4 border rounded-lg ${variantStyles[variant]}`} role="alert">
       <div className="flex-shrink-0 mr-3">{iconVariants[variant]}</div>
       <div className="flex-1">
         {title && <h3 className="text-sm font-medium mb-1">{title}</h3>}
@@ -59,7 +50,7 @@ const Alert = ({ children, title, variant = 'info', onClose }: AlertProps) => {
       {onClose && (
         <button 
           type="button" 
-          className={\`ml-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 p-1.5 inline-flex h-8 w-8\`}
+          className={`ml-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 p-1.5 inline-flex h-8 w-8`}
           onClick={onClose}
           aria-label="Close"
         >
@@ -73,12 +64,4 @@ const Alert = ({ children, title, variant = 'info', onClose }: AlertProps) => {
   );
 };
 
-export default Alert;`,
-  component: AlertPreview,
-  tags: ["UI", "feedback", "message"],
-  isNew: false,
-  fileSize: "2.4 KB",
-  price: "0"
-};
-
-export default AlertComponent;
+export default AlertPreview;

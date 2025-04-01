@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { ComponentItem } from "@/types/component";
+import { TerrainMap } from "@/lib/components/3d";
 
 const TerrainMapComponent: ComponentItem = {
   id: 103,
@@ -56,6 +56,7 @@ export default function TerrainMap() {
     </Canvas>
   );
 }`,
+  component: TerrainMap,
   tags: ["3D", "terrain", "map", "three.js", "procedural"],
   is3D: true,
   fileSize: "2.0 KB",

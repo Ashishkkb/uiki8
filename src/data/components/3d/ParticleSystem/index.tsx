@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { ComponentItem } from "@/types/component";
+import { ParticleSystem } from "@/lib/components/3d";
 
 const ParticleSystemComponent: ComponentItem = {
   id: 104,
@@ -236,6 +236,7 @@ export default function ParticleSystemEffect() {
     </div>
   );
 }`,
+  component: ParticleSystem,
   tags: ["3D", "Particles", "Animation", "Effects", "GPU"],
   isNew: true,
   fileSize: "15.2 KB",

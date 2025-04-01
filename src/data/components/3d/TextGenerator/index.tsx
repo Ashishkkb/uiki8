@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { ComponentItem } from "@/types/component";
+import { TextGenerator } from "@/lib/components/3d";
 
 const TextGeneratorComponent: ComponentItem = {
   id: 105,
@@ -174,6 +174,7 @@ export default function TextGenerator() {
     </div>
   );
 }`,
+  component: TextGenerator,
   tags: ["3D", "Text", "Typography", "Interactive", "Customizable"],
   isNew: true,
   fileSize: "9.8 KB",

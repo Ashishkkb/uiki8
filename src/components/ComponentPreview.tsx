@@ -49,6 +49,18 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
     }
   }
 
+  // Render React component if available
+  if (component.component) {
+    const Component = component.component;
+    return (
+      <div className="w-full h-full flex items-center justify-center p-4">
+        <ErrorBoundary fallback={<FallbackComponent name={component.name} />}>
+          <Component />
+        </ErrorBoundary>
+      </div>
+    );
+  }
+
   // For any other components or fallback, use the HTML preview if available
   if (component.previewHtml) {
     return (
@@ -97,7 +109,7 @@ class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error: Error) {
-    console.error("Error in 3D component:", error);
+    console.error("Error in component:", error);
   }
 
   render() {

@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { ComponentItem } from "@/types/component";
+import DropdownPreview from "@/components/ui/DropdownPreview";
 
 const DropdownComponent: ComponentItem = {
   id: 5,
@@ -112,6 +112,7 @@ const Dropdown = ({ trigger, items, align = 'left', width = 180 }: DropdownProps
 };
 
 export default Dropdown;`,
+  component: DropdownPreview,
   tags: ["UI", "navigation", "menu"],
   isNew: false,
   fileSize: "2.5 KB",

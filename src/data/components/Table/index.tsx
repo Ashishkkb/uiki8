@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { ComponentItem } from "@/types/component";
+import TablePreview from "@/components/ui/TablePreview";
 
 const TableComponent: ComponentItem = {
   id: 7,
@@ -347,6 +347,7 @@ function Table<T extends Record<string, any>>({
 }
 
 export default Table;`,
+  component: TablePreview,
   tags: ["UI", "table", "data", "sorting", "pagination"],
   isNew: false,
   fileSize: "11.8 KB",

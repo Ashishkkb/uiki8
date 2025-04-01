@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { ComponentItem } from "@/types/component";
+import ModalPreview from "@/components/ui/ModalPreview";
 
 const ModalComponent: ComponentItem = {
   id: 4,
@@ -96,6 +96,7 @@ const Modal = ({ isOpen, onClose, title, children, footer, size = 'md' }: ModalP
 };
 
 export default Modal;`,
+  component: ModalPreview,
   tags: ["UI", "overlay", "dialog", "popup"],
   isNew: false,
   fileSize: "2.1 KB",

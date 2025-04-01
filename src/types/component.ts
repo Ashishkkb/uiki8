@@ -6,6 +6,7 @@ export interface ComponentItem {
   framework: string;
   description: string;
   code: string;
+  component?: React.ComponentType<any>; // Actual component implementation
   price?: number | string;
   language?: string;
   previewBg?: string;

@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { ComponentItem } from "@/types/component";
+import TabsPreview from "@/components/ui/TabsPreview";
 
 const TabsComponent: ComponentItem = {
   id: 8,
@@ -45,7 +45,7 @@ const Tabs = ({ tabs, defaultTabId, variant = 'underline', onChange, fullWidth =
       case 'boxed':
         return isActive
           ? 'bg-white border-t border-l border-r border-gray-200 text-blue-600'
-          : 'bg-gray-100 text-gray-600 hover:text-gray-800 border border-transparent hover:border-gray-200';
+          : 'bg-gray-100 text-gray-600 hover:text-gray-800 hover:border-gray-200';
 
       case 'underline':
       default:
@@ -93,6 +93,7 @@ const Tabs = ({ tabs, defaultTabId, variant = 'underline', onChange, fullWidth =
 };
 
 export default Tabs;`,
+  component: TabsPreview,
   tags: ["UI", "navigation", "content"],
   isNew: false,
   fileSize: "2.3 KB",

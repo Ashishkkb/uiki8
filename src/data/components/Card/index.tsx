@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { ComponentItem } from "@/types/component";
+import CardPreview from "@/components/ui/CardPreview";
 
 const CardComponent: ComponentItem = {
   id: 2,
@@ -34,6 +35,7 @@ const Card = ({ children, title, subtitle, footer, hover = false }: CardProps) =
 };
 
 export default Card;`,
+  component: CardPreview,
   tags: ["UI", "container", "layout"],
   isNew: false,
   fileSize: "0.9 KB",

@@ -1,15 +1,5 @@
 
 import React from 'react';
-import { ComponentItem } from "@/types/component";
-import ButtonPreview from "@/components/ui/ButtonPreview";
-
-const ButtonComponent: ComponentItem = {
-  id: 1,
-  name: "Button",
-  category: "UI",
-  framework: "React",
-  description: "A simple, versatile button component with multiple variants and sizes",
-  code: `import React from 'react';
 
 type ButtonProps = {
   children: React.ReactNode;
@@ -20,8 +10,8 @@ type ButtonProps = {
   onClick?: () => void;
 };
 
-const Button = ({ 
-  children, 
+const ButtonPreview = ({ 
+  children = "Button Text", 
   variant = 'primary', 
   size = 'md', 
   fullWidth = false,
@@ -54,7 +44,7 @@ const Button = ({
 
   return (
     <button
-      className={\`\${baseStyles} \${variantStyles[variant]} \${sizeStyles[size]} \${widthStyle} \${disabledStyle}\`}
+      className={`${baseStyles} ${variantStyles[variant]} ${sizeStyles[size]} ${widthStyle} ${disabledStyle}`}
       disabled={disabled}
       onClick={onClick}
     >
@@ -63,12 +53,4 @@ const Button = ({
   );
 };
 
-export default Button;`,
-  component: ButtonPreview,
-  tags: ["UI", "interactive", "form"],
-  isNew: false,
-  fileSize: "1.2 KB",
-  price: "0"
-};
-
-export default ButtonComponent;
+export default ButtonPreview;
