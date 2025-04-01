@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -18,6 +19,20 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				sans: [
+					'-apple-system', 
+					'BlinkMacSystemFont', 
+					'Segoe UI', 
+					'Roboto', 
+					'Helvetica', 
+					'Arial', 
+					'sans-serif', 
+					'Apple Color Emoji', 
+					'Segoe UI Emoji'
+				],
+				mono: ['SFMono-Regular', 'Consolas', 'Liberation Mono', 'Menlo', 'Courier', 'monospace'],
+			},
 			colors: {
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
@@ -61,6 +76,26 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				github: {
+					blue: '#0969da',
+					purple: '#8250df',
+					green: '#2da44e',
+					red: '#cf222e',
+					orange: '#bc4c00',
+					yellow: '#bf8700',
+					gray: {
+						50: '#f6f8fa',
+						100: '#eaeef2',
+						200: '#d0d7de',
+						300: '#afb8c1',
+						400: '#8c959f',
+						500: '#6e7781',
+						600: '#57606a',
+						700: '#424a53',
+						800: '#32383f',
+						900: '#24292f',
+					},
 				}
 			},
 			borderRadius: {
