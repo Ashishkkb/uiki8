@@ -15,7 +15,9 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
         return (
           <div className="w-full h-full flex items-center justify-center">
             <ErrorBoundary fallback={<FallbackComponent name={component.name} />}>
-              <RotatingCube />
+              <Suspense fallback={<LoadingFallback />}>
+                <RotatingCube />
+              </Suspense>
             </ErrorBoundary>
           </div>
         );
@@ -24,7 +26,9 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
         return (
           <div className="w-full h-full flex items-center justify-center">
             <ErrorBoundary fallback={<FallbackComponent name={component.name} />}>
-              <ProductViewer color="#5f9ea0" height="100%" />
+              <Suspense fallback={<LoadingFallback />}>
+                <ProductViewer color="#5f9ea0" />
+              </Suspense>
             </ErrorBoundary>
           </div>
         );
@@ -33,7 +37,9 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
         return (
           <div className="w-full h-full flex items-center justify-center">
             <ErrorBoundary fallback={<FallbackComponent name={component.name} />}>
-              <TerrainMap />
+              <Suspense fallback={<LoadingFallback />}>
+                <TerrainMap />
+              </Suspense>
             </ErrorBoundary>
           </div>
         );
@@ -60,6 +66,13 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
     </div>
   );
 };
+
+// Loading fallback when 3D components are loading
+const LoadingFallback = () => (
+  <div className="w-full h-full flex items-center justify-center">
+    <p className="text-blue-500">Loading 3D component...</p>
+  </div>
+);
 
 // Simple fallback component for error cases
 const FallbackComponent = ({ name }: { name: string }) => (
