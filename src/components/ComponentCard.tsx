@@ -5,6 +5,7 @@ import { Card, CardHeader, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import CodeSnippet from "./CodeSnippet";
 import { ComponentItem } from "@/types/component";
@@ -86,18 +87,22 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
           </div>
         </div>
 
-        <div className={`${viewMode === "preview" ? "flex" : "hidden"} rounded-lg border border-[#F1F0FB] ${component.previewBg || "bg-[#f3f3f3]"} flex-grow items-center justify-center h-[220px]`}>
-          <div className="flex items-center justify-center w-full h-full overflow-hidden p-3">
-            {component.previewHtml ? (
-              <div dangerouslySetInnerHTML={{ __html: component.previewHtml }} className="max-w-full max-h-full" />
-            ) : (
-              <p className="text-[#8A898C]">Preview not available</p>
-            )}
-          </div>
+        <div className={`${viewMode === "preview" ? "flex" : "hidden"} rounded-lg border border-[#F1F0FB] ${component.previewBg || "bg-[#f3f3f3]"} flex-grow h-[220px] overflow-hidden`}>
+          <ScrollArea className="w-full h-full">
+            <div className="flex items-center justify-center w-full h-full p-3">
+              {component.previewHtml ? (
+                <div dangerouslySetInnerHTML={{ __html: component.previewHtml }} className="max-w-full" />
+              ) : (
+                <p className="text-[#8A898C]">Preview not available</p>
+              )}
+            </div>
+          </ScrollArea>
         </div>
 
-        <div className={`${viewMode === "code" ? "block" : "hidden"} h-[220px] overflow-auto rounded-lg border border-[#F1F0FB] flex-grow`}>
-          <CodeSnippet code={component.code} language={component.language || "tsx"} />
+        <div className={`${viewMode === "code" ? "block" : "hidden"} h-[220px] overflow-hidden rounded-lg border border-[#F1F0FB] flex-grow`}>
+          <ScrollArea className="w-full h-full">
+            <CodeSnippet code={component.code} language={component.language || "tsx"} />
+          </ScrollArea>
         </div>
 
         {component.tags && component.tags.length > 0 && (

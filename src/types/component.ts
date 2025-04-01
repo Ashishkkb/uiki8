@@ -11,4 +11,6 @@ export interface ComponentItem {
   previewBg?: string;
   previewHtml?: string;
   tags?: string[];
+  isNew?: boolean;
+  fileSize?: string;
 }
