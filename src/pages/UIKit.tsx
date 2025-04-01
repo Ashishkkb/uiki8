@@ -13,7 +13,6 @@ import UIKitSponsors from "@/components/UIKitSponsors";
 const UIKit = () => {
   return (
     <div className="min-h-screen bg-white text-gray-900">
-      <Navbar />
       <UIKitHero />
       <UIKitFeatures />
       <UIKitShowcase />

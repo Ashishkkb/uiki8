@@ -12,8 +12,6 @@ import Footer from "@/components/Footer";
 const Index = () => {
   return (
     <div className="min-h-screen bg-white text-gray-900">
-      <Navbar />
-      
       {/* Hero Section */}
       <section className="pt-24 pb-20 px-6 md:px-12 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row items-center gap-12">

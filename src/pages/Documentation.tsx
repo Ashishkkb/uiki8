@@ -24,8 +24,6 @@ const Documentation = () => {
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
-      <Navbar />
-      
       <div className="max-w-7xl mx-auto px-6 md:px-12 pt-24 pb-16">
         <div className="flex flex-col md:flex-row gap-10">
           {/* Sidebar Navigation */}
