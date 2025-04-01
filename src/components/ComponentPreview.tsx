@@ -1,4 +1,3 @@
-
 import React, { Suspense } from 'react';
 import { ProductViewer, RotatingCube, TerrainMap } from "@/lib/components/3d";
 import { ComponentItem } from "@/types/component";
