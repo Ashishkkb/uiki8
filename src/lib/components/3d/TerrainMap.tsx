@@ -105,19 +105,19 @@ function Terrain({ width = 20, height = 20, widthSegments = 64, heightSegments =
           itemSize={1}
         />
         <bufferAttribute
-          attachObject={['attributes', 'position']}
+          attach="attributes-position"
           array={positions}
           count={positions.length / 3}
           itemSize={3}
         />
         <bufferAttribute
-          attachObject={['attributes', 'normal']}
+          attach="attributes-normal"
           array={normals}
           count={normals.length / 3}
           itemSize={3}
         />
         <bufferAttribute
-          attachObject={['attributes', 'uv']}
+          attach="attributes-uv"
           array={uvs}
           count={uvs.length / 2}
           itemSize={2}

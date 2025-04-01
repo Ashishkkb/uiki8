@@ -19,7 +19,8 @@ function Model({ url, position = [0, 0, 0], ...props }: any) {
   // Apply the material color to all meshes in the model
   scene.traverse((node) => {
     if ((node as THREE.Mesh).isMesh) {
-      ((node as THREE.Mesh).material as THREE.Material).color?.set(materialColor);
+      const material = (node as THREE.Mesh).material as THREE.MeshStandardMaterial;
+      if (material.color) material.color.set(materialColor);
     }
   });
 
