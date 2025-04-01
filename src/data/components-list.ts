@@ -1235,5 +1235,7 @@ for (let i = 18; i <= 97; i++) {
     previewBg: "bg-gray-50",
     previewHtml: `<div class="p-4 border border-dashed">Component ${i} Preview</div>`,
     code: `// Component ${i} code\nconst Component${i} = () => {\n  return <div>Component ${i}</div>;\n};\n\nexport default Component${i};`,
+    price: i % 5 === 0 ? 19.99 : "Free", // Adding explicit price value
   });
 }
+
