@@ -1,75 +1,87 @@
 
+import React from "react";
 import { useState } from "react";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const NewsletterSignup = () => {
   const [email, setEmail] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
-
-  const handleSubmit = (e: React.FormEvent) => {
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    
+    // Basic email validation
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast({
+        title: "Invalid email",
+        description: "Please enter a valid email address.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setLoading(true);
     
     // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setEmail("");
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
       
       toast({
         title: "Success!",
         description: "You've been subscribed to our newsletter.",
-        variant: "default",
       });
-    }, 1000);
+      
+      setEmail("");
+    } catch (error) {
+      toast({
+        title: "Something went wrong",
+        description: "Please try again later.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <section className="py-20 px-6 md:px-12 bg-gradient-to-r from-purple-600 to-blue-500 text-white">
-      <div className="max-w-7xl mx-auto">
+    <section className="py-16 px-6 md:px-12 bg-[#F1F0FB]">
+      <div className="max-w-5xl mx-auto">
         <div className="text-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Stay Updated with New Components
+          <h2 className="text-3xl font-bold mb-4 text-[#333]">
+            Stay Updated
           </h2>
-          <p className="text-xl opacity-90 max-w-2xl mx-auto">
-            Subscribe to our newsletter and be the first to know about new components, 
-            updates, and exclusive offers.
+          <p className="text-lg text-[#666] max-w-2xl mx-auto">
+            Subscribe to our newsletter for updates, tutorials, and early access to new features.
           </p>
         </div>
         
         <form 
           onSubmit={handleSubmit}
-          className="max-w-md mx-auto relative bg-white/10 backdrop-blur-sm p-1.5 rounded-lg flex items-center"
+          className="max-w-md mx-auto flex gap-2 flex-col sm:flex-row"
         >
-          <input
+          <Input
             type="email"
-            placeholder="Enter your email"
-            className="flex-1 bg-transparent border-0 focus:ring-0 text-white placeholder-white/60 py-3 px-4"
+            placeholder="Your email address"
+            className="flex-grow"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
           <Button 
             type="submit" 
-            className="bg-white text-purple-600 hover:bg-white/90 rounded-md px-4 py-2"
-            disabled={isSubmitting}
+            className="bg-[#6A9D80] hover:bg-[#5D8B72]"
+            disabled={loading}
           >
-            {isSubmitting ? (
-              <div className="h-5 w-5 border-2 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
-            ) : (
-              <>
-                <span className="mr-2">Subscribe</span>
-                <Send className="h-4 w-4" />
-              </>
-            )}
+            {loading ? "Subscribing..." : "Subscribe"}
           </Button>
         </form>
         
-        <p className="text-center mt-4 text-sm opacity-80">
+        <div className="text-center text-sm text-[#666] mt-4">
           We respect your privacy. Unsubscribe at any time.
-        </p>
+        </div>
       </div>
     </section>
   );

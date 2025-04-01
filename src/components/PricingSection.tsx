@@ -1,128 +1,128 @@
 
-import { Check } from "lucide-react";
+import React from "react";
 import { Button } from "@/components/ui/button";
+import { Check } from "lucide-react";
 
 const plans = [
   {
-    name: "Free",
+    name: "Open Source",
     price: "$0",
-    description: "Perfect for trying out components and small projects.",
+    description: "Get started with our open-source components",
+    buttonText: "Get Started",
+    buttonVariant: "outline" as const,
     features: [
-      "50+ Basic Components",
-      "React & Vue Support",
-      "Community Support",
-      "Basic Documentation",
-      "1 Project"
+      "Core components library",
+      "Base themes",
+      "Documentation",
+      "Community support",
+      "MIT license"
     ],
-    cta: "Get Started",
     popular: false
   },
   {
     name: "Pro",
     price: "$49",
-    period: "one-time",
-    description: "For professional developers working on multiple projects.",
+    description: "Everything you need for professional projects",
+    buttonText: "Buy Pro License",
+    buttonVariant: "default" as const,
     features: [
-      "200+ Premium Components",
-      "All Framework Support",
-      "Priority Email Support",
-      "Advanced Documentation",
-      "Unlimited Projects",
-      "Source Files Access"
+      "All core components",
+      "Advanced components",
+      "Premium themes",
+      "Figma design files",
+      "1 year of updates",
+      "Priority support"
     ],
-    cta: "Upgrade to Pro",
     popular: true
   },
   {
     name: "Enterprise",
-    price: "$99",
-    period: "per month",
-    description: "For teams building commercial applications at scale.",
+    price: "Contact Us",
+    description: "Custom solutions for large organizations",
+    buttonText: "Contact Sales",
+    buttonVariant: "outline" as const,
     features: [
-      "Everything in Pro",
-      "500+ Enterprise Components",
-      "Custom Component Development",
-      "Dedicated Support",
-      "White-labeling Option",
-      "Team Collaboration"
+      "All Pro features",
+      "Custom branding",
+      "Dedicated support",
+      "SLA agreement",
+      "Team training",
+      "Extended license"
     ],
-    cta: "Contact Sales",
     popular: false
   }
 ];
 
 const PricingSection = () => {
   return (
-    <section id="pricing" className="py-20 px-6 md:px-12 bg-gray-50">
+    <section className="py-16 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#333]">
             Simple, Transparent Pricing
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose the plan that's right for you and start building amazing UIs today.
+          <p className="text-xl text-[#666] max-w-3xl mx-auto">
+            Choose the plan that's right for your project. All plans include access to our core components.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
           {plans.map((plan, index) => (
             <div 
               key={index} 
-              className={`bg-white rounded-xl overflow-hidden border ${
+              className={`bg-white rounded-lg overflow-hidden ${
                 plan.popular 
-                  ? "border-purple-500 shadow-lg shadow-purple-100" 
-                  : "border-gray-200"
+                  ? "border-2 border-[#6A9D80] shadow-lg relative" 
+                  : "border border-gray-200 shadow-sm"
               }`}
             >
               {plan.popular && (
-                <div className="bg-purple-500 text-white text-center text-sm font-medium py-1">
-                  Most Popular
+                <div className="bg-[#6A9D80] text-white py-1 px-4 text-xs font-medium text-center">
+                  MOST POPULAR
                 </div>
               )}
               
-              <div className="p-8">
-                <h3 className="text-2xl font-bold mb-2">{plan.name}</h3>
-                <div className="mb-4">
-                  <span className="text-4xl font-bold">{plan.price}</span>
-                  {plan.period && (
-                    <span className="text-gray-500 ml-1">{plan.period}</span>
+              <div className="p-6">
+                <h3 className="text-2xl font-bold">{plan.name}</h3>
+                <div className="mt-4 mb-2">
+                  <span className="text-3xl font-bold">{plan.price}</span>
+                  {plan.price !== "Contact Us" && (
+                    <span className="text-gray-500 ml-2">one-time payment</span>
                   )}
                 </div>
-                <p className="text-gray-600 mb-6">{plan.description}</p>
+                <p className="text-[#666] mb-6">{plan.description}</p>
                 
                 <Button 
+                  variant={plan.buttonVariant} 
                   className={`w-full ${
-                    plan.popular 
-                      ? "bg-gradient-to-r from-purple-600 to-blue-500 text-white" 
-                      : "bg-gray-100 text-gray-800 hover:bg-gray-200"
+                    plan.buttonVariant === "default" 
+                      ? "bg-[#6A9D80] hover:bg-[#5D8B72]" 
+                      : ""
                   }`}
                 >
-                  {plan.cta}
+                  {plan.buttonText}
                 </Button>
                 
-                <div className="mt-8">
-                  <h4 className="font-medium mb-4 text-sm uppercase text-gray-500">What's included</h4>
-                  <ul className="space-y-3">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-start">
-                        <Check className="h-5 w-5 text-green-500 mr-3 flex-shrink-0" />
-                        <span className="text-gray-600">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
+                <div className="mt-8 space-y-3">
+                  {plan.features.map((feature, i) => (
+                    <div key={i} className="flex items-start">
+                      <Check className="h-5 w-5 mr-2 text-[#6A9D80] shrink-0 mt-0.5" />
+                      <span>{feature}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           ))}
         </div>
         
-        <div className="mt-16 text-center bg-white rounded-xl border border-gray-200 p-8 max-w-3xl mx-auto">
-          <h3 className="text-2xl font-bold mb-4">Need a Custom Solution?</h3>
-          <p className="text-gray-600 mb-6">
-            We offer custom development services for teams with specific needs.
-            Contact us to discuss your requirements.
+        <div className="mt-16 text-center">
+          <h3 className="text-xl font-bold mb-4">Need something special?</h3>
+          <p className="text-[#666] max-w-2xl mx-auto mb-6">
+            We offer custom development services for specific requirements.
+            Contact our team for a personalized solution.
           </p>
-          <Button className="bg-gradient-to-r from-purple-600 to-blue-500 text-white px-8">
+          <Button variant="outline" className="border-[#6A9D80] text-[#6A9D80]">
             Contact Us
           </Button>
         </div>

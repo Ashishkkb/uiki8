@@ -4,15 +4,21 @@ import Index from "./pages/Index";
 import Components from "./pages/Components";
 import UIKit from "./pages/UIKit";
 import NotFound from "./pages/NotFound";
+import Documentation from "./pages/Documentation";
+import { Toaster } from "@/components/ui/toaster";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<Index />} />
-      <Route path="/components" element={<Components />} />
-      <Route path="/ui-kit" element={<UIKit />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/components" element={<Components />} />
+        <Route path="/ui-kit" element={<UIKit />} />
+        <Route path="/documentation" element={<Documentation />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      <Toaster />
+    </>
   );
 }
 

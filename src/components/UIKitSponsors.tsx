@@ -1,80 +1,71 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Heart, Coffee } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+
+const sponsors = [
+  { name: "Acme Inc.", logo: "https://via.placeholder.com/150x50?text=ACME" },
+  { name: "Globex", logo: "https://via.placeholder.com/150x50?text=Globex" },
+  { name: "Initech", logo: "https://via.placeholder.com/150x50?text=Initech" },
+  { name: "Hooli", logo: "https://via.placeholder.com/150x50?text=Hooli" },
+  { name: "Massive Dynamic", logo: "https://via.placeholder.com/150x50?text=MassiveDynamic" },
+];
 
 const UIKitSponsors = () => {
   return (
-    <section className="py-20 px-6 md:px-12 bg-white">
+    <section className="py-16 px-6 md:px-12">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Support the Project
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-[#333]">
+            Trusted By Developers Worldwide
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Enchant UI is an open-source project backed by a community of contributors and sponsors.
-            Your support helps us continue building and improving the library.
+          <p className="text-lg text-[#666] max-w-2xl mx-auto">
+            Join the growing community of developers and companies using our UI kit to build modern web applications.
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-gradient-to-r from-pink-50 to-red-50 p-8 rounded-xl border border-pink-100">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 rounded-lg bg-pink-100">
-                <Heart className="h-6 w-6 text-pink-500" />
-              </div>
-              <h3 className="text-2xl font-bold">GitHub Sponsors</h3>
+        <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12 my-8">
+          {sponsors.map((sponsor, index) => (
+            <div key={index} className="grayscale hover:grayscale-0 transition-all duration-300">
+              <img 
+                src={sponsor.logo} 
+                alt={sponsor.name} 
+                className="h-12 object-contain"
+                loading="lazy"
+              />
             </div>
-            
-            <p className="text-gray-700 mb-6">
-              Become a sponsor on GitHub to support our work and get your logo featured on our documentation.
-              GitHub Sponsors matches contributions for the first year.
-            </p>
-            
-            <Button className="bg-[#EA4AAA] text-white hover:bg-[#EA4AAA]/90 transition-colors">
-              <Heart className="mr-2 h-4 w-4" />
-              Sponsor on GitHub
-            </Button>
-            
-            <div className="mt-6">
-              <p className="text-sm text-gray-500 mb-3">Current Sponsors:</p>
-              <div className="flex flex-wrap gap-3">
-                {[1, 2, 3, 4, 5].map(i => (
-                  <div key={i} className="h-10 w-10 rounded-full bg-gray-100"></div>
-                ))}
-              </div>
-            </div>
+          ))}
+        </div>
+        
+        <Separator className="my-12" />
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <div>
+            <div className="text-3xl font-bold text-[#6A9D80]">10,000+</div>
+            <div className="text-[#666] mt-2">Downloads</div>
           </div>
-          
-          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-xl border border-blue-100">
-            <div className="flex items-center gap-4 mb-4">
-              <div className="p-3 rounded-lg bg-blue-100">
-                <Coffee className="h-6 w-6 text-blue-500" />
-              </div>
-              <h3 className="text-2xl font-bold">Open Collective</h3>
-            </div>
-            
-            <p className="text-gray-700 mb-6">
-              Support us through Open Collective where funds are transparently managed.
-              All expenses are public and go directly toward development and maintenance.
-            </p>
-            
-            <Button className="bg-[#3385FF] text-white hover:bg-[#3385FF]/90 transition-colors">
-              <Coffee className="mr-2 h-4 w-4" />
-              Contribute on Open Collective
-            </Button>
-            
-            <div className="mt-6">
-              <p className="text-sm text-gray-500 mb-3">Monthly Budget:</p>
-              <div className="h-4 w-full bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full w-3/4 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
-              </div>
-              <div className="flex justify-between mt-2 text-sm text-gray-500">
-                <span>$1,850 raised</span>
-                <span>$2,500 goal</span>
-              </div>
-            </div>
+          <div>
+            <div className="text-3xl font-bold text-[#6A9D80]">1,000+</div>
+            <div className="text-[#666] mt-2">GitHub Stars</div>
           </div>
+          <div>
+            <div className="text-3xl font-bold text-[#6A9D80]">50+</div>
+            <div className="text-[#666] mt-2">Contributors</div>
+          </div>
+        </div>
+        
+        <div className="flex flex-col md:flex-row gap-4 items-center justify-center mt-12 bg-[#F1F0FB] p-6 rounded-lg">
+          <div className="text-center md:text-left">
+            <h3 className="font-medium text-lg">Want to become a sponsor?</h3>
+            <p className="text-sm text-[#666]">Support this project and get your logo displayed above.</p>
+          </div>
+          <a 
+            href="https://github.com/sponsors" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="bg-[#333] text-white px-4 py-2 rounded-md text-sm hover:bg-[#555] transition-colors"
+          >
+            Become a Sponsor
+          </a>
         </div>
       </div>
     </section>

@@ -1,90 +1,104 @@
 
 import React from "react";
-import { 
-  CheckCircle2, 
-  Layers, 
-  Code, 
-  Sparkles, 
-  Palette, 
-  Zap, 
-  Box, 
-  Figma, 
-  Smartphone
+import { Badge } from "@/components/ui/badge";
+import {
+  Code,
+  PenTool,
+  Layers,
+  Zap,
+  Settings,
+  Monitor,
+  Smartphone,
+  Terminal,
+  FileText,
 } from "lucide-react";
 
 const features = [
   {
-    icon: <Layers className="h-6 w-6 text-purple-600" />,
-    title: "Multiple Frameworks",
-    description: "React, Vue, Angular, and Svelte support with identical APIs."
+    icon: <Layers className="h-6 w-6" />,
+    title: "50+ Components",
+    description:
+      "Comprehensive collection of UI components with consistent design language.",
   },
   {
-    icon: <Code className="h-6 w-6 text-purple-600" />,
-    title: "TypeScript Ready",
-    description: "Full type definitions for all components and hooks."
+    icon: <PenTool className="h-6 w-6" />,
+    title: "Figma Design Kit",
+    description:
+      "Pixel-perfect design files with components, styles, and templates.",
+    badge: "Pro",
   },
   {
-    icon: <Sparkles className="h-6 w-6 text-purple-600" />,
-    title: "Fully Customizable",
-    description: "Easily modify themes, colors, and behaviors to match your brand."
+    icon: <Code className="h-6 w-6" />,
+    title: "Framework Agnostic",
+    description: "Works with React, Vue, Angular, and other modern frameworks.",
   },
   {
-    icon: <Palette className="h-6 w-6 text-purple-600" />,
-    title: "Dark Mode Support",
-    description: "Built-in dark mode with automatic system preference detection."
-  },
-  {
-    icon: <Zap className="h-6 w-6 text-purple-600" />,
+    icon: <Zap className="h-6 w-6" />,
     title: "Performance Optimized",
-    description: "Lightweight components with minimal bundle size impact."
+    description: "Lightweight implementation with minimal dependencies.",
   },
   {
-    icon: <CheckCircle2 className="h-6 w-6 text-purple-600" />,
-    title: "Accessibility Built-in",
-    description: "WCAG 2.1 AA compliant components for inclusive applications."
+    icon: <Terminal className="h-6 w-6" />,
+    title: "TypeScript Support",
+    description: "Fully typed components with excellent autocompletion support.",
   },
   {
-    icon: <Box className="h-6 w-6 text-purple-600" />,
-    title: "CSS-in-JS",
-    description: "Modern styling solutions with zero runtime overhead."
+    icon: <Settings className="h-6 w-6" />,
+    title: "Customizable",
+    description: "Easily theme and adapt components to match your brand.",
   },
   {
-    icon: <Figma className="h-6 w-6 text-purple-600" />,
-    title: "Design Assets",
-    description: "Figma component library that mirrors the code components."
+    icon: <Monitor className="h-6 w-6" />,
+    title: "Dark Mode",
+    description: "Built-in dark mode support with seamless transitions.",
+    badge: "Pro",
   },
   {
-    icon: <Smartphone className="h-6 w-6 text-purple-600" />,
+    icon: <Smartphone className="h-6 w-6" />,
     title: "Responsive Design",
-    description: "Mobile-first approach ensures great UX on all devices."
-  }
+    description: "Mobile-first components that work on all screen sizes.",
+  },
+  {
+    icon: <FileText className="h-6 w-6" />,
+    title: "Documentation",
+    description: "Comprehensive guides, examples, and API references.",
+  },
 ];
 
 const UIKitFeatures = () => {
   return (
-    <section id="features" className="py-20 px-6 md:px-12 bg-gray-50">
+    <section className="py-16 px-6 md:px-12 bg-white">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Everything You Need to Build<br />Modern User Interfaces
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#333]">
+            Everything You Need to Build Better UIs
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Our comprehensive collection provides all the essential components and utilities 
-            for creating beautiful, functional UIs.
+          <p className="text-xl text-[#666] max-w-3xl mx-auto">
+            Our UI kit provides all the tools and components needed to create
+            beautiful, responsive web applications.
           </p>
         </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
           {features.map((feature, index) => (
-            <div 
-              key={index} 
-              className="bg-white p-8 rounded-xl border border-gray-200 hover:shadow-md transition-shadow group"
+            <div
+              key={index}
+              className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
             >
-              <div className="mb-5 inline-block p-3 rounded-lg bg-purple-100 group-hover:bg-purple-200 transition-colors">
+              <div className="mb-4 p-2 rounded-full bg-[#F1F0FB] inline-block text-[#6A9D80]">
                 {feature.icon}
               </div>
-              <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-              <p className="text-gray-600">{feature.description}</p>
+              <div className="flex items-center gap-2 mb-3">
+                <h3 className="text-xl font-semibold text-[#333]">
+                  {feature.title}
+                </h3>
+                {feature.badge && (
+                  <Badge variant="secondary" className="bg-[#FDE1D3] text-[#333]">
+                    {feature.badge}
+                  </Badge>
+                )}
+              </div>
+              <p className="text-[#555]">{feature.description}</p>
             </div>
           ))}
         </div>
