@@ -882,7 +882,7 @@ function Wall({ position, width, height, depth }) {
     for (let x = 0; x < width; x++) {
       boxes.push(
         <PhysicsBox
-          key={\`\${x}-\${y}\`}
+          key={`${x}-${y}`}
           position={[
             position[0] + (x - width/2 + 0.5) * boxSize,
             position[1] + (y + 0.5) * boxSize,
@@ -905,7 +905,7 @@ function SphereBall({ position }) {
   
   const dropSphere = () => {
     const id = nextId.current++;
-    const color = `hsl(${Math.random() * 360}, 70%, 50%)`;
+    const color = "hsl(" + (Math.random() * 360) + ", 70%, 50%)";
     const radius = Math.random() * 0.3 + 0.2;
     
     setSpheres(prevSpheres => [
@@ -2436,7 +2436,7 @@ export default function ProductConfigurator() {
                   transition: 'transform 0.1s',
                   transform: color === option.color ? 'scale(1.1)' : 'scale(1)',
                 }}
-                title={\`\${option.name} \${option.price > 0 ? '(+$' + option.price + ')' : ''}\`}
+                title={`${option.name} ${option.price > 0 ? '(+$' + option.price + ')' : ''}`}
               />
             ))}
           </div>
