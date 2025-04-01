@@ -4,7 +4,7 @@ import Index from "./pages/Index";
 import Components from "./pages/Components";
 import NotFound from "./pages/NotFound";
 import Documentation from "./pages/Documentation";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "sonner";
 
 function App() {
   return (

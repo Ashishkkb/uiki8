@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -13,16 +12,13 @@ import {
   Github,
   Package,
 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 const Documentation = () => {
-  const { toast } = useToast();
-  
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast({
-      title: "Copied to clipboard",
-      description: "You can now paste the code in your project.",
+    toast("Copied to clipboard", {
+      description: "You can now paste the code in your project."
     });
   };
 
