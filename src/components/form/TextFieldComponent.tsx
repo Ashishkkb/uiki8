@@ -1,16 +1,5 @@
 
-import React from 'react';
-import { ComponentItem } from "@/types/component";
-import TextFieldComponent from "@/components/form/TextFieldComponent";
-import { Mail } from "lucide-react";
-
-const TextFieldComponentData: ComponentItem = {
-  id: 401,
-  name: "Text Field",
-  category: "Form",
-  framework: "React",
-  description: "A customizable text field component with validation support, icons, and helper text",
-  code: `import React from "react";
+import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -30,7 +19,7 @@ export interface TextFieldComponentProps {
   endIcon?: React.ReactNode;
 }
 
-const TextFieldComponent = ({
+const TextFieldComponent: React.FC<TextFieldComponentProps> = ({
   label,
   placeholder,
   type = "text",
@@ -45,10 +34,10 @@ const TextFieldComponent = ({
   startIcon,
   endIcon,
 }) => {
-  const inputId = id || \`input-\${Math.random().toString(36).substring(2, 9)}\`;
+  const inputId = id || `input-${Math.random().toString(36).substring(2, 9)}`;
   
   return (
-    <div className={\`space-y-2 w-full \${className}\`}>
+    <div className={`space-y-2 w-full ${className}`}>
       {label && (
         <Label htmlFor={inputId} className="flex items-center gap-1">
           {label}
@@ -71,12 +60,12 @@ const TextFieldComponent = ({
           onChange={onChange}
           disabled={disabled}
           required={required}
-          className={\`
+          className={`
             w-full 
-            \${startIcon ? 'pl-10' : ''} 
-            \${endIcon ? 'pr-10' : ''}
-            \${error ? 'border-red-500 focus-visible:ring-red-500' : ''}
-          \`}
+            ${startIcon ? 'pl-10' : ''} 
+            ${endIcon ? 'pr-10' : ''}
+            ${error ? 'border-red-500 focus-visible:ring-red-500' : ''}
+          `}
         />
         
         {endIcon && (
@@ -97,22 +86,4 @@ const TextFieldComponent = ({
   );
 };
 
-export default TextFieldComponent;`,
-  component: () => (
-    <div className="max-w-sm">
-      <TextFieldComponent 
-        label="Email" 
-        placeholder="Enter your email" 
-        type="email" 
-        required={true}
-        startIcon={<Mail size={16} />}
-        helperText="We'll never share your email with anyone else."
-      />
-    </div>
-  ),
-  tags: ["form", "input", "text field", "UI"],
-  fileSize: "1.5 KB",
-  price: "Free"
-};
-
-export default TextFieldComponentData;
+export default TextFieldComponent;

@@ -4,9 +4,20 @@ import { ComponentItem } from "@/types/component";
 // UI Components
 import ButtonComponent from './UI/Button';
 import CardComponent from './Card';
+import AlertComponent from './UI/Alert';
+import ModalComponent from './UI/Modal';
+import DropdownComponent from './UI/Dropdown';
 
 // Layout Components
 import ContainerComponent from './Layout/Container';
+import GridComponent from './Layout/Grid';
+import DividerComponent from './Layout/Divider';
+
+// Form Components
+import TextFieldComponent from './Form/TextField';
+
+// Media Components
+import CarouselComponent from './Media/Carousel';
 
 // 3D Components
 import RotatingCubeComponent from './3d/RotatingCube';
@@ -21,9 +32,20 @@ export const getAllComponents = (): ComponentItem[] => [
   // UI Components
   ButtonComponent,
   CardComponent,
+  AlertComponent,
+  ModalComponent,
+  DropdownComponent,
   
   // Layout Components
   ContainerComponent,
+  GridComponent,
+  DividerComponent,
+  
+  // Form Components
+  TextFieldComponent,
+  
+  // Media Components
+  CarouselComponent,
   
   // 3D Components
   RotatingCubeComponent,
