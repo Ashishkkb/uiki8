@@ -5,20 +5,20 @@ import { ExternalLink, Github, FileText } from "lucide-react";
 
 const UIKitCTA = () => {
   return (
-    <section className="py-20 px-6 md:px-12 bg-gradient-to-r from-purple-600 to-indigo-600 text-white">
+    <section className="py-20 px-6 md:px-12 bg-github-blue text-white">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Ready to Build Something Amazing?
           </h2>
           <p className="text-xl opacity-90 max-w-3xl mx-auto">
-            Get started with Enchant UI today and transform your development workflow.
+            Get started with GitHub UI today and transform your development workflow.
             Join thousands of developers building better interfaces, faster.
           </p>
         </div>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button className="bg-white text-purple-700 hover:bg-white/90 transition-colors">
+          <Button className="bg-white text-github-blue hover:bg-white/90 transition-colors">
             Get Started
             <ExternalLink className="ml-2 h-4 w-4" />
           </Button>
