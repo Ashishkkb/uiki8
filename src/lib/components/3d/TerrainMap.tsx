@@ -1,31 +1,37 @@
 
-import { useRef, useMemo } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Sky } from '@react-three/drei';
 import * as THREE from 'three';
 
-function Terrain({ width = 20, height = 20, widthSegments = 64, heightSegments = 64, ...props }: any) {
+const Terrain = () => {
   const meshRef = useRef<THREE.Mesh>(null!);
+  const width = 20;
+  const height = 20;
+  const widthSegments = 64;
+  const heightSegments = 64;
   
   // Generate terrain data
-  const { positions, normals, indices } = useMemo(() => {
+  const { positions, normals, indices, uvs } = useMemo(() => {
     const positions: number[] = [];
     const normals: number[] = [];
     const indices: number[] = [];
-    const noise = generateNoise(widthSegments, heightSegments);
+    const uvs: number[] = [];
     
-    // Generate grid
+    // Generate grid with simple noise for elevation
     for (let i = 0; i <= heightSegments; i++) {
       const y = (i / heightSegments) * height - height / 2;
       
       for (let j = 0; j <= widthSegments; j++) {
         const x = (j / widthSegments) * width - width / 2;
         
-        // Apply noise to z coordinate for height
-        const z = noise[i * (widthSegments + 1) + j] * 2;
+        // Simple noise function
+        const z = Math.sin(j * 0.1) * Math.cos(i * 0.1) * 0.5 + 
+                 Math.sin(j * 0.4) * Math.cos(i * 0.3) * 0.25;
         
         positions.push(x, z, y);
         normals.push(0, 1, 0);
+        uvs.push(j / widthSegments, i / heightSegments);
         
         if (i < heightSegments && j < widthSegments) {
           const a = i * (widthSegments + 1) + j;
@@ -42,23 +48,10 @@ function Terrain({ width = 20, height = 20, widthSegments = 64, heightSegments =
     return {
       positions: new Float32Array(positions),
       normals: new Float32Array(normals),
-      indices: new Uint32Array(indices)
+      indices: new Uint32Array(indices),
+      uvs: new Float32Array(uvs)
     };
-  }, [width, height, widthSegments, heightSegments]);
-
-  // Generate terrain texture coordinates
-  const uvs = useMemo(() => {
-    const uvs: number[] = [];
-    
-    for (let i = 0; i <= heightSegments; i++) {
-      for (let j = 0; j <= widthSegments; j++) {
-        uvs.push(j / widthSegments);
-        uvs.push(i / heightSegments);
-      }
-    }
-    
-    return new Float32Array(uvs);
-  }, [widthSegments, heightSegments]);
+  }, []);
 
   // Create texture colors based on height
   const texture = useMemo(() => {
@@ -89,14 +82,13 @@ function Terrain({ width = 20, height = 20, widthSegments = 64, heightSegments =
 
   // Add normals for better lighting
   useFrame(() => {
-    if (meshRef.current) {
-      const geometry = meshRef.current.geometry;
-      geometry.computeVertexNormals();
+    if (meshRef.current && meshRef.current.geometry) {
+      meshRef.current.geometry.computeVertexNormals();
     }
   });
 
   return (
-    <mesh {...props} ref={meshRef} rotation={[-Math.PI / 2, 0, 0]}>
+    <mesh ref={meshRef} rotation={[-Math.PI / 2, 0, 0]}>
       <bufferGeometry>
         <bufferAttribute
           attach="index"
@@ -130,29 +122,12 @@ function Terrain({ width = 20, height = 20, widthSegments = 64, heightSegments =
       />
     </mesh>
   );
-}
+};
 
-function generateNoise(width: number, height: number) {
-  const noise: number[] = [];
-  
-  // Create Perlin-like noise
-  for (let i = 0; i <= height; i++) {
-    for (let j = 0; j <= width; j++) {
-      // Simple noise function (would use a library like SimplexNoise in production)
-      const value = Math.sin(j * 0.1) * Math.cos(i * 0.1) * 0.5
-                   + Math.sin(j * 0.4) * Math.cos(i * 0.3) * 0.25;
-      
-      noise.push(value);
-    }
-  }
-  
-  return noise;
-}
-
-export default function TerrainMap() {
+const TerrainMap = () => {
   return (
-    <div style={{ width: '100%', height: '400px' }}>
-      <Canvas camera={{ position: [0, 8, 12], fov: 50 }}>
+    <div style={{ width: '100%', height: '100%' }}>
+      <Canvas camera={{ position: [0, 8, 12], fov: 50 }} gl={{ preserveDrawingBuffer: true }}>
         <ambientLight intensity={0.5} />
         <directionalLight position={[10, 10, 5]} intensity={1} />
         <Terrain />
@@ -161,4 +136,6 @@ export default function TerrainMap() {
       </Canvas>
     </div>
   );
-}
+};
+
+export default TerrainMap;

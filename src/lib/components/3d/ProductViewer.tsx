@@ -1,18 +1,10 @@
 
-import { Suspense, useRef, useState } from 'react';
+import React, { Suspense, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, useGLTF, Environment, ContactShadows } from '@react-three/drei';
+import { OrbitControls, Environment, ContactShadows } from '@react-three/drei';
 import * as THREE from 'three';
-import { GLTF } from 'three-stdlib';
 
-// Define the proper type for the GLTF result
-type GLTFResult = GLTF & {
-  nodes: { [key: string]: THREE.Mesh };
-  materials: { [key: string]: THREE.Material };
-};
-
-function Model({ url, position = [0, 0, 0], color = '#ffffff', ...props }: any) {
-  const { scene } = useGLTF(url) as GLTFResult;
+const DummyModel = ({ color = '#ffffff' }) => {
   const groupRef = useRef<THREE.Group>(null!);
 
   useFrame((state) => {
@@ -22,28 +14,23 @@ function Model({ url, position = [0, 0, 0], color = '#ffffff', ...props }: any) 
     }
   });
 
-  // Apply the material color to all meshes in the model
-  scene.traverse((node) => {
-    if ((node as THREE.Mesh).isMesh) {
-      const material = (node as THREE.Mesh).material as THREE.MeshStandardMaterial;
-      if (material.color) material.color.set(color);
-    }
-  });
-
   return (
-    <group ref={groupRef} position={position as any} {...props}>
-      <primitive object={scene} />
+    <group ref={groupRef}>
+      <mesh castShadow>
+        <torusKnotGeometry args={[0.8, 0.35, 100, 16]} />
+        <meshStandardMaterial color={color} roughness={0.5} metalness={0.7} />
+      </mesh>
     </group>
   );
-}
+};
 
-function Controls() {
+const Controls = () => {
   const {
     camera,
     gl: { domElement }
   } = useThree();
   return <OrbitControls args={[camera, domElement]} enableZoom={true} enablePan={true} />;
-}
+};
 
 export interface ProductViewerProps {
   modelUrl?: string;
@@ -51,14 +38,17 @@ export interface ProductViewerProps {
   height?: string | number;
 }
 
-export default function ProductViewer({ modelUrl = "/path/to/model.glb", color = '#ffffff', height = '400px' }: ProductViewerProps) {
+const ProductViewer: React.FC<ProductViewerProps> = ({ 
+  color = '#ffffff', 
+  height = '100%'
+}) => {
   return (
     <div style={{ width: '100%', height, position: 'relative' }}>
-      <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
+      <Canvas camera={{ position: [0, 0, 5], fov: 50 }} gl={{ preserveDrawingBuffer: true }}>
         <ambientLight intensity={0.8} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
         <Suspense fallback={null}>
-          <Model url={modelUrl} scale={1.5} color={color} />
+          <DummyModel color={color} />
           <Environment preset="sunset" />
           <ContactShadows
             rotation={[Math.PI / 2, 0, 0]}
@@ -74,4 +64,6 @@ export default function ProductViewer({ modelUrl = "/path/to/model.glb", color =
       </Canvas>
     </div>
   );
-}
+};
+
+export default ProductViewer;
