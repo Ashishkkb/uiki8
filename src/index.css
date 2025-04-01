@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -49,6 +50,14 @@
     --sidebar-border: 220 13% 91%;
 
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Ghibli theme colors */
+    --ghibli-green: 133 35% 52%;
+    --ghibli-soft-green: 150 29% 60%;
+    --ghibli-cream: 48 100% 97%;
+    --ghibli-peach: 24 100% 91%;
+    --ghibli-blue: 210 100% 91%;
+    --ghibli-soft-gray: 240 5% 55%;
   }
 
   .dark {
@@ -87,6 +96,34 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background-image: url('/lovable-uploads/c22546d2-7d9c-43cb-b4c7-c8b2f9e6db5e.png');
+    background-repeat: no-repeat;
+    background-position: top right;
+    background-size: 100% auto;
+    background-attachment: fixed;
+  }
+  
+  /* Ghibli-inspired styles */
+  .ghibli-card {
+    @apply backdrop-blur-md bg-white/80 border border-[#D3E4FD] rounded-lg shadow-sm;
+  }
+  
+  .ghibli-bg-gradient {
+    @apply bg-gradient-to-b from-[#F2FCE2] to-[#FEF7CD];
+  }
+  
+  .ghibli-button {
+    @apply bg-gradient-to-r from-[#6A9D80] to-[#87B5A2] text-white hover:opacity-90 transition-opacity;
   }
 }
 
