@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, Suspense } from "react";
 import { Copy, Check, Eye, Code, Download, Boxes } from "lucide-react";
 import { Card, CardHeader, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,6 @@ import { useToast } from "@/hooks/use-toast";
 import CodeSnippet from "./CodeSnippet";
 import { ComponentItem } from "@/types/component";
 import ComponentPreview from "./ComponentPreview";
-import React, { Suspense } from 'react';
 
 interface ComponentCardProps {
   component: ComponentItem;
