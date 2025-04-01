@@ -1,6 +1,6 @@
 
-import React, { useState } from "react";
-import { Menu, X, Github, ChevronDown } from "lucide-react";
+import * as React from "react";
+import { Menu, X, ChevronDown } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +15,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const Navbar = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const location = useLocation();
   
   const toggleMenu = () => {
