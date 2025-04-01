@@ -1,8 +1,8 @@
 
 {
   "name": "enchant-ui",
-  "version": "0.1.0",
-  "description": "A beautiful UI component library for modern web applications",
+  "version": "0.2.0",
+  "description": "A beautiful UI component library for modern web applications with 3D capabilities",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -19,7 +19,10 @@
     "ui",
     "components",
     "design-system",
-    "tailwindcss"
+    "tailwindcss",
+    "3d",
+    "three-js",
+    "react-three-fiber"
   ],
   "author": "Your Name",
   "license": "MIT",
@@ -30,7 +33,10 @@
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "tailwindcss": "^3.0.0"
+    "tailwindcss": "^3.0.0",
+    "@react-three/fiber": "^8.0.0",
+    "@react-three/drei": "^9.0.0",
+    "three": "^0.150.0"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.0.0",

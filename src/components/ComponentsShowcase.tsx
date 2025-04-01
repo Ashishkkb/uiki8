@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import ComponentFilters from "./ComponentFilters";
 import ComponentCard from "./ComponentCard";
 import componentsList from "@/data/reactComponents";
-import threeDComponents from "@/data/threeDComponents";
+import { get3DComponents } from "@/data/componentMap";
 import {
   Pagination,
   PaginationContent,
@@ -23,7 +23,8 @@ const ComponentsShowcase = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const componentsPerPage = 5;
   
-  // Combine regular components with 3D components
+  // Combine regular components with 3D components from the new registry
+  const threeDComponents = get3DComponents();
   const allComponents = [...componentsList, ...threeDComponents];
 
   // Filter components based on category and search query
