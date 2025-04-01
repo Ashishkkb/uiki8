@@ -11,10 +11,9 @@ type GLTFResult = GLTF & {
   materials: { [key: string]: THREE.Material };
 };
 
-function Model({ url, position = [0, 0, 0], ...props }: any) {
+function Model({ url, position = [0, 0, 0], color = '#ffffff', ...props }: any) {
   const { scene } = useGLTF(url) as GLTFResult;
   const groupRef = useRef<THREE.Group>(null!);
-  const [materialColor, setMaterialColor] = useState('#ffffff');
 
   useFrame((state) => {
     if (groupRef.current) {
@@ -27,7 +26,7 @@ function Model({ url, position = [0, 0, 0], ...props }: any) {
   scene.traverse((node) => {
     if ((node as THREE.Mesh).isMesh) {
       const material = (node as THREE.Mesh).material as THREE.MeshStandardMaterial;
-      if (material.color) material.color.set(materialColor);
+      if (material.color) material.color.set(color);
     }
   });
 
@@ -48,20 +47,18 @@ function Controls() {
 
 export interface ProductViewerProps {
   modelUrl?: string;
+  color?: string;
+  height?: string | number;
 }
 
-export default function ProductViewer({ modelUrl = "/path/to/model.glb" }: ProductViewerProps) {
-  const [color, setColor] = useState('#ffffff');
-  
-  const colors = ['#ffffff', '#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff'];
-
+export default function ProductViewer({ modelUrl = "/path/to/model.glb", color = '#ffffff', height = '400px' }: ProductViewerProps) {
   return (
-    <div style={{ width: '100%', height: '400px', position: 'relative' }}>
+    <div style={{ width: '100%', height, position: 'relative' }}>
       <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
         <ambientLight intensity={0.8} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
         <Suspense fallback={null}>
-          <Model url={modelUrl} scale={1.5} />
+          <Model url={modelUrl} scale={1.5} color={color} />
           <Environment preset="sunset" />
           <ContactShadows
             rotation={[Math.PI / 2, 0, 0]}
@@ -75,24 +72,6 @@ export default function ProductViewer({ modelUrl = "/path/to/model.glb" }: Produ
         </Suspense>
         <Controls />
       </Canvas>
-      
-      <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px' }}>
-        {colors.map((c) => (
-          <div
-            key={c}
-            style={{
-              width: '24px',
-              height: '24px',
-              borderRadius: '50%',
-              background: c,
-              cursor: 'pointer',
-              border: color === c ? '2px solid white' : 'none',
-              boxShadow: '0 0 5px rgba(0,0,0,0.3)'
-            }}
-            onClick={() => setColor(c)}
-          />
-        ))}
-      </div>
     </div>
   );
 }

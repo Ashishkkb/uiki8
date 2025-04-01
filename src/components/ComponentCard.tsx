@@ -9,6 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import CodeSnippet from "./CodeSnippet";
 import { ComponentItem } from "@/types/component";
+import ComponentPreview from "./ComponentPreview";
 
 interface ComponentCardProps {
   component: ComponentItem;
@@ -94,12 +95,10 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
 
         <div className={`${viewMode === "preview" ? "flex" : "hidden"} rounded-lg border border-[#F1F0FB] ${component.previewBg || "bg-[#f3f3f3]"} flex-grow h-[300px] overflow-hidden`}>
           <ScrollArea className="w-full h-full">
-            <div className="flex items-center justify-center w-full h-full p-3">
-              {component.previewHtml ? (
-                <div dangerouslySetInnerHTML={{ __html: component.previewHtml }} className="max-w-full" />
-              ) : (
-                <p className="text-[#8A898C]">Preview not available</p>
-              )}
+            <div className="w-full h-full p-3">
+              <Suspense fallback={<div className="flex items-center justify-center w-full h-full"><p>Loading...</p></div>}>
+                <ComponentPreview component={component} />
+              </Suspense>
             </div>
           </ScrollArea>
         </div>
