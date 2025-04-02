@@ -1,3 +1,4 @@
+
 import React, { Suspense } from 'react';
 import { ProductViewer, RotatingCube, TerrainMap } from "@/lib/components/3d";
 import { ComponentItem } from "@/types/component";
@@ -15,7 +16,9 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
           <div className="w-full h-full flex items-center justify-center">
             <ErrorBoundary fallback={<FallbackComponent name={component.name} />}>
               <Suspense fallback={<LoadingFallback />}>
-                <RotatingCube />
+                <div style={{ width: '100%', height: '200px' }}>
+                  <RotatingCube />
+                </div>
               </Suspense>
             </ErrorBoundary>
           </div>
@@ -26,7 +29,9 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
           <div className="w-full h-full flex items-center justify-center">
             <ErrorBoundary fallback={<FallbackComponent name={component.name} />}>
               <Suspense fallback={<LoadingFallback />}>
-                <ProductViewer color="#5f9ea0" />
+                <div style={{ width: '100%', height: '200px' }}>
+                  <ProductViewer color="#5f9ea0" />
+                </div>
               </Suspense>
             </ErrorBoundary>
           </div>
@@ -37,7 +42,9 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
           <div className="w-full h-full flex items-center justify-center">
             <ErrorBoundary fallback={<FallbackComponent name={component.name} />}>
               <Suspense fallback={<LoadingFallback />}>
-                <TerrainMap />
+                <div style={{ width: '100%', height: '200px' }}>
+                  <TerrainMap />
+                </div>
               </Suspense>
             </ErrorBoundary>
           </div>
