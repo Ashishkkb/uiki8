@@ -1,5 +1,5 @@
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import DummyModel from './DummyModel';
@@ -8,12 +8,21 @@ export interface ProductViewerProps {
   modelUrl?: string;
   color?: string;
   height?: string | number;
+  onLoad?: () => void;
 }
 
 const ProductViewer: React.FC<ProductViewerProps> = ({ 
   color = '#ffffff', 
-  height = '400px'
+  height = '400px',
+  onLoad
 }) => {
+  useEffect(() => {
+    // Call onLoad if provided
+    if (onLoad) {
+      onLoad();
+    }
+  }, [onLoad]);
+
   return (
     <div style={{ width: '100%', height, position: 'relative', minHeight: '200px' }}>
       <Canvas 

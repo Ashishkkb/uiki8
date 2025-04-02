@@ -1,48 +1,47 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
-const RotatingCubeInner: React.FC = () => {
-  const meshRef = useRef<THREE.Mesh>(null);
+interface RotatingCubeProps {
+  isInCanvas?: boolean;
+  onLoad?: () => void;
+}
+
+function Box({ isInCanvas }: { isInCanvas?: boolean }) {
+  const mesh = useRef<THREE.Mesh>(null!);
   
-  useFrame(() => {
-    if (meshRef.current) {
-      meshRef.current.rotation.x += 0.01;
-      meshRef.current.rotation.y += 0.01;
+  useFrame((state) => {
+    if (mesh.current) {
+      mesh.current.rotation.x += 0.01;
+      mesh.current.rotation.y += 0.01;
     }
   });
 
   return (
-    <mesh
-      ref={meshRef}
-      position={[0, 0, 0]}
-    >
-      <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="#5f9ea0" />
+    <mesh ref={mesh}>
+      <boxGeometry args={[1.5, 1.5, 1.5]} />
+      <meshStandardMaterial color={isInCanvas ? "#6366f1" : "#3b82f6"} />
     </mesh>
   );
-};
+}
 
-const RotatingCube: React.FC<{ isInCanvas?: boolean }> = ({ isInCanvas = false }) => {
-  if (isInCanvas) {
-    return <RotatingCubeInner />;
-  }
-  
+const RotatingCube: React.FC<RotatingCubeProps> = ({ isInCanvas = false, onLoad }) => {
+  useEffect(() => {
+    // Call onLoad callback if provided
+    if (onLoad) {
+      onLoad();
+    }
+  }, [onLoad]);
+
   return (
-    <div style={{ width: '100%', height: '400px', minHeight: '200px' }}>
-      <Canvas
-        onCreated={({ gl }) => {
-          gl.setClearColor('#f0f0f0');
-        }}
-      >
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} />
-        <RotatingCubeInner />
-        <OrbitControls enableZoom={false} enablePan={false} />
-      </Canvas>
-    </div>
+    <Canvas style={{ height: '100%', minHeight: '200px' }}>
+      <ambientLight intensity={0.5} />
+      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
+      <Box isInCanvas={isInCanvas} />
+      <OrbitControls enableZoom={false} enablePan={false} />
+    </Canvas>
   );
 };
 
