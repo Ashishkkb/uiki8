@@ -99,24 +99,24 @@ const ComponentsShowcase = () => {
   };
 
   return (
-    <div className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#F2FCE2] to-[#FEF7CD]">
+    <div className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#2D3748]/90 to-[#1A1F2C]/90 rounded-xl">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-[#555]">Enchanted Components</h2>
-          <p className="mt-4 text-xl text-[#666]">
-            Browse our collection of magical React components
+          <h2 className="text-3xl font-bold text-[#9b87f5]">Modern Components</h2>
+          <p className="mt-4 text-xl text-gray-300">
+            Build powerful applications with our MERN-inspired components
           </p>
         </div>
         
         <div className="flex flex-col md:flex-row justify-between items-start mb-8 gap-4">
           <div className="w-full md:w-auto relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <SearchIcon className="h-5 w-5 text-[#8A898C]" />
+              <SearchIcon className="h-5 w-5 text-gray-400" />
             </div>
             <Input
               type="search"
               placeholder="Search components..."
-              className="pl-10 w-full md:w-80 border-[#ccc] bg-white/80 backdrop-blur-sm"
+              className="pl-10 w-full md:w-80 border-[#9b87f5]/30 bg-[#1A1F2C]/50 text-white backdrop-blur-sm"
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -136,11 +136,11 @@ const ComponentsShowcase = () => {
         </div>
 
         {filteredComponents.length === 0 ? (
-          <div className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-lg shadow-sm border border-[#D3E4FD]">
-            <h3 className="text-lg font-medium text-[#555]">No components found</h3>
-            <p className="mt-2 text-[#8A898C]">Try adjusting your search or filter criteria</p>
+          <div className="text-center py-16 bg-[#1A1F2C]/60 backdrop-blur-sm rounded-lg border border-[#9b87f5]/20">
+            <h3 className="text-lg font-medium text-white">No components found</h3>
+            <p className="mt-2 text-gray-400">Try adjusting your search or filter criteria</p>
             <Button 
-              className="mt-4 bg-gradient-to-r from-[#6A9D80] to-[#87B5A2] hover:opacity-90 transition-opacity" 
+              className="mt-4 bg-gradient-to-r from-[#9b87f5] to-[#7C3AED] hover:opacity-90 transition-opacity" 
               onClick={() => {
                 setSearchQuery("");
                 setSelectedCategory(null);
@@ -166,7 +166,7 @@ const ComponentsShowcase = () => {
                       <PaginationItem>
                         <PaginationPrevious 
                           onClick={() => handlePageChange(currentPage - 1)}
-                          className="cursor-pointer hover:bg-[#D3E4FD]/50"
+                          className="cursor-pointer hover:bg-[#9b87f5]/20 text-white"
                         />
                       </PaginationItem>
                     )}
@@ -184,7 +184,7 @@ const ComponentsShowcase = () => {
                             className={`cursor-pointer ${
                               currentPage === pageNumber 
                                 ? "bg-[#9b87f5] text-white hover:bg-[#8874e0]" 
-                                : "hover:bg-[#D3E4FD]/50"
+                                : "text-white hover:bg-[#9b87f5]/20"
                             }`}
                           >
                             {pageNumber}
@@ -197,7 +197,7 @@ const ComponentsShowcase = () => {
                       <PaginationItem>
                         <PaginationNext 
                           onClick={() => handlePageChange(currentPage + 1)}
-                          className="cursor-pointer hover:bg-[#D3E4FD]/50"
+                          className="cursor-pointer hover:bg-[#9b87f5]/20 text-white"
                         />
                       </PaginationItem>
                     )}

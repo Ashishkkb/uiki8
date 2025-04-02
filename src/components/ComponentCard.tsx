@@ -1,3 +1,4 @@
+
 import React, { useState, Suspense } from "react";
 import { Copy, Check, Eye, Code, Download, Boxes } from "lucide-react";
 import { Card, CardHeader, CardFooter } from "@/components/ui/card";
@@ -47,16 +48,16 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
   };
 
   return (
-    <Card className="overflow-hidden border border-[#D3E4FD] shadow-sm transition-all hover:shadow-md flex flex-col bg-white/80 backdrop-blur-sm">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2 border-b border-[#F1F0FB]">
+    <Card className="overflow-hidden border border-[#9b87f5]/30 shadow-lg hover:shadow-[#9b87f5]/10 transition-all flex flex-col bg-[#1A1F2C]/80 backdrop-blur-sm text-white">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2 border-b border-[#9b87f5]/20">
         <div>
-          <h3 className="font-medium text-lg text-[#555]">{component.name}</h3>
+          <h3 className="font-medium text-lg text-[#F1F0FB]">{component.name}</h3>
           <div className="flex items-center mt-1">
-            <Badge variant="outline" className="text-xs bg-[#FDE1D3]/30 text-[#666] border-[#FDE1D3]">
+            <Badge variant="outline" className="text-xs bg-[#2D3748] text-[#D6BCFA] border-[#9b87f5]/30">
               {component.category}
             </Badge>
             {component.isNew && (
-              <Badge className="ml-2 text-xs bg-gradient-to-r from-[#6A9D80] to-[#87B5A2] text-white">
+              <Badge className="ml-2 text-xs bg-gradient-to-r from-[#9b87f5] to-[#7C3AED] text-white">
                 New
               </Badge>
             )}
@@ -71,12 +72,12 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
 
       <div className="p-4 flex-grow flex flex-col">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-sm text-[#666] line-clamp-2">{component.description}</p>
+          <p className="text-sm text-gray-300 line-clamp-2">{component.description}</p>
           <div className="flex gap-1 ml-2">
             <Button
               size="sm"
               variant={viewMode === "preview" ? "default" : "outline"}
-              className={`px-2 py-1 h-8 ${viewMode === "preview" ? "bg-[#6A9D80] hover:bg-[#87B5A2]" : "border-[#ccc]"}`}
+              className={`px-2 py-1 h-8 ${viewMode === "preview" ? "bg-[#9b87f5] hover:bg-[#8874e0]" : "border-[#9b87f5]/30 text-gray-300"}`}
               onClick={() => setViewMode("preview")}
             >
               <Eye className="h-4 w-4" />
@@ -84,7 +85,7 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
             <Button
               size="sm"
               variant={viewMode === "code" ? "default" : "outline"}
-              className={`px-2 py-1 h-8 ${viewMode === "code" ? "bg-[#6A9D80] hover:bg-[#87B5A2]" : "border-[#ccc]"}`}
+              className={`px-2 py-1 h-8 ${viewMode === "code" ? "bg-[#9b87f5] hover:bg-[#8874e0]" : "border-[#9b87f5]/30 text-gray-300"}`}
               onClick={() => setViewMode("code")}
             >
               <Code className="h-4 w-4" />
@@ -92,17 +93,17 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
           </div>
         </div>
 
-        <div className={`${viewMode === "preview" ? "flex" : "hidden"} rounded-lg border border-[#F1F0FB] ${component.previewBg || "bg-[#f3f3f3]"} flex-grow h-[300px] overflow-hidden`}>
+        <div className={`${viewMode === "preview" ? "flex" : "hidden"} rounded-lg border border-[#9b87f5]/20 ${component.previewBg || "bg-[#2D3748]"} flex-grow h-[300px] overflow-hidden`}>
           <ScrollArea className="w-full h-full">
             <div className="w-full h-full p-3">
-              <Suspense fallback={<div className="flex items-center justify-center w-full h-full"><p>Loading...</p></div>}>
+              <Suspense fallback={<div className="flex items-center justify-center w-full h-full"><p className="text-gray-300">Loading...</p></div>}>
                 <ComponentPreview component={component} />
               </Suspense>
             </div>
           </ScrollArea>
         </div>
 
-        <div className={`${viewMode === "code" ? "block" : "hidden"} h-[300px] overflow-hidden rounded-lg border border-[#F1F0FB] flex-grow`}>
+        <div className={`${viewMode === "code" ? "block" : "hidden"} h-[300px] overflow-hidden rounded-lg border border-[#9b87f5]/20 flex-grow bg-[#1A1F2C]`}>
           <ScrollArea className="w-full h-full">
             <CodeSnippet code={component.code} language={component.language || "tsx"} />
           </ScrollArea>
@@ -111,7 +112,7 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
         {component.tags && component.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-3">
             {component.tags.map((tag, index) => (
-              <Badge key={index} variant="outline" className="text-xs bg-[#F1F0FB]/50 text-[#8A898C] border-[#F1F0FB]">
+              <Badge key={index} variant="outline" className="text-xs bg-[#2D3748] text-gray-300 border-[#9b87f5]/20">
                 {tag}
               </Badge>
             ))}
@@ -119,20 +120,22 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
         )}
       </div>
 
-      <CardFooter className="flex justify-between items-center p-4 bg-[#F1F0FB]/30 border-t border-[#F1F0FB] mt-auto">
+      <CardFooter className="flex justify-between items-center p-4 bg-[#1A1F2C] border-t border-[#9b87f5]/20 mt-auto">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className="text-xs text-[#8A898C] flex items-center">
+              <span className="text-xs text-gray-400 flex items-center">
                 {component.fileSize && <span>{component.fileSize}</span>}
                 {component.price && (
-                  <Badge className="ml-2 bg-[#FDE1D3] text-[#555] hover:bg-[#FDE1D3]/80">
+                  <Badge className="ml-2 bg-[#2D3748] text-[#D6BCFA] hover:bg-[#2D3748]/80 border border-[#9b87f5]/20">
                     ${component.price}
                   </Badge>
                 )}
               </span>
             </TooltipTrigger>
-            <TooltipContent>{component.fileSize ? `File size: ${component.fileSize}` : "Free component"}</TooltipContent>
+            <TooltipContent className="bg-[#1A1F2C] text-white border border-[#9b87f5]/30">
+              {component.fileSize ? `File size: ${component.fileSize}` : "Free component"}
+            </TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
@@ -141,14 +144,14 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
             size="sm"
             variant="outline"
             onClick={handleCopyCode}
-            className="h-8 border-[#D3E4FD] hover:bg-[#D3E4FD]/20 hover:border-[#D3E4FD]"
+            className="h-8 border-[#9b87f5]/30 hover:bg-[#9b87f5]/20 hover:border-[#9b87f5]/50 text-white"
           >
             {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           </Button>
           <Button
             size="sm"
             onClick={handleDownload}
-            className="h-8 bg-gradient-to-r from-[#6A9D80] to-[#87B5A2] hover:opacity-90 transition-opacity"
+            className="h-8 bg-gradient-to-r from-[#9b87f5] to-[#7C3AED] hover:opacity-90 transition-opacity"
           >
             <Download className="h-4 w-4 mr-1" /> Download
           </Button>
