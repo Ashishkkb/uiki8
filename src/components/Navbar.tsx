@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@/hooks/useTheme";
@@ -14,7 +13,6 @@ const Navbar = () => {
   const routes = [
     { path: "/", label: "Home" },
     { path: "/components", label: "Components" },
-    { path: "/documentation", label: "Documentation" },
     { path: "/pricing", label: "Pricing" }
   ];
 
