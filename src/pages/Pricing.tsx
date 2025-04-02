@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { AnimatedGradientBackground } from "@/components/ui/animated-gradient-background";
 import { Spotlight } from "@/components/ui/spotlight";
 import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 type PlanFeature = {
   text: string;
