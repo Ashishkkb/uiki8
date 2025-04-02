@@ -1,13 +1,11 @@
 
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
-import { useTheme } from "@/hooks/useTheme";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {
   const location = useLocation();
-  const { theme } = useTheme();
 
   useEffect(() => {
     console.error(
@@ -16,12 +14,8 @@ const NotFound = () => {
     );
   }, [location.pathname]);
 
-  const bgClass = theme === 'dark' 
-    ? 'bg-background' 
-    : 'bg-gray-50';
-
   return (
-    <div className={`min-h-[80vh] flex flex-col items-center justify-center ${bgClass} transition-colors duration-200`}>
+    <div className="min-h-[80vh] flex flex-col items-center justify-center">
       <div className="text-center max-w-md mx-auto px-4">
         <h1 className="text-6xl font-bold text-primary mb-6">404</h1>
         <p className="text-xl text-foreground mb-6">Oops! The page you're looking for doesn't exist.</p>

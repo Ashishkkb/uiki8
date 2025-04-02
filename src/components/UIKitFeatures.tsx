@@ -67,38 +67,42 @@ const features = [
 
 const UIKitFeatures = () => {
   return (
-    <section className="py-16 px-6 md:px-12 bg-white">
+    <section className="py-24 px-6 md:px-12 bg-muted/30">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#333]">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">
             Everything You Need to Build Better UIs
           </h2>
-          <p className="text-xl text-[#666] max-w-3xl mx-auto">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             Our UI kit provides all the tools and components needed to create
             beautiful, responsive web applications.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <div
               key={index}
-              className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow"
+              className="bg-card rounded-xl p-6 shadow-sm border"
             >
-              <div className="mb-4 p-2 rounded-full bg-[#F1F0FB] inline-block text-[#6A9D80]">
-                {feature.icon}
+              <div className="flex items-start">
+                <div className="mr-4 rounded-lg bg-primary/10 p-2 text-primary">
+                  {feature.icon}
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-semibold">{feature.title}</h3>
+                    {feature.badge && (
+                      <Badge variant="default" className="text-xs">
+                        {feature.badge}
+                      </Badge>
+                    )}
+                  </div>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    {feature.description}
+                  </p>
+                </div>
               </div>
-              <div className="flex items-center gap-2 mb-3">
-                <h3 className="text-xl font-semibold text-[#333]">
-                  {feature.title}
-                </h3>
-                {feature.badge && (
-                  <Badge variant="secondary" className="bg-[#FDE1D3] text-[#333]">
-                    {feature.badge}
-                  </Badge>
-                )}
-              </div>
-              <p className="text-[#555]">{feature.description}</p>
             </div>
           ))}
         </div>

@@ -1,188 +1,73 @@
 
-import React, { useState, Suspense } from "react";
-import { Copy, Check, Eye, Code, Download, Boxes } from "lucide-react";
-import { Card, CardHeader, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { useToast } from "@/hooks/use-toast";
-import { useTheme } from "@/hooks/useTheme";
-import CodeSnippet from "./CodeSnippet";
+import React, { useState } from "react";
 import { ComponentItem } from "@/types/component";
-import ComponentPreview from "./ComponentPreview";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import CodeSnippet from "./CodeSnippet";
+import { Code, X } from "lucide-react";
 
 interface ComponentCardProps {
   component: ComponentItem;
 }
 
-const ComponentCard = ({ component }: ComponentCardProps) => {
-  const [isCopied, setIsCopied] = useState(false);
-  const [viewMode, setViewMode] = useState<"preview" | "code">("preview");
-  const { toast } = useToast();
-  const { theme } = useTheme();
-
-  // Theme-specific card styles
-  const cardBg = theme === 'dark' 
-    ? 'bg-[#1A1F2C]/80 border-[#9b87f5]/30 shadow-lg hover:shadow-[#9b87f5]/10'
-    : 'bg-white/90 border-[#9b87f5]/20 shadow-md hover:shadow-lg';
-    
-  const headerBg = theme === 'dark'
-    ? 'border-[#9b87f5]/20'
-    : 'border-[#9b87f5]/10';
-    
-  const previewBg = theme === 'dark'
-    ? 'bg-[#2D3748] border-[#9b87f5]/20'
-    : 'bg-gray-50 border-[#9b87f5]/10';
-    
-  const codeBg = theme === 'dark'
-    ? 'bg-[#1A1F2C] border-[#9b87f5]/20'
-    : 'bg-gray-50 border-[#9b87f5]/10';
-    
-  const badgeBg = theme === 'dark'
-    ? 'bg-[#2D3748] text-[#D6BCFA] border-[#9b87f5]/30'
-    : 'bg-[#F3F4F6] text-[#7C3AED] border-[#9b87f5]/20';
-    
-  const footerBg = theme === 'dark'
-    ? 'bg-[#1A1F2C] border-[#9b87f5]/20'
-    : 'bg-gray-50 border-[#9b87f5]/10';
-
-  const handleCopyCode = () => {
-    navigator.clipboard.writeText(component.code);
-    setIsCopied(true);
-    toast({
-      title: "Code copied!",
-      description: `${component.name} code copied to clipboard`,
-    });
-    setTimeout(() => setIsCopied(false), 2000);
-  };
-
-  const handleDownload = () => {
-    const blob = new Blob([component.code], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${component.name.toLowerCase().replace(/\s+/g, "-")}.tsx`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    
-    toast({
-      title: "Component downloaded!",
-      description: `${component.name} has been downloaded`,
-    });
-  };
-
+const ComponentCard: React.FC<ComponentCardProps> = ({ component }) => {
+  const [showCode, setShowCode] = useState(false);
+  const ComponentPreview = component.component;
+  
   return (
-    <Card className={`overflow-hidden border backdrop-blur-sm transition-all flex flex-col ${cardBg}`}>
-      <CardHeader className={`flex flex-row items-center justify-between space-y-0 p-4 pb-2 border-b ${headerBg}`}>
-        <div>
-          <h3 className="font-medium text-lg text-foreground">{component.name}</h3>
-          <div className="flex items-center mt-1">
-            <Badge variant="outline" className={`text-xs ${badgeBg}`}>
-              {component.category}
-            </Badge>
-            {component.isNew && (
-              <Badge className="ml-2 text-xs bg-gradient-to-r from-[#9b87f5] to-[#7C3AED] text-white">
-                New
-              </Badge>
-            )}
-            {component.is3D && (
-              <Badge className="ml-2 text-xs bg-gradient-to-r from-[#4F46E5] to-[#7C3AED] text-white flex items-center gap-1">
-                <Boxes className="h-3 w-3" /> 3D
-              </Badge>
-            )}
+    <Card className="overflow-hidden transition-all duration-200 hover:shadow-md">
+      <CardHeader className="pb-2">
+        <div className="flex justify-between items-start">
+          <div>
+            <CardTitle className="text-lg">{component.name}</CardTitle>
+            <CardDescription className="text-sm line-clamp-2 mt-1">
+              {component.description}
+            </CardDescription>
           </div>
+          
+          {component.isNew && (
+            <Badge variant="default" className="ml-2">New</Badge>
+          )}
         </div>
       </CardHeader>
-
-      <div className="p-4 flex-grow flex flex-col">
-        <div className="flex items-center justify-between mb-3">
-          <p className="text-sm text-muted-foreground line-clamp-2">{component.description}</p>
-          <div className="flex gap-1 ml-2">
-            <Button
-              size="sm"
-              variant={viewMode === "preview" ? "default" : "outline"}
-              className={`px-2 py-1 h-8 ${viewMode === "preview" ? "bg-primary hover:bg-primary/90" : "border-border text-muted-foreground"}`}
-              onClick={() => setViewMode("preview")}
-            >
-              <Eye className="h-4 w-4" />
-            </Button>
-            <Button
-              size="sm"
-              variant={viewMode === "code" ? "default" : "outline"}
-              className={`px-2 py-1 h-8 ${viewMode === "code" ? "bg-primary hover:bg-primary/90" : "border-border text-muted-foreground"}`}
-              onClick={() => setViewMode("code")}
-            >
-              <Code className="h-4 w-4" />
-            </Button>
-          </div>
+      
+      <CardContent>
+        <div className="bg-muted/40 rounded-md p-4 min-h-24 flex items-center justify-center">
+          <ComponentPreview />
         </div>
-
-        <div className={`${viewMode === "preview" ? "flex" : "hidden"} rounded-lg border ${previewBg} flex-grow h-[300px] overflow-hidden`}>
-          <ScrollArea className="w-full h-full">
-            <div className="w-full h-full p-3">
-              <Suspense fallback={<div className="flex items-center justify-center w-full h-full"><p className="text-muted-foreground">Loading...</p></div>}>
-                <ComponentPreview component={component} />
-              </Suspense>
-            </div>
-          </ScrollArea>
-        </div>
-
-        <div className={`${viewMode === "code" ? "block" : "hidden"} h-[300px] overflow-hidden rounded-lg border ${codeBg} flex-grow`}>
-          <ScrollArea className="w-full h-full">
-            <CodeSnippet code={component.code} language={component.language || "tsx"} />
-          </ScrollArea>
-        </div>
-
-        {component.tags && component.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-3">
-            {component.tags.map((tag, index) => (
-              <Badge key={index} variant="outline" className={`text-xs ${badgeBg}`}>
-                {tag}
-              </Badge>
-            ))}
+        
+        {showCode && (
+          <div className="mt-4">
+            <CodeSnippet code={component.code} />
           </div>
         )}
-      </div>
-
-      <CardFooter className={`flex justify-between items-center p-4 border-t mt-auto ${footerBg}`}>
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <span className="text-xs text-muted-foreground flex items-center">
-                {component.fileSize && <span>{component.fileSize}</span>}
-                {component.price && (
-                  <Badge className={`ml-2 ${badgeBg}`}>
-                    ${component.price}
-                  </Badge>
-                )}
-              </span>
-            </TooltipTrigger>
-            <TooltipContent className="bg-popover text-popover-foreground border border-[#9b87f5]/30">
-              {component.fileSize ? `File size: ${component.fileSize}` : "Free component"}
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
-        <div className="flex space-x-2">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={handleCopyCode}
-            className="h-8 border-primary/30 hover:bg-primary/10 hover:border-primary/50 text-foreground"
-          >
-            {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-          </Button>
-          <Button
-            size="sm"
-            onClick={handleDownload}
-            className="h-8 bg-gradient-to-r from-[#9b87f5] to-[#7C3AED] hover:opacity-90 transition-opacity"
-          >
-            <Download className="h-4 w-4 mr-1" /> Download
-          </Button>
+      </CardContent>
+      
+      <CardFooter className="flex items-center justify-between pt-0 pb-3 px-6">
+        <div className="flex items-center gap-2">
+          {component.tags?.map((tag, index) => (
+            <Badge key={index} variant="outline" className="text-xs">
+              {tag}
+            </Badge>
+          ))}
         </div>
+        
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={() => setShowCode(!showCode)}
+        >
+          {showCode ? (
+            <>
+              <X className="mr-1 h-3 w-3" /> Hide Code
+            </>
+          ) : (
+            <>
+              <Code className="mr-1 h-3 w-3" /> View Code
+            </>
+          )}
+        </Button>
       </CardFooter>
     </Card>
   );

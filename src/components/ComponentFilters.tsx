@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/hooks/useTheme";
+import { cn } from "@/lib/utils";
 
 interface ComponentFiltersProps {
   categories: string[];
@@ -14,21 +14,12 @@ const ComponentFilters: React.FC<ComponentFiltersProps> = ({
   selectedCategory,
   onSelectCategory,
 }) => {
-  const { theme } = useTheme();
-  
-  // Theme-specific styling for buttons
-  const activeButtonStyle = "bg-primary text-primary-foreground hover:bg-primary/90";
-  const inactiveButtonStyle = theme === 'dark' 
-    ? "bg-transparent border-[#9b87f5]/30 text-foreground hover:bg-accent" 
-    : "bg-transparent border-[#9b87f5]/20 text-foreground hover:bg-accent";
-
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex flex-wrap gap-2 mb-6">
       <Button
         variant={!selectedCategory ? "default" : "outline"}
         size="sm"
         onClick={() => onSelectCategory(null)}
-        className={!selectedCategory ? activeButtonStyle : inactiveButtonStyle}
       >
         All
       </Button>
@@ -39,7 +30,6 @@ const ComponentFilters: React.FC<ComponentFiltersProps> = ({
           variant={selectedCategory === category ? "default" : "outline"}
           size="sm"
           onClick={() => onSelectCategory(category)}
-          className={selectedCategory === category ? activeButtonStyle : inactiveButtonStyle}
         >
           {category}
         </Button>

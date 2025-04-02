@@ -1,8 +1,9 @@
 
 import React from "react";
-import { ClipboardCopy } from "lucide-react";
+import { ClipboardCopy, Check } from "lucide-react";
 import { toast } from "sonner";
-import { useTheme } from "@/hooks/useTheme";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
 
 interface CodeSnippetProps {
   code: string;
@@ -17,30 +18,38 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
   showLineNumbers = false,
   showCopyButton = true,
 }) => {
-  const { theme } = useTheme();
+  const [copied, setCopied] = useState(false);
   
   const handleCopyCode = () => {
     navigator.clipboard.writeText(code);
+    setCopied(true);
     toast.success("Code copied to clipboard");
+    
+    setTimeout(() => {
+      setCopied(false);
+    }, 2000);
   };
 
-  const bgColor = theme === 'dark' ? 'bg-gray-900' : 'bg-gray-100';
-  const textColor = theme === 'dark' ? 'text-gray-100' : 'text-gray-900';
-  const buttonBg = theme === 'dark' ? 'bg-gray-800 text-gray-300 hover:bg-gray-700' : 'bg-gray-200 text-gray-700 hover:bg-gray-300';
-
   return (
-    <div className={`relative ${bgColor} ${textColor} rounded-md overflow-hidden transition-colors duration-200`}>
+    <div className="relative rounded-lg border overflow-hidden bg-card text-card-foreground shadow-sm">
       {showCopyButton && (
         <button
-          className={`absolute top-2 right-2 p-1 rounded-md ${buttonBg} transition-colors`}
+          className="absolute top-2 right-2 p-1.5 rounded-md bg-muted/80 hover:bg-muted transition-colors text-muted-foreground"
           onClick={handleCopyCode}
           aria-label="Copy code"
         >
-          <ClipboardCopy size={16} />
+          {copied ? (
+            <Check size={14} className="text-green-500" />
+          ) : (
+            <ClipboardCopy size={14} />
+          )}
         </button>
       )}
       
-      <pre className={`p-4 overflow-x-auto ${showCopyButton ? 'pr-10' : ''}`}>
+      <pre className={cn(
+        "p-4 overflow-x-auto font-mono text-sm",
+        showCopyButton && "pr-10"
+      )}>
         <code>{code}</code>
       </pre>
     </div>

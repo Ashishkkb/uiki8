@@ -11,7 +11,7 @@ import { ThemeProvider } from "./hooks/useTheme";
 function App() {
   return (
     <ThemeProvider>
-      <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-200">
+      <div className="min-h-screen flex flex-col bg-background text-foreground antialiased">
         <Navbar />
         <main className="flex-grow">
           <Routes>
