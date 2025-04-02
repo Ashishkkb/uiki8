@@ -27,7 +27,7 @@ export function CodeBlock({
   return (
     <div
       className={cn(
-        "relative rounded-lg bg-muted p-4 font-mono text-sm text-muted-foreground",
+        "relative rounded-lg bg-muted p-4 font-mono text-sm text-muted-foreground overflow-x-auto",
         className
       )}
     >
