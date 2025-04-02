@@ -15,7 +15,7 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
 } from "@/components/ui/sidebar";
-import { Github, Package, Twitter } from "lucide-react";
+import { Github, Package, Twitter, FileCode, FileText, Code2 } from "lucide-react";
 import { Button } from "./ui/button";
 
 interface ComponentSidebarProps {
@@ -62,13 +62,13 @@ const ComponentSidebar: React.FC<ComponentSidebarProps> = ({
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => filterBySearch("tailwind")}>
-                  <Package className="h-4 w-4" />
+                  <FileText className="h-4 w-4" />
                   <span>Install Tailwind CSS</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton onClick={() => filterBySearch("utils")}>
-                  <Package className="h-4 w-4" />
+                  <Code2 className="h-4 w-4" />
                   <span>Add utilities</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>

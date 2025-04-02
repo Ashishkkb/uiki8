@@ -1,5 +1,5 @@
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useState, useEffect } from 'react';
 import { ProductViewer, RotatingCube, TerrainMap } from "@/lib/components/3d";
 import { ComponentItem } from "@/types/component";
 
@@ -8,51 +8,88 @@ interface ComponentPreviewProps {
 }
 
 const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
+  const [hasError, setHasError] = useState(false);
+  const [is3DRendered, setIs3DRendered] = useState(false);
+
+  // Reset error state when component changes
+  useEffect(() => {
+    setHasError(false);
+    setIs3DRendered(false);
+  }, [component.id]);
+  
+  // Handle 3D components with better error handling and rendering constraints
+  const render3DComponent = () => {
+    // Prevent multiple 3D renders which can cause context issues
+    if (is3DRendered) {
+      return (
+        <div className="w-full h-full flex items-center justify-center">
+          <p className="text-muted-foreground">3D preview available</p>
+        </div>
+      );
+    }
+
+    try {
+      switch (component.id) {
+        case 101: // Rotating Cube
+          return (
+            <div className="w-full h-full flex items-center justify-center">
+              <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
+                <Suspense fallback={<LoadingFallback />}>
+                  <div style={{ width: '100%', height: '200px', position: 'relative' }}>
+                    <RotatingCube onLoad={() => setIs3DRendered(true)} />
+                  </div>
+                </Suspense>
+              </ErrorBoundary>
+            </div>
+          );
+        
+        case 102: // Product Viewer
+          return (
+            <div className="w-full h-full flex items-center justify-center">
+              <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
+                <Suspense fallback={<LoadingFallback />}>
+                  <div style={{ width: '100%', height: '200px', position: 'relative' }}>
+                    <ProductViewer color="#5f9ea0" onLoad={() => setIs3DRendered(true)} />
+                  </div>
+                </Suspense>
+              </ErrorBoundary>
+            </div>
+          );
+        
+        case 103: // Terrain Map
+          return (
+            <div className="w-full h-full flex items-center justify-center">
+              <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
+                <Suspense fallback={<LoadingFallback />}>
+                  <div style={{ width: '100%', height: '200px', position: 'relative' }}>
+                    <TerrainMap onLoad={() => setIs3DRendered(true)} />
+                  </div>
+                </Suspense>
+              </ErrorBoundary>
+            </div>
+          );
+          
+        default:
+          return (
+            <div className="w-full h-full flex items-center justify-center">
+              <p className="text-muted-foreground">3D preview not available</p>
+            </div>
+          );
+      }
+    } catch (error) {
+      console.error("Error rendering 3D component:", error);
+      return <FallbackComponent name={component.name} />;
+    }
+  };
+
+  // If component has errored previously, show fallback
+  if (hasError) {
+    return <FallbackComponent name={component.name} />;
+  }
+
   // Render 3D components
   if (component.is3D) {
-    switch (component.id) {
-      case 101: // Rotating Cube
-        return (
-          <div className="w-full h-full flex items-center justify-center">
-            <ErrorBoundary fallback={<FallbackComponent name={component.name} />}>
-              <Suspense fallback={<LoadingFallback />}>
-                <div style={{ width: '100%', height: '200px' }}>
-                  <RotatingCube />
-                </div>
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-        );
-      
-      case 102: // Product Viewer
-        return (
-          <div className="w-full h-full flex items-center justify-center">
-            <ErrorBoundary fallback={<FallbackComponent name={component.name} />}>
-              <Suspense fallback={<LoadingFallback />}>
-                <div style={{ width: '100%', height: '200px' }}>
-                  <ProductViewer color="#5f9ea0" />
-                </div>
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-        );
-      
-      case 103: // Terrain Map
-        return (
-          <div className="w-full h-full flex items-center justify-center">
-            <ErrorBoundary fallback={<FallbackComponent name={component.name} />}>
-              <Suspense fallback={<LoadingFallback />}>
-                <div style={{ width: '100%', height: '200px' }}>
-                  <TerrainMap />
-                </div>
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-        );
-        
-      default:
-        break;
-    }
+    return render3DComponent();
   }
 
   // Render React component if available
@@ -100,12 +137,20 @@ const FallbackComponent = ({ name }: { name: string }) => (
   </div>
 );
 
-// Simple error boundary component
+// Enhanced error boundary component with onError callback
 class ErrorBoundary extends React.Component<
-  { children: React.ReactNode; fallback: React.ReactNode },
+  { 
+    children: React.ReactNode; 
+    fallback: React.ReactNode;
+    onError?: () => void;
+  },
   { hasError: boolean }
 > {
-  constructor(props: { children: React.ReactNode; fallback: React.ReactNode }) {
+  constructor(props: { 
+    children: React.ReactNode; 
+    fallback: React.ReactNode;
+    onError?: () => void;
+  }) {
     super(props);
     this.state = { hasError: false };
   }
@@ -116,6 +161,9 @@ class ErrorBoundary extends React.Component<
 
   componentDidCatch(error: Error) {
     console.error("Error in component:", error);
+    if (this.props.onError) {
+      this.props.onError();
+    }
   }
 
   render() {

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { getAllComponents } from "@/data/components/registry";
 import ComponentFilters from "./ComponentFilters";
 import ComponentCard from "./ComponentCard";
@@ -11,7 +11,8 @@ interface ComponentsShowcaseProps {
   searchQuery?: string;
 }
 
-const ComponentsShowcase: React.FC<ComponentsShowcaseProps> = ({
+// Memoize the component to prevent unnecessary re-renders
+const ComponentsShowcase: React.FC<ComponentsShowcaseProps> = memo(({
   initialCategory = null,
   searchQuery = "",
 }) => {
@@ -29,7 +30,7 @@ const ComponentsShowcase: React.FC<ComponentsShowcaseProps> = ({
     const matchesSearch = searchQuery
       ? component.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         component.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        component.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+        (component.tags && component.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())))
       : true;
     
     return matchesCategory && matchesSearch;
@@ -80,6 +81,8 @@ const ComponentsShowcase: React.FC<ComponentsShowcaseProps> = ({
       )}
     </div>
   );
-};
+});
+
+ComponentsShowcase.displayName = "ComponentsShowcase";
 
 export default ComponentsShowcase;
