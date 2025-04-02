@@ -12,17 +12,22 @@ export interface ProductViewerProps {
 
 const ProductViewer: React.FC<ProductViewerProps> = ({ 
   color = '#ffffff', 
-  height = '100%'
+  height = '400px'
 }) => {
   return (
     <div style={{ width: '100%', height, position: 'relative', minHeight: '200px' }}>
-      <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
+      <Canvas 
+        camera={{ position: [0, 0, 5], fov: 50 }}
+        onCreated={({ gl }) => {
+          gl.setClearColor('#f0f0f0');
+        }}
+      >
         <ambientLight intensity={0.8} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />
         <Suspense fallback={null}>
           <DummyModel color={color} />
         </Suspense>
-        <OrbitControls enableZoom={false} />
+        <OrbitControls enableZoom={false} enablePan={false} />
       </Canvas>
     </div>
   );

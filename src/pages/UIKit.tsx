@@ -1,7 +1,5 @@
 
 import React from "react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import UIKitHero from "@/components/UIKitHero";
 import UIKitFeatures from "@/components/UIKitFeatures";
 import UIKitShowcase from "@/components/UIKitShowcase";
@@ -20,7 +18,6 @@ const UIKit = () => {
       <UIKitSponsors />
       <NewsletterSignup />
       <UIKitCTA />
-      <Footer />
     </div>
   );
 };

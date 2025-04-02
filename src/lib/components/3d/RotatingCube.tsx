@@ -31,12 +31,16 @@ const RotatingCube: React.FC<{ isInCanvas?: boolean }> = ({ isInCanvas = false }
   }
   
   return (
-    <div style={{ width: '100%', height: '100%', minHeight: '200px' }}>
-      <Canvas>
+    <div style={{ width: '100%', height: '400px', minHeight: '200px' }}>
+      <Canvas
+        onCreated={({ gl }) => {
+          gl.setClearColor('#f0f0f0');
+        }}
+      >
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />
         <RotatingCubeInner />
-        <OrbitControls enableZoom={false} />
+        <OrbitControls enableZoom={false} enablePan={false} />
       </Canvas>
     </div>
   );

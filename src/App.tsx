@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Components from "./pages/Components";
 import NotFound from "./pages/NotFound";
-import Documentation from "./pages/Documentation";
 import Pricing from "./pages/Pricing";
 import { Toaster } from "sonner";
 import Navbar from "./components/Navbar";
@@ -18,7 +17,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/components" element={<Components />} />
-            <Route path="/documentation" element={<Documentation />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
