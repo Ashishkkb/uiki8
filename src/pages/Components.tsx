@@ -8,9 +8,9 @@ const Components = () => {
   const { theme } = useTheme();
 
   return (
-    <div className={`min-h-screen bg-gradient-to-b ${theme === 'dark' 
-      ? 'from-[#1A1F2C]/95 to-[#2D3748]/95' 
-      : 'from-gray-50 to-white'} text-foreground`}>
+    <div className={`min-h-screen transition-colors duration-300 ${theme === 'dark' 
+      ? 'bg-gradient-to-b from-[#1A1F2C]/95 to-[#2D3748]/95' 
+      : 'bg-gradient-to-b from-gray-50 to-white'} text-foreground`}>
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-primary sm:text-4xl">

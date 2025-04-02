@@ -1,8 +1,13 @@
+
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { useTheme } from "@/hooks/useTheme";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const NotFound = () => {
   const location = useLocation();
+  const { theme } = useTheme();
 
   useEffect(() => {
     console.error(
@@ -11,14 +16,22 @@ const NotFound = () => {
     );
   }, [location.pathname]);
 
+  const bgClass = theme === 'dark' 
+    ? 'bg-background' 
+    : 'bg-gray-50';
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
-          Return to Home
-        </a>
+    <div className={`min-h-[80vh] flex flex-col items-center justify-center ${bgClass} transition-colors duration-200`}>
+      <div className="text-center max-w-md mx-auto px-4">
+        <h1 className="text-6xl font-bold text-primary mb-6">404</h1>
+        <p className="text-xl text-foreground mb-6">Oops! The page you're looking for doesn't exist.</p>
+        <p className="text-muted-foreground mb-8">
+          The page you requested could not be found. It might have been removed, 
+          renamed, or didn't exist in the first place.
+        </p>
+        <Button asChild>
+          <Link to="/">Return to Home</Link>
+        </Button>
       </div>
     </div>
   );

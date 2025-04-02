@@ -11,14 +11,16 @@ import { ThemeProvider } from "./hooks/useTheme";
 function App() {
   return (
     <ThemeProvider>
-      <div className="min-h-screen flex flex-col bg-background text-foreground">
+      <div className="min-h-screen flex flex-col bg-background text-foreground transition-colors duration-200">
         <Navbar />
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/components" element={<Components />} />
-          <Route path="/documentation" element={<Documentation />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <main className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/components" element={<Components />} />
+            <Route path="/documentation" element={<Documentation />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </main>
         <Toaster position="top-right" richColors closeButton />
       </div>
     </ThemeProvider>

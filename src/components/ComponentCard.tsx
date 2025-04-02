@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
+import { useTheme } from "@/hooks/useTheme";
 import CodeSnippet from "./CodeSnippet";
 import { ComponentItem } from "@/types/component";
 import ComponentPreview from "./ComponentPreview";
@@ -19,6 +20,32 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
   const [isCopied, setIsCopied] = useState(false);
   const [viewMode, setViewMode] = useState<"preview" | "code">("preview");
   const { toast } = useToast();
+  const { theme } = useTheme();
+
+  // Theme-specific card styles
+  const cardBg = theme === 'dark' 
+    ? 'bg-[#1A1F2C]/80 border-[#9b87f5]/30 shadow-lg hover:shadow-[#9b87f5]/10'
+    : 'bg-white/90 border-[#9b87f5]/20 shadow-md hover:shadow-lg';
+    
+  const headerBg = theme === 'dark'
+    ? 'border-[#9b87f5]/20'
+    : 'border-[#9b87f5]/10';
+    
+  const previewBg = theme === 'dark'
+    ? 'bg-[#2D3748] border-[#9b87f5]/20'
+    : 'bg-gray-50 border-[#9b87f5]/10';
+    
+  const codeBg = theme === 'dark'
+    ? 'bg-[#1A1F2C] border-[#9b87f5]/20'
+    : 'bg-gray-50 border-[#9b87f5]/10';
+    
+  const badgeBg = theme === 'dark'
+    ? 'bg-[#2D3748] text-[#D6BCFA] border-[#9b87f5]/30'
+    : 'bg-[#F3F4F6] text-[#7C3AED] border-[#9b87f5]/20';
+    
+  const footerBg = theme === 'dark'
+    ? 'bg-[#1A1F2C] border-[#9b87f5]/20'
+    : 'bg-gray-50 border-[#9b87f5]/10';
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(component.code);
@@ -48,12 +75,12 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
   };
 
   return (
-    <Card className="overflow-hidden border border-[#9b87f5]/30 shadow-lg hover:shadow-[#9b87f5]/10 transition-all flex flex-col bg-[#1A1F2C]/80 backdrop-blur-sm text-white">
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 p-4 pb-2 border-b border-[#9b87f5]/20">
+    <Card className={`overflow-hidden border backdrop-blur-sm transition-all flex flex-col ${cardBg}`}>
+      <CardHeader className={`flex flex-row items-center justify-between space-y-0 p-4 pb-2 border-b ${headerBg}`}>
         <div>
-          <h3 className="font-medium text-lg text-[#F1F0FB]">{component.name}</h3>
+          <h3 className="font-medium text-lg text-foreground">{component.name}</h3>
           <div className="flex items-center mt-1">
-            <Badge variant="outline" className="text-xs bg-[#2D3748] text-[#D6BCFA] border-[#9b87f5]/30">
+            <Badge variant="outline" className={`text-xs ${badgeBg}`}>
               {component.category}
             </Badge>
             {component.isNew && (
@@ -72,12 +99,12 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
 
       <div className="p-4 flex-grow flex flex-col">
         <div className="flex items-center justify-between mb-3">
-          <p className="text-sm text-gray-300 line-clamp-2">{component.description}</p>
+          <p className="text-sm text-muted-foreground line-clamp-2">{component.description}</p>
           <div className="flex gap-1 ml-2">
             <Button
               size="sm"
               variant={viewMode === "preview" ? "default" : "outline"}
-              className={`px-2 py-1 h-8 ${viewMode === "preview" ? "bg-[#9b87f5] hover:bg-[#8874e0]" : "border-[#9b87f5]/30 text-gray-300"}`}
+              className={`px-2 py-1 h-8 ${viewMode === "preview" ? "bg-primary hover:bg-primary/90" : "border-border text-muted-foreground"}`}
               onClick={() => setViewMode("preview")}
             >
               <Eye className="h-4 w-4" />
@@ -85,7 +112,7 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
             <Button
               size="sm"
               variant={viewMode === "code" ? "default" : "outline"}
-              className={`px-2 py-1 h-8 ${viewMode === "code" ? "bg-[#9b87f5] hover:bg-[#8874e0]" : "border-[#9b87f5]/30 text-gray-300"}`}
+              className={`px-2 py-1 h-8 ${viewMode === "code" ? "bg-primary hover:bg-primary/90" : "border-border text-muted-foreground"}`}
               onClick={() => setViewMode("code")}
             >
               <Code className="h-4 w-4" />
@@ -93,17 +120,17 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
           </div>
         </div>
 
-        <div className={`${viewMode === "preview" ? "flex" : "hidden"} rounded-lg border border-[#9b87f5]/20 ${component.previewBg || "bg-[#2D3748]"} flex-grow h-[300px] overflow-hidden`}>
+        <div className={`${viewMode === "preview" ? "flex" : "hidden"} rounded-lg border ${previewBg} flex-grow h-[300px] overflow-hidden`}>
           <ScrollArea className="w-full h-full">
             <div className="w-full h-full p-3">
-              <Suspense fallback={<div className="flex items-center justify-center w-full h-full"><p className="text-gray-300">Loading...</p></div>}>
+              <Suspense fallback={<div className="flex items-center justify-center w-full h-full"><p className="text-muted-foreground">Loading...</p></div>}>
                 <ComponentPreview component={component} />
               </Suspense>
             </div>
           </ScrollArea>
         </div>
 
-        <div className={`${viewMode === "code" ? "block" : "hidden"} h-[300px] overflow-hidden rounded-lg border border-[#9b87f5]/20 flex-grow bg-[#1A1F2C]`}>
+        <div className={`${viewMode === "code" ? "block" : "hidden"} h-[300px] overflow-hidden rounded-lg border ${codeBg} flex-grow`}>
           <ScrollArea className="w-full h-full">
             <CodeSnippet code={component.code} language={component.language || "tsx"} />
           </ScrollArea>
@@ -112,7 +139,7 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
         {component.tags && component.tags.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-3">
             {component.tags.map((tag, index) => (
-              <Badge key={index} variant="outline" className="text-xs bg-[#2D3748] text-gray-300 border-[#9b87f5]/20">
+              <Badge key={index} variant="outline" className={`text-xs ${badgeBg}`}>
                 {tag}
               </Badge>
             ))}
@@ -120,20 +147,20 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
         )}
       </div>
 
-      <CardFooter className="flex justify-between items-center p-4 bg-[#1A1F2C] border-t border-[#9b87f5]/20 mt-auto">
+      <CardFooter className={`flex justify-between items-center p-4 border-t mt-auto ${footerBg}`}>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <span className="text-xs text-gray-400 flex items-center">
+              <span className="text-xs text-muted-foreground flex items-center">
                 {component.fileSize && <span>{component.fileSize}</span>}
                 {component.price && (
-                  <Badge className="ml-2 bg-[#2D3748] text-[#D6BCFA] hover:bg-[#2D3748]/80 border border-[#9b87f5]/20">
+                  <Badge className={`ml-2 ${badgeBg}`}>
                     ${component.price}
                   </Badge>
                 )}
               </span>
             </TooltipTrigger>
-            <TooltipContent className="bg-[#1A1F2C] text-white border border-[#9b87f5]/30">
+            <TooltipContent className="bg-popover text-popover-foreground border border-[#9b87f5]/30">
               {component.fileSize ? `File size: ${component.fileSize}` : "Free component"}
             </TooltipContent>
           </Tooltip>
@@ -144,7 +171,7 @@ const ComponentCard = ({ component }: ComponentCardProps) => {
             size="sm"
             variant="outline"
             onClick={handleCopyCode}
-            className="h-8 border-[#9b87f5]/30 hover:bg-[#9b87f5]/20 hover:border-[#9b87f5]/50 text-white"
+            className="h-8 border-primary/30 hover:bg-primary/10 hover:border-primary/50 text-foreground"
           >
             {isCopied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           </Button>

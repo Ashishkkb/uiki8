@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import ComponentFilters from "./ComponentFilters";
 import ComponentCard from "./ComponentCard";
 import { getAllComponents } from "@/data/components";
+import { useTheme } from "@/hooks/useTheme";
 import {
   Pagination,
   PaginationContent,
@@ -21,6 +22,7 @@ const ComponentsShowcase = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const componentsPerPage = 5;
+  const { theme } = useTheme();
   
   // Get all components from the registry
   const allComponents = getAllComponents();
@@ -98,12 +100,25 @@ const ComponentsShowcase = () => {
     return pageNumbers;
   };
 
+  // Theme-specific styling
+  const containerBg = theme === 'dark' 
+    ? 'from-[#2D3748]/90 to-[#1A1F2C]/90' 
+    : 'from-gray-50 to-white';
+  
+  const searchBg = theme === 'dark'
+    ? 'border-[#9b87f5]/30 bg-[#1A1F2C]/50 text-white backdrop-blur-sm'
+    : 'border-[#9b87f5]/20 bg-white text-gray-700';
+    
+  const errorMsgBg = theme === 'dark'
+    ? 'bg-[#1A1F2C]/60 backdrop-blur-sm border border-[#9b87f5]/20'
+    : 'bg-white backdrop-blur-sm border border-[#9b87f5]/10';
+
   return (
-    <div className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-[#2D3748]/90 to-[#1A1F2C]/90 rounded-xl">
+    <div className={`py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-b ${containerBg} rounded-xl transition-colors duration-300`}>
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-[#9b87f5]">Modern Components</h2>
-          <p className="mt-4 text-xl text-gray-300">
+          <h2 className="text-3xl font-bold text-primary">Modern Components</h2>
+          <p className="mt-4 text-xl text-muted-foreground">
             Build powerful applications with our MERN-inspired components
           </p>
         </div>
@@ -111,12 +126,12 @@ const ComponentsShowcase = () => {
         <div className="flex flex-col md:flex-row justify-between items-start mb-8 gap-4">
           <div className="w-full md:w-auto relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <SearchIcon className="h-5 w-5 text-gray-400" />
+              <SearchIcon className="h-5 w-5 text-muted-foreground" />
             </div>
             <Input
               type="search"
               placeholder="Search components..."
-              className="pl-10 w-full md:w-80 border-[#9b87f5]/30 bg-[#1A1F2C]/50 text-white backdrop-blur-sm"
+              className={`pl-10 w-full md:w-80 ${searchBg}`}
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
@@ -136,9 +151,9 @@ const ComponentsShowcase = () => {
         </div>
 
         {filteredComponents.length === 0 ? (
-          <div className="text-center py-16 bg-[#1A1F2C]/60 backdrop-blur-sm rounded-lg border border-[#9b87f5]/20">
-            <h3 className="text-lg font-medium text-white">No components found</h3>
-            <p className="mt-2 text-gray-400">Try adjusting your search or filter criteria</p>
+          <div className={`text-center py-16 ${errorMsgBg} rounded-lg`}>
+            <h3 className="text-lg font-medium text-foreground">No components found</h3>
+            <p className="mt-2 text-muted-foreground">Try adjusting your search or filter criteria</p>
             <Button 
               className="mt-4 bg-gradient-to-r from-[#9b87f5] to-[#7C3AED] hover:opacity-90 transition-opacity" 
               onClick={() => {
@@ -166,7 +181,7 @@ const ComponentsShowcase = () => {
                       <PaginationItem>
                         <PaginationPrevious 
                           onClick={() => handlePageChange(currentPage - 1)}
-                          className="cursor-pointer hover:bg-[#9b87f5]/20 text-white"
+                          className="cursor-pointer hover:bg-accent text-foreground"
                         />
                       </PaginationItem>
                     )}
@@ -183,8 +198,8 @@ const ComponentsShowcase = () => {
                             onClick={() => handlePageChange(Number(pageNumber))}
                             className={`cursor-pointer ${
                               currentPage === pageNumber 
-                                ? "bg-[#9b87f5] text-white hover:bg-[#8874e0]" 
-                                : "text-white hover:bg-[#9b87f5]/20"
+                                ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                                : "text-foreground hover:bg-accent"
                             }`}
                           >
                             {pageNumber}
@@ -197,7 +212,7 @@ const ComponentsShowcase = () => {
                       <PaginationItem>
                         <PaginationNext 
                           onClick={() => handlePageChange(currentPage + 1)}
-                          className="cursor-pointer hover:bg-[#9b87f5]/20 text-white"
+                          className="cursor-pointer hover:bg-accent text-foreground"
                         />
                       </PaginationItem>
                     )}
