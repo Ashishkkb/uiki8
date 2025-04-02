@@ -12,7 +12,7 @@ interface RotatingCubeProps {
 function Box({ isInCanvas }: { isInCanvas?: boolean }) {
   const mesh = useRef<THREE.Mesh>(null!);
   
-  useFrame((state) => {
+  useFrame(() => {
     if (mesh.current) {
       mesh.current.rotation.x += 0.01;
       mesh.current.rotation.y += 0.01;
@@ -35,13 +35,19 @@ const RotatingCube: React.FC<RotatingCubeProps> = ({ isInCanvas = false, onLoad 
     }
   }, [onLoad]);
 
+  if (isInCanvas) {
+    return <Box isInCanvas={true} />;
+  }
+
   return (
-    <Canvas style={{ height: '100%', minHeight: '200px' }}>
-      <ambientLight intensity={0.5} />
-      <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
-      <Box isInCanvas={isInCanvas} />
-      <OrbitControls enableZoom={false} enablePan={false} />
-    </Canvas>
+    <div style={{ width: '100%', height: '100%', position: 'relative', minHeight: '200px' }}>
+      <Canvas camera={{ position: [0, 0, 4], fov: 50 }}>
+        <ambientLight intensity={0.5} />
+        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} />
+        <Box isInCanvas={isInCanvas} />
+        <OrbitControls enableZoom={false} enablePan={false} />
+      </Canvas>
+    </div>
   );
 };
 

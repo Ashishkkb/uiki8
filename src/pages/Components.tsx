@@ -74,7 +74,7 @@ const Components = () => {
                           <div>
                             <h3 className="text-2xl font-bold">Installation</h3>
                             <p className="text-muted-foreground mt-1">
-                              How to install and use the components
+                              How to install and dependencies for your project
                             </p>
                           </div>
                         </div>
@@ -85,7 +85,7 @@ const Components = () => {
                             <div className="relative">
                               <CodeBlock>
                                 <div className="text-sm font-mono">
-                                  npm install @modernui/components
+                                  npm install tailwindcss class-variance-authority clsx tailwind-merge lucide-react
                                 </div>
                               </CodeBlock>
                               <Button
@@ -242,7 +242,7 @@ const Components = () => {
                           <div className="relative">
                             <CodeBlock>
                               <div className="text-sm font-mono">
-                                import {"{ Button }"} from '@modernui/components';
+                                import {"{ Button }"} from '@/components/ui/button';
                               </div>
                             </CodeBlock>
                             <Button
@@ -260,7 +260,7 @@ const Components = () => {
                           <div className="relative">
                             <CodeBlock>
                               <div className="text-sm font-mono">
-                                <div>import {"{ Button }"} from '@modernui/components';</div>
+                                <div>import {"{ Button }"} from '@/components/ui/button';</div>
                                 <div className="mt-2">
                                   export default function App() {"{"}
                                 </div>
