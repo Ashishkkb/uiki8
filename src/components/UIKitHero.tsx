@@ -11,7 +11,7 @@ const UIKitHero = () => {
           Introducing GitHub UI
         </div>
         
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-github-gray-900 max-w-3xl">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-[#8250df] max-w-3xl">
           Beautiful UI Components for Modern Web Applications
         </h1>
         
