@@ -1,12 +1,21 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { getAllComponents } from "@/data/components/registry";
 import ComponentFilters from "./ComponentFilters";
 import ComponentCard from "./ComponentCard";
 import { cn } from "@/lib/utils";
+import { Search } from "lucide-react";
 
-const ComponentsShowcase = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+interface ComponentsShowcaseProps {
+  initialCategory?: string | null;
+  searchQuery?: string;
+}
+
+const ComponentsShowcase: React.FC<ComponentsShowcaseProps> = ({
+  initialCategory = null,
+  searchQuery = "",
+}) => {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(initialCategory);
   const allComponents = getAllComponents();
   
   // Extract unique categories
@@ -14,19 +23,37 @@ const ComponentsShowcase = () => {
     new Set(allComponents.map((component) => component.category))
   ).sort();
   
-  // Filter components by selected category
-  const filteredComponents = selectedCategory
-    ? allComponents.filter((component) => component.category === selectedCategory)
-    : allComponents;
+  // Filter components by selected category and search query
+  const filteredComponents = allComponents.filter((component) => {
+    const matchesCategory = selectedCategory ? component.category === selectedCategory : true;
+    const matchesSearch = searchQuery
+      ? component.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        component.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        component.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+      : true;
+    
+    return matchesCategory && matchesSearch;
+  });
+
+  // Reset category when initialCategory prop changes
+  useEffect(() => {
+    if (initialCategory !== undefined) {
+      setSelectedCategory(initialCategory);
+    }
+  }, [initialCategory]);
 
   return (
     <div>
-      <ComponentFilters
-        categories={categories}
-        selectedCategory={selectedCategory}
-        onSelectCategory={setSelectedCategory}
-      />
+      {/* Only show filters when not in category-specific view */}
+      {initialCategory === null && (
+        <ComponentFilters
+          categories={categories}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+        />
+      )}
       
+      {/* Masonry grid layout for components */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredComponents.map((component) => (
           <ComponentCard
@@ -37,8 +64,18 @@ const ComponentsShowcase = () => {
       </div>
       
       {filteredComponents.length === 0 && (
-        <div className="text-center py-12 border rounded-lg bg-card">
-          <p className="text-lg text-muted-foreground">No components found.</p>
+        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-12">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
+            <Search className="h-10 w-10 text-muted-foreground" />
+          </div>
+          <h3 className="mt-4 text-lg font-semibold">No components found</h3>
+          <p className="mt-2 text-center text-muted-foreground">
+            {searchQuery ? (
+              <>No results for "{searchQuery}". Try another search term.</>
+            ) : (
+              <>No components found in this category.</>
+            )}
+          </p>
         </div>
       )}
     </div>

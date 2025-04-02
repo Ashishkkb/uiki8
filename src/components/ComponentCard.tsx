@@ -1,75 +1,74 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { ComponentItem } from "@/types/component";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import CodeSnippet from "./CodeSnippet";
-import { Code, X } from "lucide-react";
+import { Sparkles, Code } from "lucide-react";
 
 interface ComponentCardProps {
   component: ComponentItem;
+  className?: string;
 }
 
-const ComponentCard: React.FC<ComponentCardProps> = ({ component }) => {
-  const [showCode, setShowCode] = useState(false);
-  const ComponentPreview = component.component;
-  
+const ComponentCard: React.FC<ComponentCardProps> = ({
+  component,
+  className
+}) => {
+  const { name, description, tags, component: ComponentPreview, isNew } = component;
+
   return (
-    <Card className="overflow-hidden transition-all duration-200 hover:shadow-md">
-      <CardHeader className="pb-2">
-        <div className="flex justify-between items-start">
-          <div>
-            <CardTitle className="text-lg">{component.name}</CardTitle>
-            <CardDescription className="text-sm line-clamp-2 mt-1">
-              {component.description}
-            </CardDescription>
+    <div className={cn(
+      "group overflow-hidden rounded-xl border border-border/40 bg-card transition-all hover:shadow-md",
+      className
+    )}>
+      {/* Preview area */}
+      <div className="aspect-[16/9] relative flex items-center justify-center overflow-hidden bg-muted/40 p-6">
+        <div className="w-full">
+          {ComponentPreview && <ComponentPreview />}
+        </div>
+        {/* Hover overlay */}
+        <div className="absolute inset-0 flex items-center justify-center bg-foreground/5 opacity-0 transition-opacity group-hover:opacity-100">
+          <div className="flex items-center gap-2">
+            <span className="rounded-md bg-foreground/10 px-2 py-1 text-xs font-medium backdrop-blur">
+              View Component
+            </span>
           </div>
-          
-          {component.isNew && (
-            <Badge variant="default" className="ml-2">New</Badge>
-          )}
         </div>
-      </CardHeader>
-      
-      <CardContent>
-        <div className="bg-muted/40 rounded-md p-4 min-h-24 flex items-center justify-center">
-          <ComponentPreview />
+        {isNew && (
+          <Badge className="absolute right-2 top-2 gap-1 bg-primary px-2">
+            <Sparkles className="h-3 w-3" />
+            NEW
+          </Badge>
+        )}
+      </div>
+
+      {/* Component info */}
+      <div className="px-4 py-3">
+        <div className="flex items-center justify-between">
+          <h3 className="font-medium text-lg">{name}</h3>
+          <Code className="h-4 w-4 text-muted-foreground" />
         </div>
-        
-        {showCode && (
-          <div className="mt-4">
-            <CodeSnippet code={component.code} />
+        <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{description}</p>
+
+        {tags?.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1">
+            {tags.slice(0, 3).map((tag, index) => (
+              <div
+                key={index}
+                className="inline-flex items-center rounded-full border border-border/50 px-2 py-0.5 text-xs font-medium text-muted-foreground"
+              >
+                {tag}
+              </div>
+            ))}
+            {tags.length > 3 && (
+              <div className="inline-flex items-center rounded-full border border-border/50 px-2 py-0.5 text-xs font-medium text-muted-foreground">
+                +{tags.length - 3} more
+              </div>
+            )}
           </div>
         )}
-      </CardContent>
-      
-      <CardFooter className="flex items-center justify-between pt-0 pb-3 px-6">
-        <div className="flex items-center gap-2">
-          {component.tags?.map((tag, index) => (
-            <Badge key={index} variant="outline" className="text-xs">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-        
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={() => setShowCode(!showCode)}
-        >
-          {showCode ? (
-            <>
-              <X className="mr-1 h-3 w-3" /> Hide Code
-            </>
-          ) : (
-            <>
-              <Code className="mr-1 h-3 w-3" /> View Code
-            </>
-          )}
-        </Button>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 };
 

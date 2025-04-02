@@ -15,10 +15,14 @@ const ComponentFilters: React.FC<ComponentFiltersProps> = ({
   onSelectCategory,
 }) => {
   return (
-    <div className="flex flex-wrap gap-2 mb-6">
+    <div className="flex flex-wrap gap-2 pb-6 border-b border-border/20 mb-8">
       <Button
         variant={!selectedCategory ? "default" : "outline"}
         size="sm"
+        className={cn(
+          "rounded-full",
+          !selectedCategory ? "bg-primary text-primary-foreground" : ""
+        )}
         onClick={() => onSelectCategory(null)}
       >
         All
@@ -29,6 +33,10 @@ const ComponentFilters: React.FC<ComponentFiltersProps> = ({
           key={category}
           variant={selectedCategory === category ? "default" : "outline"}
           size="sm"
+          className={cn(
+            "rounded-full",
+            selectedCategory === category ? "bg-primary text-primary-foreground" : ""
+          )}
           onClick={() => onSelectCategory(category)}
         >
           {category}
