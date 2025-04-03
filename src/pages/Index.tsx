@@ -158,7 +158,7 @@ const Index = () => {
                   ><a
                       href="https://github.com"
                       target="_blank"
-                      rel="noreferrer"
+                      rel="noopener"
                       className="flex items-center gap-2"
                     >
                       <Github className="h-4 w-4" />
