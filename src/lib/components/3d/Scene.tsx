@@ -4,6 +4,11 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
+interface SceneProps {
+  height?: string | number;
+  onLoad?: () => void;
+}
+
 const Cube = () => {
   const meshRef = useRef<THREE.Mesh>(null!);
   
@@ -22,12 +27,15 @@ const Cube = () => {
   );
 };
 
-const Scene = () => {
+const Scene: React.FC<SceneProps> = ({ height = '400px', onLoad }) => {
   return (
-    <div style={{ width: '100%', height: '100%' }}>
+    <div style={{ width: '100%', height: height, position: 'relative', minHeight: '200px' }}>
       <Canvas 
         shadows 
         camera={{ position: [0, 0, 5], fov: 75 }}
+        onCreated={() => {
+          if (onLoad) onLoad();
+        }}
       >
         <ambientLight intensity={0.5} />
         <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow />

@@ -1,4 +1,3 @@
-
 import React, { Suspense, useState, useEffect } from 'react';
 import { ProductViewer, RotatingCube, TerrainMap, ParticleSystem, TextGenerator, ModelViewer } from "@/lib/components/3d";
 import { ComponentItem } from "@/types/component";
@@ -89,6 +88,19 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
                 <Suspense fallback={<LoadingFallback />}>
                   <div style={{ width: '100%', height: '200px', position: 'relative' }}>
                     <TextGenerator text="Hello 3D" onLoad={() => setIs3DRendered(true)} />
+                  </div>
+                </Suspense>
+              </ErrorBoundary>
+            </div>
+          );
+          
+        case 97: // Scene3D
+          return (
+            <div className="w-full h-full flex items-center justify-center">
+              <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
+                <Suspense fallback={<LoadingFallback />}>
+                  <div style={{ width: '100%', height: '200px', position: 'relative' }}>
+                    <Scene onLoad={() => setIs3DRendered(true)} />
                   </div>
                 </Suspense>
               </ErrorBoundary>
