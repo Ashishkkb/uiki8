@@ -15,6 +15,10 @@ import DividerComponent from './Layout/Divider';
 
 // Form Components
 import TextFieldComponent from './Form/TextField';
+import FormBuilderComponent from './Form/FormBuilder';
+import MultiStepFormComponent from './Form/MultiStepForm';
+import SearchableSelectComponent from './Form/SearchableSelect';
+import FormComponent from './Form';
 
 // Media Components
 import CarouselComponent from './Media/Carousel';
@@ -45,6 +49,10 @@ export const getAllComponents = (): ComponentItem[] => [
   
   // Form Components
   TextFieldComponent,
+  FormBuilderComponent,
+  MultiStepFormComponent,
+  SearchableSelectComponent,
+  FormComponent,
   
   // Media Components
   CarouselComponent,
