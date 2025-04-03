@@ -1,50 +1,68 @@
+<div align="center">
+  <img src="https://via.placeholder.com/150x150?text=uiki8" alt="uiki8 Logo" width="150" />
+  <h1>uiki8</h1>
+  
+  <p>A beautiful 3D-enabled UI component library for modern web applications</p>
 
-# Enchant UI
+  <div>
+    <img src="https://img.shields.io/github/license/yourusername/uiki8?style=flat-square" alt="License" />
+    <img src="https://img.shields.io/github/stars/yourusername/uiki8?style=flat-square" alt="Stars" />
+    <img src="https://img.shields.io/npm/v/uiki8?style=flat-square" alt="npm version" />
+    <img src="https://img.shields.io/npm/dm/uiki8?style=flat-square" alt="Downloads" />
+  </div>
+  
+  <br />
+</div>
 
-![Enchant UI](https://via.placeholder.com/1200x600?text=Enchant+UI)
+## ✨ Features
 
-A beautiful UI component library for modern web applications, designed with accessibility and developer experience in mind.
-
-## Features
-
-- 🎨 **Beautiful Design**: Carefully crafted components with attention to detail
-- 🛠️ **Framework Agnostic**: Works with React, Vue, Angular, and other modern frameworks
-- 🔍 **Fully Accessible**: Built with accessibility as a priority
+- 🎨 **Beautiful Design**: Meticulously crafted components with attention to detail
+- 🧩 **3D Components**: Built-in Three.js powered 3D components ready to use
+- 🛠️ **Framework Agnostic**: Works seamlessly with React, Vue, Angular, and other modern frameworks
+- 🔍 **Fully Accessible**: Built with WCAG and ARIA guidelines as a priority
 - 📱 **Responsive**: Mobile-first approach for all components
-- 🌙 **Dark Mode Support**: Built-in dark mode for all components
-- 🧩 **Customizable**: Easily theme and adapt components to match your brand
+- 🌙 **Dark Mode**: First-class dark mode support for all components
+- 🎭 **Theme Customization**: Easily adapt components to match your brand identity
+- 🚀 **Performance Optimized**: Lightweight core with tree-shakable imports
 - 📖 **Comprehensive Documentation**: Detailed guides, examples, and API references
 
-## Installation
+## 🚀 Quick Start
 
 ```bash
 # npm
-npm install enchant-ui
+npm install uiki8
 
 # yarn
-yarn add enchant-ui
+yarn add uiki8
 
 # pnpm
-pnpm add enchant-ui
+pnpm add uiki8
 ```
 
-## Quick Start
-
 ```jsx
-import { Button } from 'enchant-ui';
+import { Button, Scene } from 'uiki8';
 
 function App() {
   return (
-    <Button>Click me</Button>
+    <div>
+      <h1>My Amazing App</h1>
+      <Scene height="300px" />
+      <Button>Get Started</Button>
+    </div>
   );
 }
 ```
 
-## Documentation
+## 📚 Documentation
 
-For full documentation, visit [enchant-ui.com/docs](https://enchant-ui.com/docs)
+Visit our [documentation site](https://uiki8.com/docs) for:
+- Component API references
+- Interactive examples
+- Theme customization
+- Accessibility guidelines
+- Integration tutorials
 
-## Examples
+## 🧩 Component Showcase
 
 ```jsx
 import { 
@@ -52,32 +70,68 @@ import {
   Card, 
   CardHeader, 
   CardTitle, 
-  CardContent, 
-  CardFooter 
-} from 'enchant-ui';
+  Scene,
+  TextGenerator
+} from 'uiki8';
 
 function Example() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Card Title</CardTitle>
+        <CardTitle>Interactive 3D Card</CardTitle>
       </CardHeader>
-      <CardContent>
-        <p>Card content goes here.</p>
-      </CardContent>
-      <CardFooter>
-        <Button>Submit</Button>
-      </CardFooter>
+      <TextGenerator 
+        text="Hello 3D World!" 
+        color="#5f9ea0" 
+        height="200px"
+      />
+      <Button>Explore</Button>
     </Card>
   );
 }
 ```
 
-## Contributing
+## 🤝 Contributing
 
-We welcome contributions! Please see our [contributing guidelines](CONTRIBUTING.md) for details.
+We welcome contributions from the community! uiki8 is an open source project that's better with your involvement.
 
-## License
+### How to Contribute
 
-MIT © [Your Name](https://github.com/yourusername)
+1. **Fork the repository**
+2. **Clone your fork**: `git clone https://github.com/yourusername/uiki8.git`
+3. **Install dependencies**: `npm install`
+4. **Create a branch**: `git checkout -b feature/amazing-feature`
+5. **Make your changes and commit**: `git commit -m 'Add amazing feature'`
+6. **Push to your fork**: `git push origin feature/amazing-feature`
+7. **Open a pull request**
 
+Check out our [Contributing Guide](./CONTRIBUTING.md) for more details.
+
+## ⚙️ Project Structure
+
+```
+uiki8/
+├── components/       # UI components
+│   ├── ui/           # Basic UI components  
+│   └── 3d/           # Three.js powered 3D components
+├── hooks/            # Custom React hooks
+├── theme/            # Theming system
+└── utils/            # Utility functions
+```
+
+## 📜 License
+
+uiki8 is [MIT licensed](./LICENSE).
+
+## 💖 Support the Project
+
+If you find uiki8 valuable, please consider:
+- Starring the [GitHub repository](https://github.com/yourusername/uiki8)
+- Sharing it with friends and colleagues
+- [Sponsoring the project](https://github.com/sponsors/yourusername)
+
+---
+
+<div align="center">
+  <p>Built with ❤️ by the uiki8 team and contributors</p>
+</div>

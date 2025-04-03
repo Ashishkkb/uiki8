@@ -1,69 +1,156 @@
-# Welcome to your Lovable project
+<div align="center">
+  <img src="https://via.placeholder.com/150x150?text=uiki8" alt="uiki8 Logo" width="150" />
+  <h1>uiki8</h1>
+  
+  <p>A beautiful 3D-enabled UI component library for modern web applications</p>
 
-## Project info
+  <div>
+    <img src="https://img.shields.io/github/license/yourusername/uiki8?style=flat-square" alt="License" />
+    <img src="https://img.shields.io/github/stars/yourusername/uiki8?style=flat-square" alt="Stars" />
+    <img src="https://img.shields.io/npm/v/uiki8?style=flat-square" alt="npm version" />
+    <img src="https://img.shields.io/npm/dm/uiki8?style=flat-square" alt="Downloads" />
+  </div>
+  
+  <br />
+</div>
 
-**URL**: https://lovable.dev/projects/de3fd613-3885-4f10-8ec1-737d246326e2
+## ✨ Features
 
-## How can I edit this code?
+- 🎨 **Beautiful Design**: Meticulously crafted components with attention to detail
+- 🧩 **3D Components**: Built-in Three.js powered 3D components ready to use
+- 🛠️ **Framework Agnostic**: Works seamlessly with React, Vue, Angular, and other modern frameworks
+- 🔍 **Fully Accessible**: Built with WCAG and ARIA guidelines as a priority
+- 📱 **Responsive**: Mobile-first approach for all components
+- 🌙 **Dark Mode**: First-class dark mode support for all components
+- 🎭 **Theme Customization**: Easily adapt components to match your brand identity
+- 🚀 **Performance Optimized**: Lightweight core with tree-shakable imports
+- 📖 **Comprehensive Documentation**: Detailed guides, examples, and API references
 
-There are several ways of editing your application.
+## 🚀 Quick Start
 
-**Use Lovable**
+```bash
+# npm
+npm install uiki8
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/de3fd613-3885-4f10-8ec1-737d246326e2) and start prompting.
+# yarn
+yarn add uiki8
 
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# pnpm
+pnpm add uiki8
 ```
 
-**Edit a file directly in GitHub**
+```jsx
+import { Button, Scene } from 'uiki8';
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+function App() {
+  return (
+    <div>
+      <h1>My Amazing App</h1>
+      <Scene height="300px" />
+      <Button>Get Started</Button>
+    </div>
+  );
+}
+```
 
-**Use GitHub Codespaces**
+## 📚 Documentation
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+Visit our [documentation site](https://uiki8.com/docs) for:
+- Component API references
+- Interactive examples
+- Theme customization
+- Accessibility guidelines
+- Integration tutorials
 
-## What technologies are used for this project?
+## 🧩 Component Showcase
 
-This project is built with .
+```jsx
+import { 
+  Button, 
+  Card, 
+  CardHeader, 
+  CardTitle, 
+  Scene,
+  TextGenerator
+} from 'uiki8';
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+function Example() {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Interactive 3D Card</CardTitle>
+      </CardHeader>
+      <TextGenerator 
+        text="Hello 3D World!" 
+        color="#5f9ea0" 
+        height="200px"
+      />
+      <Button>Explore</Button>
+    </Card>
+  );
+}
+```
 
-## How can I deploy this project?
+## 🤝 Contributing
 
-Simply open [Lovable](https://lovable.dev/projects/de3fd613-3885-4f10-8ec1-737d246326e2) and click on Share -> Publish.
+We welcome contributions from the community! uiki8 is an open source project that's better with your involvement.
 
-## I want to use a custom domain - is that possible?
+### How to Contribute
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+1. **Fork the repository**
+2. **Clone your fork**: `git clone https://github.com/yourusername/uiki8.git`
+3. **Install dependencies**: `npm install`
+4. **Create a branch**: `git checkout -b feature/amazing-feature`
+5. **Make your changes and commit**: `git commit -m 'Add amazing feature'`
+6. **Push to your fork**: `git push origin feature/amazing-feature`
+7. **Open a pull request**
+
+### Development Guide
+
+```bash
+# Start the development server
+npm run dev
+
+# Run tests
+npm test
+
+# Build the library
+npm run build
+
+# Generate documentation
+npm run docs
+```
+
+Check out our [Contributing Guide](https://github.com/yourusername/uiki8/blob/main/CONTRIBUTING.md) for more details.
+
+### Good First Issues
+
+Looking to make your first contribution? Check out our [good first issues](https://github.com/yourusername/uiki8/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) to get started!
+
+## ⚙️ Project Structure
+
+```
+uiki8/
+├── components/       # UI components
+├── hooks/            # Custom React hooks
+├── theme/            # Theming system
+├── utils/            # Utility functions
+└── 3d/               # Three.js powered 3D components
+```
+
+## 📜 License
+
+uiki8 is [MIT licensed](./LICENSE).
+
+## 💖 Support the Project
+
+If you find uiki8 valuable, please consider:
+- Starring the [GitHub repository](https://github.com/yourusername/uiki8)
+- Sharing it with friends and colleagues
+- [Sponsoring the project](https://github.com/sponsors/yourusername)
+
+---
+
+<div align="center">
+  <p>Built with ❤️ by the uiki8 team and contributors</p>
+</div>
