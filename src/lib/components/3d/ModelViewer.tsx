@@ -129,19 +129,28 @@ interface ModelViewerProps {
   environmentPreset?: EnvironmentPreset;
   autoRotate?: boolean;
   showInspector?: boolean;
+  onLoad?: () => void; // Add the onLoad prop to the interface
 }
 
 export default function ModelViewer({ 
   modelUrl = '/path/to/model.glb',
   environmentPreset = 'sunset',
   autoRotate = true,
-  showInspector = false 
+  showInspector = false,
+  onLoad 
 }: ModelViewerProps) {
   const [preset, setPreset] = useState<EnvironmentPreset>(environmentPreset);
   const [rotation, setRotation] = useState(autoRotate);
   const [viewMode, setViewMode] = useState<'normal' | 'wireframe' | 'uv'>('normal');
   
   const environments: EnvironmentPreset[] = ['sunset', 'dawn', 'night', 'warehouse', 'forest', 'apartment', 'studio', 'city', 'park', 'lobby'];
+  
+  // Call onLoad callback if provided
+  useEffect(() => {
+    if (onLoad) {
+      onLoad();
+    }
+  }, [onLoad]);
   
   return (
     <div style={{ width: '100%', height: '500px', position: 'relative' }}>
