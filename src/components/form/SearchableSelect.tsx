@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,25 +49,27 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedValues, setSelectedValues] = useState<string[]>(
-    multiple 
-      ? Array.isArray(value) ? value : value ? [value] : [] 
-      : value ? [value] : []
-  );
+  
+  const [selectedValues, setSelectedValues] = useState<string[]>(() => {
+    if (multiple) {
+      return Array.isArray(value) ? value : value ? [value] : [];
+    } else {
+      return value ? (typeof value === 'string' ? [value] : value) : [];
+    }
+  });
+  
   const containerRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const uniqueId = id || `select-${Math.random().toString(36).substring(2, 9)}`;
 
-  // Update internal state when value prop changes
   useEffect(() => {
     if (multiple) {
-      setSelectedValues(Array.isArray(value) ? value : value ? [value] : []);
+      setSelectedValues(Array.isArray(value) ? value : value ? [value as string] : []);
     } else {
-      setSelectedValues(value ? [value] : []);
+      setSelectedValues(value ? (typeof value === 'string' ? [value] : value) : []);
     }
   }, [value, multiple]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (
@@ -81,7 +82,6 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
 
     if (isOpen) {
       document.addEventListener("mousedown", handleOutsideClick);
-      // Focus search input when dropdown opens
       if (searchable && searchInputRef.current) {
         searchInputRef.current.focus();
       }
@@ -138,7 +138,6 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
     }
   };
 
-  // Get display text for the selected option(s)
   const getSelectionText = () => {
     if (selectedValues.length === 0) return placeholder;
 
@@ -183,13 +182,11 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
           {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
         </Button>
 
-        {/* Dropdown Menu */}
         {isOpen && (
           <div
             className="absolute z-50 w-full mt-1 bg-popover rounded-md border shadow-md overflow-hidden"
             onKeyDown={handleKeyDown}
           >
-            {/* Search input */}
             {searchable && (
               <div className="p-2 border-b">
                 <div className="relative">
@@ -212,7 +209,6 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
               </div>
             )}
 
-            {/* Options list */}
             <div
               className="overflow-auto"
               style={{ maxHeight: `${maxHeight}px` }}
@@ -266,7 +262,6 @@ const SearchableSelect: React.FC<SearchableSelectProps> = ({
               )}
             </div>
 
-            {/* Footer with clear button */}
             {multiple && clearable && selectedValues.length > 0 && (
               <div className="p-2 border-t bg-muted/20">
                 <Button
