@@ -1,3 +1,4 @@
+
 import React, { Suspense, useRef, useState, useEffect, useMemo } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { 
@@ -52,20 +53,15 @@ function Loader() {
 // Model component that loads and displays a 3D model
 function Model({ url, autoRotate = false }: { url: string; autoRotate?: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
-  const gltf = useGLTF(url) as GLTFResult;
+  const { scene } = useGLTF(url) as GLTFResult;
   const { camera } = useThree();
   const [hovered, setHovered] = useState(false);
 
   // Make a copy to avoid modifying the original
-  const model = useMemo(() => gltf.scene.clone(), [gltf.scene]);
+  const model = useMemo(() => scene.clone(), [scene]);
 
   // Set up animation
   useEffect(() => {
-    if (gltf.animations && gltf.animations.length > 0) {
-      // Set up animation mixer if there are animations
-      // Implementation omitted for brevity
-    }
-    
     // Reset camera to fit the model
     const box = new THREE.Box3().setFromObject(model);
     const size = box.getSize(new THREE.Vector3());
@@ -86,7 +82,7 @@ function Model({ url, autoRotate = false }: { url: string; autoRotate?: boolean 
     return () => {
       // Cleanup
     };
-  }, [model, gltf.animations, camera]);
+  }, [model, camera]);
 
   // Auto-rotate if enabled
   useFrame((state, delta) => {
