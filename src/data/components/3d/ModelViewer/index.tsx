@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ComponentItem } from "@/types/component";
 import { ModelViewer } from "@/lib/components/3d";
@@ -8,7 +9,7 @@ const ModelViewerComponent: ComponentItem = {
   category: "3D",
   framework: "React Three Fiber",
   description: "Professional GLTF/GLB model viewer with environment lighting, camera controls, and model inspector",
-  code: `import { Suspense, useRef, useState, useEffect } from 'react';
+  code: `import { Suspense, useRef, useState, useEffect, useMemo } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { 
   OrbitControls, 
@@ -19,6 +20,8 @@ import {
   Html 
 } from '@react-three/drei';
 import * as THREE from 'three';
+
+type EnvironmentPreset = 'sunset' | 'dawn' | 'night' | 'warehouse' | 'forest' | 'apartment' | 'studio' | 'city' | 'park' | 'lobby';
 
 // Simple loading indicator
 function Loader() {
@@ -55,7 +58,7 @@ function Loader() {
 // Model component that loads and displays a 3D model
 function Model({ url, autoRotate = false }) {
   const group = useRef();
-  const { scene, animations } = useGLTF(url);
+  const { scene } = useGLTF(url);
   const { camera } = useThree();
   const [hovered, setHovered] = useState(false);
 
@@ -64,11 +67,6 @@ function Model({ url, autoRotate = false }) {
 
   // Set up animation
   useEffect(() => {
-    if (animations && animations.length > 0) {
-      // Set up animation mixer if there are animations
-      // Implementation omitted for brevity
-    }
-    
     // Reset camera to fit the model
     const box = new THREE.Box3().setFromObject(model);
     const size = box.getSize(new THREE.Vector3());
@@ -85,7 +83,7 @@ function Model({ url, autoRotate = false }) {
     return () => {
       // Cleanup
     };
-  }, [model, animations, camera]);
+  }, [model, camera]);
 
   // Auto-rotate if enabled
   useFrame((state, delta) => {
@@ -127,13 +125,21 @@ export default function ModelViewer({
   modelUrl = '/path/to/model.glb',
   environmentPreset = 'sunset',
   autoRotate = true,
-  showInspector = false 
+  showInspector = false,
+  onLoad
 }) {
   const [preset, setPreset] = useState(environmentPreset);
   const [rotation, setRotation] = useState(autoRotate);
   const [viewMode, setViewMode] = useState('normal'); // normal, wireframe, uv
   
   const environments = ['sunset', 'dawn', 'night', 'warehouse', 'forest', 'apartment', 'studio', 'city', 'park', 'lobby'];
+  
+  // Call onLoad callback if provided
+  useEffect(() => {
+    if (onLoad) {
+      onLoad();
+    }
+  }, [onLoad]);
   
   return (
     <div style={{ width: '100%', height: '500px', position: 'relative' }}>
@@ -144,7 +150,7 @@ export default function ModelViewer({
           <Stage 
             environment={preset}
             intensity={0.5}
-            contactShadow={{ opacity: 0.6, blur: 2 }}
+            shadows
             preset="rembrandt"
             adjustCamera={false}
           >

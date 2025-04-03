@@ -53,6 +53,7 @@ function Loader() {
 // Model component that loads and displays a 3D model
 function Model({ url, autoRotate = false }: { url: string; autoRotate?: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
+  // Safely handle the GLTF result
   const { scene } = useGLTF(url) as GLTFResult;
   const { camera } = useThree();
   const [hovered, setHovered] = useState(false);
