@@ -4,6 +4,20 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Text3D, OrbitControls, Center, useMatcapTexture } from '@react-three/drei';
 import * as THREE from 'three';
 
+// Define proper types for Text3DObject props
+interface Text3DObjectProps {
+  text?: string;
+  font?: string;
+  matcapId?: string;
+  bevelEnabled?: boolean;
+  bevelSize?: number;
+  bevelOffset?: number;
+  bevelSegments?: number;
+  curveSegments?: number;
+  depth?: number;
+  position?: [number, number, number];
+}
+
 function Text3DObject({
   text = 'Hello',
   font = '/fonts/inter_regular.json',
@@ -14,9 +28,9 @@ function Text3DObject({
   bevelSegments = 4,
   curveSegments = 12,
   depth = 0.2,
-  ...props
-}) {
-  const textRef = useRef();
+  position = [0, 0, 0]
+}: Text3DObjectProps) {
+  const textRef = useRef<THREE.Mesh>(null);
   const [matcapTexture] = useMatcapTexture(matcapId, 256);
   const [bounceAnimation, setBounceAnimation] = useState(true);
   const [rotateAnimation, setRotateAnimation] = useState(false);
@@ -37,7 +51,7 @@ function Text3DObject({
   });
 
   return (
-    <group {...props}>
+    <group position={position}>
       <Center>
         <Text3D
           ref={textRef}
@@ -48,7 +62,7 @@ function Text3DObject({
           bevelOffset={bevelOffset}
           bevelSegments={bevelSegments}
           curveSegments={curveSegments}
-          depth={depth}
+          height={depth} // Using height instead of depth for Text3D
         >
           {text}
           <meshMatcapMaterial matcap={matcapTexture} />

@@ -10,6 +10,13 @@ import {
   Html 
 } from '@react-three/drei';
 import * as THREE from 'three';
+import { GLTF } from 'three-stdlib';
+
+// Define proper type for the model loader result
+type GLTFResult = GLTF & {
+  nodes: Record<string, THREE.Mesh>;
+  materials: Record<string, THREE.Material>;
+};
 
 // Simple loading indicator
 function Loader() {
@@ -44,18 +51,18 @@ function Loader() {
 }
 
 // Model component that loads and displays a 3D model
-function Model({ url, autoRotate = false }) {
-  const group = useRef();
-  const { scene, animations } = useGLTF(url);
+function Model({ url, autoRotate = false }: { url: string; autoRotate?: boolean }) {
+  const groupRef = useRef<THREE.Group>(null);
+  const gltf = useGLTF(url) as GLTFResult;
   const { camera } = useThree();
   const [hovered, setHovered] = useState(false);
 
   // Make a copy to avoid modifying the original
-  const model = useMemo(() => scene.clone(), [scene]);
+  const model = useMemo(() => gltf.scene.clone(), [gltf.scene]);
 
   // Set up animation
   useEffect(() => {
-    if (animations && animations.length > 0) {
+    if (gltf.animations && gltf.animations.length > 0) {
       // Set up animation mixer if there are animations
       // Implementation omitted for brevity
     }
@@ -66,28 +73,32 @@ function Model({ url, autoRotate = false }) {
     const center = box.getCenter(new THREE.Vector3());
     
     const maxDim = Math.max(size.x, size.y, size.z);
-    const fov = camera.fov * (Math.PI / 180);
-    let cameraZ = Math.abs(maxDim / Math.sin(fov / 2));
     
-    camera.position.set(0, center.y, center.z + cameraZ * 1.5);
-    camera.lookAt(center);
-    camera.updateProjectionMatrix();
+    // Check if camera is PerspectiveCamera before accessing fov
+    if (camera instanceof THREE.PerspectiveCamera) {
+      const fov = camera.fov * (Math.PI / 180);
+      let cameraZ = Math.abs(maxDim / Math.sin(fov / 2));
+      
+      camera.position.set(0, center.y, center.z + cameraZ * 1.5);
+      camera.lookAt(center);
+      camera.updateProjectionMatrix();
+    }
     
     return () => {
       // Cleanup
     };
-  }, [model, animations, camera]);
+  }, [model, gltf.animations, camera]);
 
   // Auto-rotate if enabled
   useFrame((state, delta) => {
-    if (autoRotate && group.current) {
-      group.current.rotation.y += delta * 0.5;
+    if (autoRotate && groupRef.current) {
+      groupRef.current.rotation.y += delta * 0.5;
     }
   });
 
   return (
     <group 
-      ref={group}
+      ref={groupRef}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
@@ -114,17 +125,27 @@ function Model({ url, autoRotate = false }) {
   );
 }
 
+// Define environment preset type
+type EnvironmentPreset = 'sunset' | 'dawn' | 'night' | 'warehouse' | 'forest' | 'apartment' | 'studio' | 'city' | 'park' | 'lobby';
+
+interface ModelViewerProps {
+  modelUrl?: string;
+  environmentPreset?: EnvironmentPreset;
+  autoRotate?: boolean;
+  showInspector?: boolean;
+}
+
 export default function ModelViewer({ 
   modelUrl = '/path/to/model.glb',
   environmentPreset = 'sunset',
   autoRotate = true,
   showInspector = false 
-}) {
-  const [preset, setPreset] = useState(environmentPreset);
+}: ModelViewerProps) {
+  const [preset, setPreset] = useState<EnvironmentPreset>(environmentPreset);
   const [rotation, setRotation] = useState(autoRotate);
-  const [viewMode, setViewMode] = useState('normal'); // normal, wireframe, uv
+  const [viewMode, setViewMode] = useState<'normal' | 'wireframe' | 'uv'>('normal');
   
-  const environments = ['sunset', 'dawn', 'night', 'warehouse', 'forest', 'apartment', 'studio', 'city', 'park', 'lobby'];
+  const environments: EnvironmentPreset[] = ['sunset', 'dawn', 'night', 'warehouse', 'forest', 'apartment', 'studio', 'city', 'park', 'lobby'];
   
   return (
     <div style={{ width: '100%', height: '500px', position: 'relative' }}>
@@ -205,7 +226,7 @@ export default function ModelViewer({
           </label>
           <select
             value={preset}
-            onChange={(e) => setPreset(e.target.value)}
+            onChange={(e) => setPreset(e.target.value as EnvironmentPreset)}
             style={{ 
               width: '100%', 
               padding: '8px', 
@@ -260,3 +281,4 @@ export default function ModelViewer({
     </div>
   );
 }
+
