@@ -10,6 +10,7 @@ interface CodeSnippetProps {
   language?: string;
   showLineNumbers?: boolean;
   showCopyButton?: boolean;
+  className?: string;
 }
 
 const CodeSnippet: React.FC<CodeSnippetProps> = ({
@@ -17,6 +18,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
   language = "jsx",
   showLineNumbers = false,
   showCopyButton = true,
+  className,
 }) => {
   const [copied, setCopied] = useState(false);
   
@@ -44,7 +46,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
   const fileName = `${language === "jsx" ? "Component" : language}.${language}`;
 
   return (
-    <div className="rounded-lg overflow-hidden border border-border/30 shadow-sm bg-[#1e1e1e] text-[#d4d4d4]">
+    <div className={cn("rounded-lg overflow-hidden border border-border/30 shadow-sm bg-[#1e1e1e] text-[#d4d4d4]", className)}>
       {/* VSCode-style top bar */}
       <div className="flex items-center justify-between bg-[#252526] px-4 py-2 border-b border-border/20">
         <div className="flex items-center space-x-2">
