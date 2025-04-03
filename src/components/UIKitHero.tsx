@@ -2,6 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Github, Package, ExternalLink } from "lucide-react";
+import { CodeBlock } from "@/components/ui/code-highlight";
 
 const UIKitHero = () => {
   return (
@@ -44,6 +45,12 @@ const UIKitHero = () => {
             ))}
           </div>
           <p className="text-sm text-muted-foreground">Join 5,000+ developers and designers</p>
+        </div>
+        
+        <div className="mt-10 w-full max-w-xl">
+          <CodeBlock language="jsx">
+            {`import { Button, Scene } from 'uiki8';\n\nfunction App() {\n  return (\n    <div>\n      <h1>My Amazing App</h1>\n      <Scene height="300px" />\n      <Button>Get Started</Button>\n    </div>\n  );\n}`}
+          </CodeBlock>
         </div>
       </div>
     </section>
