@@ -1,6 +1,5 @@
-
 import React, { Suspense, useState, useEffect } from 'react';
-import { ProductViewer, RotatingCube, TerrainMap, ModelViewer } from "@/lib/components/3d";
+import { ProductViewer, RotatingCube, TerrainMap } from "@/lib/components/3d";
 import { ComponentItem } from "@/types/component";
 
 interface ComponentPreviewProps {
@@ -10,26 +9,12 @@ interface ComponentPreviewProps {
 const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
   const [hasError, setHasError] = useState(false);
   const [is3DRendered, setIs3DRendered] = useState(false);
-  const [loadAttempts, setLoadAttempts] = useState(0);
 
-  // Reset states when component changes
+  // Reset error state when component changes
   useEffect(() => {
     setHasError(false);
     setIs3DRendered(false);
-    setLoadAttempts(0);
   }, [component.id]);
-  
-  // Retry rendering if it fails
-  useEffect(() => {
-    if (hasError && loadAttempts < 2) {
-      const timer = setTimeout(() => {
-        setHasError(false);
-        setLoadAttempts(prev => prev + 1);
-      }, 1000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [hasError, loadAttempts]);
   
   // Handle 3D components with better error handling and rendering constraints
   const render3DComponent = () => {
@@ -79,40 +64,6 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
                     <TerrainMap onLoad={() => setIs3DRendered(true)} />
                   </div>
                 </Suspense>
-              </ErrorBoundary>
-            </div>
-          );
-          
-        case 108: // Model Viewer - Use a sample .glb model or placeholder
-          return (
-            <div className="w-full h-full flex items-center justify-center">
-              <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
-                <Suspense fallback={<LoadingFallback />}>
-                  <div style={{ width: '100%', height: '200px', position: 'relative' }}>
-                    <ModelViewer 
-                      modelPath="/placeholder.svg" 
-                      onLoad={() => setIs3DRendered(true)} 
-                      showControls={false}
-                      fallbackElement={
-                        <div className="h-full w-full flex items-center justify-center">
-                          <p className="text-muted-foreground">Model preview</p>
-                        </div>
-                      }
-                    />
-                  </div>
-                </Suspense>
-              </ErrorBoundary>
-            </div>
-          );
-          
-        case 104: // Particle System
-          return (
-            <div className="w-full h-full flex items-center justify-center">
-              <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
-                <div className="text-center p-4">
-                  <p className="text-primary font-medium">Particle System Preview</p>
-                  <p className="text-muted-foreground text-sm mt-2">Click to view full component</p>
-                </div>
               </ErrorBoundary>
             </div>
           );
