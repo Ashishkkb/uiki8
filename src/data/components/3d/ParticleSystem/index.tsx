@@ -4,244 +4,226 @@ import { ParticleSystem } from "@/lib/components/3d";
 
 const ParticleSystemComponent: ComponentItem = {
   id: 104,
-  name: "3D Particle System",
+  name: "Interactive Particle System",
   category: "3D",
   framework: "React Three Fiber",
-  description: "GPU-accelerated particle system for creating stunning visual effects like fire, smoke, and magical auras",
-  code: `import { useState, useRef, useMemo, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+  description: "An advanced interactive particle system with real-time controls and physics. Users can interact with particles using different behavior modes.",
+  code: `import React, { useRef, useState, useEffect } from 'react';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { OrbitControls, useTexture, Text } from '@react-three/drei';
 import * as THREE from 'three';
-import { OrbitControls, PerspectiveCamera } from '@react-three/drei';
 
-// Particle system component
-function ParticleSystem({ count = 5000, color = '#ff5500', speed = 0.2, scale = 1, type = 'fire', ...props }) {
-  const mesh = useRef();
-  const [positions, setPositions] = useState(null);
-  const [colors, setColors] = useState(null);
-  const [sizes, setSizes] = useState(null);
+function ParticleField({ 
+  particleCount = 1000, 
+  particleSize = 0.05,
+  color = "#4f46e5",
+  interactiveMode = "attract",
+  speed = 0.5
+}) {
+  const pointsRef = useRef();
+  const mousePos = useMousePosition();
   
-  // Generate particle data
-  useEffect(() => {
-    const positions = new Float32Array(count * 3);
-    const colors = new Float32Array(count * 3);
-    const sizes = new Float32Array(count);
-    
-    const colorObj = new THREE.Color(color);
-    const tempColor = new THREE.Color();
-    
-    for (let i = 0; i < count; i++) {
-      const i3 = i * 3;
-      
-      // Different distributions for different effect types
-      switch (type) {
-        case 'fire':
-          // Cone-like distribution for fire
-          const radius = Math.random() * scale;
-          const theta = Math.random() * Math.PI * 2;
-          positions[i3] = radius * Math.sin(theta);
-          positions[i3 + 1] = Math.random() * 2 * scale;
-          positions[i3 + 2] = radius * Math.cos(theta);
-          
-          // Color gradient from yellow to red
-          tempColor.copy(colorObj).lerp(new THREE.Color('#ffcc00'), Math.random());
-          break;
-          
-        case 'smoke':
-          // Wider distribution for smoke
-          positions[i3] = (Math.random() - 0.5) * scale;
-          positions[i3 + 1] = Math.random() * 3 * scale;
-          positions[i3 + 2] = (Math.random() - 0.5) * scale;
-          
-          // Gray tone for smoke
-          tempColor.copy(colorObj).lerp(new THREE.Color('#aaaaaa'), Math.random());
-          break;
-          
-        case 'magic':
-          // Spherical distribution for magic effect
-          const phi = Math.acos(2 * Math.random() - 1);
-          const theta2 = Math.random() * Math.PI * 2;
-          const r = scale * Math.cbrt(Math.random());
-          
-          positions[i3] = r * Math.sin(phi) * Math.cos(theta2);
-          positions[i3 + 1] = r * Math.sin(phi) * Math.sin(theta2);
-          positions[i3 + 2] = r * Math.cos(phi);
-          
-          // Colorful gradient for magic
-          tempColor.setHSL(Math.random(), 0.7, 0.5);
-          break;
-          
-        default:
-          // Default random distribution
-          positions[i3] = (Math.random() - 0.5) * scale;
-          positions[i3 + 1] = (Math.random() - 0.5) * scale;
-          positions[i3 + 2] = (Math.random() - 0.5) * scale;
-          tempColor.copy(colorObj);
-      }
-      
-      colors[i3] = tempColor.r;
-      colors[i3 + 1] = tempColor.g;
-      colors[i3 + 2] = tempColor.b;
-      
-      // Varied particle sizes
-      sizes[i] = Math.random() * 0.5 + 0.5;
-    }
-    
-    setPositions(positions);
-    setColors(colors);
-    setSizes(sizes);
-  }, [count, color, scale, type]);
-
-  // Animation for particle movement
+  // Animation and interaction logic
   useFrame(({ clock }) => {
-    if (!mesh.current) return;
+    if (!pointsRef.current) return;
     
     const time = clock.getElapsedTime() * speed;
-    const positionArray = mesh.current.geometry.attributes.position.array;
+    const positionAttribute = pointsRef.current.geometry.getAttribute('position');
     
-    for (let i = 0; i < count; i++) {
+    // Update each particle based on interactive mode
+    for (let i = 0; i < particleCount; i++) {
       const i3 = i * 3;
+      let x = positionAttribute.array[i3];
+      let y = positionAttribute.array[i3 + 1];
+      let z = positionAttribute.array[i3 + 2];
       
-      switch (type) {
-        case 'fire':
-          // Rising motion for fire
-          positionArray[i3 + 1] += speed * 0.03;
-          positionArray[i3] += Math.sin(time + i) * 0.01;
-          positionArray[i3 + 2] += Math.cos(time + i) * 0.01;
-          
-          // Reset particles that go too high
-          if (positionArray[i3 + 1] > scale * 2) {
-            positionArray[i3 + 1] = Math.random() * 0.5;
-            positionArray[i3] = (Math.random() - 0.5) * scale * 0.3;
-            positionArray[i3 + 2] = (Math.random() - 0.5) * scale * 0.3;
+      // Calculate distance to mouse
+      const dx = x - mousePos.x;
+      const dy = y - mousePos.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      // Apply interaction effect based on mode
+      switch(interactiveMode) {
+        case "attract":
+          if (distance < 2) {
+            x += dx * -0.02 * speed;
+            y += dy * -0.02 * speed;
           }
           break;
-          
-        case 'smoke':
-          // Rising and expanding motion for smoke
-          positionArray[i3 + 1] += speed * 0.02;
-          positionArray[i3] += Math.sin(time + i) * 0.005;
-          positionArray[i3 + 2] += Math.cos(time + i) * 0.005;
-          
-          // Reset particles that go too high
-          if (positionArray[i3 + 1] > scale * 3) {
-            positionArray[i3 + 1] = Math.random() * 0.5;
-            positionArray[i3] = (Math.random() - 0.5) * scale * 0.2;
-            positionArray[i3 + 2] = (Math.random() - 0.5) * scale * 0.2;
+        case "repel":
+          if (distance < 2) {
+            x += dx * 0.02 * speed;
+            y += dy * 0.02 * speed;
           }
           break;
-          
-        case 'magic':
-          // Orbital motion for magic
-          const angle = time * (i % 10 + 1) * 0.01;
-          const radius = Math.abs(positions[i3]) + Math.abs(positions[i3 + 2]);
-          positionArray[i3] = Math.sin(angle) * radius;
-          positionArray[i3 + 2] = Math.cos(angle) * radius;
-          positionArray[i3 + 1] = positions[i3 + 1] + Math.sin(time + i) * 0.1;
+        case "swirl":
+          if (distance < 2) {
+            const angle = time * 0.5;
+            const swirl = 0.04 * speed / (distance + 0.1);
+            x += Math.cos(angle) * swirl * dy;
+            y += Math.sin(angle) * swirl * dx;
+          }
           break;
+        case "wave":
+          const waveX = originalPositions[i3] + Math.sin(time + originalPositions[i3] * 0.5) * 0.2 * speed;
+          const waveY = originalPositions[i3 + 1] + Math.sin(time + originalPositions[i3 + 1] * 0.5) * 0.2 * speed;
+          const waveZ = originalPositions[i3 + 2] + Math.sin(time + originalPositions[i3 + 2] * 0.5) * 0.2 * speed;
           
-        default:
-          // Generic pulsing motion
-          positionArray[i3] = positions[i3] + Math.sin(time + i) * 0.1;
-          positionArray[i3 + 1] = positions[i3 + 1] + Math.cos(time + i) * 0.1;
-          positionArray[i3 + 2] = positions[i3 + 2] + Math.sin(time + i * 0.7) * 0.1;
+          x = x * 0.95 + waveX * 0.05;
+          y = y * 0.95 + waveY * 0.05;
+          z = z * 0.95 + waveZ * 0.05;
+          break;
       }
+      
+      // Update position
+      positionAttribute.array[i3] = x;
+      positionAttribute.array[i3 + 1] = y;
+      positionAttribute.array[i3 + 2] = z;
     }
     
-    mesh.current.geometry.attributes.position.needsUpdate = true;
+    positionAttribute.needsUpdate = true;
   });
-
-  const particleMaterial = useMemo(() => {
-    return new THREE.PointsMaterial({
-      size: 0.1,
-      transparent: true,
-      opacity: 0.6,
-      vertexColors: true,
-      blending: THREE.AdditiveBlending,
-      sizeAttenuation: true,
-      depthWrite: false
-    });
-  }, []);
-
-  if (!positions || !colors || !sizes) return null;
-
+  
   return (
-    <points ref={mesh} {...props}>
+    <points ref={pointsRef}>
       <bufferGeometry>
         <bufferAttribute
-          attachObject={['attributes', 'position']}
-          count={count}
+          attach="attributes-position"
+          count={positions.length / 3}
           array={positions}
           itemSize={3}
         />
-        <bufferAttribute
-          attachObject={['attributes', 'color']}
-          count={count}
-          array={colors}
-          itemSize={3}
-        />
-        <bufferAttribute
-          attachObject={['attributes', 'size']}
-          count={count}
-          array={sizes}
-          itemSize={1}
-        />
       </bufferGeometry>
-      <primitive attach="material" object={particleMaterial} />
+      <pointsMaterial
+        size={particleSize}
+        color={color}
+        sizeAttenuation
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+        map={texture}
+      />
     </points>
   );
 }
 
-export default function ParticleSystemEffect() {
-  const [effectType, setEffectType] = useState('fire');
+// Custom hook for interactive mouse position
+function useMousePosition() {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const { viewport, camera } = useThree();
   
-  const effectTypes = [
-    { name: 'Fire', value: 'fire', color: '#ff5500' },
-    { name: 'Smoke', value: 'smoke', color: '#777777' },
-    { name: 'Magic', value: 'magic', color: '#8B5CF6' }
-  ];
+  useEffect(() => {
+    const updateMousePosition = (e) => {
+      // Convert screen coordinates to normalized device coordinates
+      const x = (e.clientX / window.innerWidth) * 2 - 1;
+      const y = -(e.clientY / window.innerHeight) * 2 + 1;
+      
+      // Project to 3D space
+      const vector = new THREE.Vector3(x, y, 0.5);
+      vector.unproject(camera);
+      const dir = vector.sub(camera.position).normalize();
+      const distance = -camera.position.z / dir.z;
+      const pos = camera.position.clone().add(dir.multiplyScalar(distance));
+      
+      setMousePosition({ x: pos.x, y: pos.y });
+    };
+    
+    window.addEventListener('mousemove', updateMousePosition);
+    
+    return () => {
+      window.removeEventListener('mousemove', updateMousePosition);
+    };
+  }, [camera]);
+  
+  return mousePosition;
+}
 
+export default function ParticleSystem(props) {
+  const [mode, setMode] = useState("attract");
+  const [speed, setSpeed] = useState(0.5);
+  const [particleCount, setParticleCount] = useState(1000);
+  const [particleSize, setParticleSize] = useState(0.05);
+  
   return (
     <div style={{ width: '100%', height: '400px', position: 'relative' }}>
       <Canvas>
-        <PerspectiveCamera makeDefault position={[0, 0, 5]} />
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} intensity={1} />
-        <ParticleSystem 
-          type={effectType} 
-          color={effectTypes.find(e => e.value === effectType)?.color} 
-          scale={2}
+        <ParticleField 
+          particleCount={particleCount}
+          particleSize={particleSize}
+          interactiveMode={mode}
+          speed={speed}
+          color={props.color || "#4f46e5"}
         />
-        <OrbitControls dampingFactor={0.05} />
+        <OrbitControls />
       </Canvas>
       
-      <div style={{ position: 'absolute', bottom: '10px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px' }}>
-        {effectTypes.map((effect) => (
-          <button
-            key={effect.value}
-            style={{
-              padding: '8px 12px',
-              background: effectType === effect.value ? effect.color : '#333',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              opacity: effectType === effect.value ? 1 : 0.8,
-            }}
-            onClick={() => setEffectType(effect.value)}
-          >
-            {effect.name}
-          </button>
-        ))}
+      <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-md p-3 rounded-lg text-white">
+        <div className="flex flex-wrap items-center gap-4 text-sm">
+          <div className="flex items-center gap-2">
+            <span>Mode:</span>
+            <select 
+              value={mode}
+              onChange={(e) => setMode(e.target.value)}
+              className="bg-gray-700 rounded px-2 py-1"
+            >
+              <option value="attract">Attract</option>
+              <option value="repel">Repel</option>
+              <option value="swirl">Swirl</option>
+              <option value="wave">Wave</option>
+            </select>
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <span>Speed:</span>
+            <input 
+              type="range" 
+              min="0.1" 
+              max="2" 
+              step="0.1"
+              value={speed}
+              onChange={(e) => setSpeed(parseFloat(e.target.value))}
+              className="w-24 accent-blue-500"
+            />
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <span>Size:</span>
+            <input 
+              type="range" 
+              min="0.01" 
+              max="0.2" 
+              step="0.01"
+              value={particleSize}
+              onChange={(e) => setParticleSize(parseFloat(e.target.value))}
+              className="w-24 accent-blue-500"
+            />
+          </div>
+          
+          <div className="flex items-center gap-2">
+            <span>Count:</span>
+            <input 
+              type="range" 
+              min="100" 
+              max="2000" 
+              step="100"
+              value={particleCount}
+              onChange={(e) => setParticleCount(parseInt(e.target.value))}
+              className="w-24 accent-blue-500"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
 }`,
   component: ParticleSystem,
-  tags: ["3D", "Particles", "Animation", "Effects", "GPU"],
+  tags: ["3D", "interactive", "animation", "particles", "physics", "WebGL"],
+  is3D: true,
   isNew: true,
-  fileSize: "15.2 KB",
+  fileSize: "5.8 KB",
+  complexity: "complex",
   price: "49.99",
-  is3D: true
+  dependencies: ["@react-three/fiber", "@react-three/drei", "three", "@react-spring/three"]
 };
 
 export default ParticleSystemComponent;
