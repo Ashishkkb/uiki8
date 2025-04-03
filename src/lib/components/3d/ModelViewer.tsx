@@ -7,7 +7,8 @@ import {
   PerspectiveCamera, 
   Environment, 
   useGLTF, 
-  Html 
+  Html,
+  Box
 } from '@react-three/drei';
 import * as THREE from 'three';
 import { GLTF } from 'three-stdlib';
@@ -50,40 +51,65 @@ function Loader() {
   );
 }
 
+// Fallback when model cannot be loaded
+function FallbackModel() {
+  return (
+    <group>
+      <Box args={[1, 1, 1]} position={[0, 0, 0]}>
+        <meshStandardMaterial color="#3498db" />
+      </Box>
+      <Html position={[0, 1.5, 0]} center>
+        <div style={{
+          background: 'rgba(0,0,0,0.7)',
+          color: 'white',
+          padding: '8px 12px',
+          borderRadius: '4px',
+          fontSize: '14px'
+        }}>
+          Model could not be loaded
+        </div>
+      </Html>
+    </group>
+  );
+}
+
 // Model component that loads and displays a 3D model
 function Model({ url, autoRotate = false }: { url: string; autoRotate?: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
-  // Safely handle the GLTF result
-  const { scene } = useGLTF(url) as GLTFResult;
   const { camera } = useThree();
   const [hovered, setHovered] = useState(false);
+  const [modelLoaded, setModelLoaded] = useState(false);
+  const [error, setError] = useState(false);
 
-  // Make a copy to avoid modifying the original
-  const model = useMemo(() => scene.clone(), [scene]);
-
-  // Set up animation
-  useEffect(() => {
-    // Reset camera to fit the model
-    const box = new THREE.Box3().setFromObject(model);
-    const size = box.getSize(new THREE.Vector3());
-    const center = box.getCenter(new THREE.Vector3());
-    
-    const maxDim = Math.max(size.x, size.y, size.z);
-    
-    // Check if camera is PerspectiveCamera before accessing fov
-    if (camera instanceof THREE.PerspectiveCamera) {
-      const fov = camera.fov * (Math.PI / 180);
-      let cameraZ = Math.abs(maxDim / Math.sin(fov / 2));
-      
-      camera.position.set(0, center.y, center.z + cameraZ * 1.5);
-      camera.lookAt(center);
-      camera.updateProjectionMatrix();
+  // Try to load the model but handle errors gracefully
+  let scene: THREE.Group | null = null;
+  try {
+    // Check if the URL is the placeholder or invalid path
+    if (url === '/path/to/model.glb' || url === '/placeholder.svg') {
+      throw new Error('Invalid model path');
     }
     
-    return () => {
-      // Cleanup
-    };
-  }, [model, camera]);
+    // Only attempt to load if we have a valid URL
+    const result = useGLTF(url, true);
+    scene = result.scene;
+    
+    useEffect(() => {
+      if (scene) {
+        setModelLoaded(true);
+      }
+    }, [scene]);
+  } catch (err) {
+    // Handle the loading error
+    useEffect(() => {
+      setError(true);
+      console.warn("Model loading failed:", err);
+    }, []);
+  }
+
+  // Make a copy to avoid modifying the original
+  const model = useMemo(() => {
+    return scene ? scene.clone() : null;
+  }, [scene]);
 
   // Auto-rotate if enabled
   useFrame((state, delta) => {
@@ -92,17 +118,29 @@ function Model({ url, autoRotate = false }: { url: string; autoRotate?: boolean 
     }
   });
 
+  // If model failed to load, show fallback
+  if (error) {
+    return <FallbackModel />;
+  }
+
   return (
     <group 
       ref={groupRef}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
-      <primitive 
-        object={model} 
-        scale={1}
-        dispose={null}
-      />
+      {model ? (
+        <primitive 
+          object={model} 
+          scale={1}
+          dispose={null}
+        />
+      ) : (
+        <Box args={[1, 1, 1]}>
+          <meshStandardMaterial color="#3498db" />
+        </Box>
+      )}
+      
       {hovered && (
         <Html position={[0, 2, 0]} center distanceFactor={10}>
           <div style={{
@@ -129,11 +167,11 @@ interface ModelViewerProps {
   environmentPreset?: EnvironmentPreset;
   autoRotate?: boolean;
   showInspector?: boolean;
-  onLoad?: () => void; // Add the onLoad prop to the interface
+  onLoad?: () => void;
 }
 
 export default function ModelViewer({ 
-  modelUrl = '/path/to/model.glb',
+  modelUrl = '/placeholder.svg',  // Changed from '/path/to/model.glb' to '/placeholder.svg'
   environmentPreset = 'sunset',
   autoRotate = true,
   showInspector = false,
@@ -142,42 +180,70 @@ export default function ModelViewer({
   const [preset, setPreset] = useState<EnvironmentPreset>(environmentPreset);
   const [rotation, setRotation] = useState(autoRotate);
   const [viewMode, setViewMode] = useState<'normal' | 'wireframe' | 'uv'>('normal');
+  const [isLoaded, setIsLoaded] = useState(false);
   
   const environments: EnvironmentPreset[] = ['sunset', 'dawn', 'night', 'warehouse', 'forest', 'apartment', 'studio', 'city', 'park', 'lobby'];
   
   // Call onLoad callback if provided
   useEffect(() => {
+    setIsLoaded(true);
     if (onLoad) {
       onLoad();
     }
   }, [onLoad]);
   
+  // Use error boundary for the Canvas to prevent crashes
+  const [hasError, setHasError] = useState(false);
+
+  if (hasError) {
+    return (
+      <div style={{ 
+        width: '100%', 
+        height: '300px', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center',
+        background: '#f8f9fa',
+        color: '#dc3545',
+        borderRadius: '8px' 
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <p style={{ fontSize: '18px', fontWeight: 'bold' }}>Unable to render 3D content</p>
+          <p style={{ fontSize: '14px' }}>Please check browser compatibility</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div style={{ width: '100%', height: '500px', position: 'relative' }}>
-      <Canvas shadows>
-        <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={50} />
-        
-        <Suspense fallback={<Loader />}>
-          <Stage 
-            environment={preset}
-            intensity={0.5}
-            shadows
-            preset="rembrandt"
-            adjustCamera={false}
-          >
-            <Model url={modelUrl} autoRotate={rotation} />
-          </Stage>
-          <Environment preset={preset} />
-        </Suspense>
-        
-        <OrbitControls 
-          makeDefault 
-          enablePan={true}
-          enableZoom={true}
-          minPolarAngle={0}
-          maxPolarAngle={Math.PI / 1.5}
-        />
-      </Canvas>
+      <ErrorBoundary onError={() => setHasError(true)}>
+        <Canvas shadows gl={{ antialias: true }}>
+          <color attach="background" args={['#f0f0f0']} />
+          <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={50} />
+          
+          <Suspense fallback={<Loader />}>
+            <Stage 
+              environment={preset}
+              intensity={0.5}
+              shadows
+              preset="rembrandt"
+              adjustCamera={false}
+            >
+              <Model url={modelUrl} autoRotate={rotation} />
+            </Stage>
+            <Environment preset={preset} />
+          </Suspense>
+          
+          <OrbitControls 
+            makeDefault 
+            enablePan={true}
+            enableZoom={true}
+            minPolarAngle={0}
+            maxPolarAngle={Math.PI / 1.5}
+          />
+        </Canvas>
+      </ErrorBoundary>
       
       <div style={{
         position: 'absolute',
@@ -285,4 +351,31 @@ export default function ModelViewer({
       )}
     </div>
   );
+}
+
+// Error boundary component for handling React Three Fiber errors
+class ErrorBoundary extends React.Component<
+  { children: React.ReactNode; onError: () => void },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode; onError: () => void }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error) {
+    console.error("Error in 3D component:", error);
+    this.props.onError();
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return null;
+    }
+    return this.props.children;
+  }
 }

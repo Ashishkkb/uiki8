@@ -10,12 +10,26 @@ interface ComponentPreviewProps {
 const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
   const [hasError, setHasError] = useState(false);
   const [is3DRendered, setIs3DRendered] = useState(false);
+  const [loadAttempts, setLoadAttempts] = useState(0);
 
-  // Reset error state when component changes
+  // Reset states when component changes
   useEffect(() => {
     setHasError(false);
     setIs3DRendered(false);
+    setLoadAttempts(0);
   }, [component.id]);
+  
+  // Retry rendering if it fails
+  useEffect(() => {
+    if (hasError && loadAttempts < 2) {
+      const timer = setTimeout(() => {
+        setHasError(false);
+        setLoadAttempts(prev => prev + 1);
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [hasError, loadAttempts]);
   
   // Handle 3D components with better error handling and rendering constraints
   const render3DComponent = () => {
@@ -69,7 +83,7 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
             </div>
           );
           
-        case 108: // Model Viewer
+        case 108: // Model Viewer - Use a sample .glb model or placeholder
           return (
             <div className="w-full h-full flex items-center justify-center">
               <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
@@ -78,6 +92,18 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
                     <ModelViewer modelUrl="/placeholder.svg" onLoad={() => setIs3DRendered(true)} />
                   </div>
                 </Suspense>
+              </ErrorBoundary>
+            </div>
+          );
+          
+        case 104: // Particle System
+          return (
+            <div className="w-full h-full flex items-center justify-center">
+              <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
+                <div className="text-center p-4">
+                  <p className="text-primary font-medium">Particle System Preview</p>
+                  <p className="text-muted-foreground text-sm mt-2">Click to view full component</p>
+                </div>
               </ErrorBoundary>
             </div>
           );
