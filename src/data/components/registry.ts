@@ -18,6 +18,7 @@ import TextFieldComponent from './Form/TextField';
 
 // Media Components
 import CarouselComponent from './Media/Carousel';
+import EnhancedMediaGalleryComponent from './Media/EnhancedMediaGallery';
 
 // 3D Components
 import RotatingCubeComponent from './3d/RotatingCube';
@@ -46,6 +47,7 @@ export const getAllComponents = (): ComponentItem[] => [
   
   // Media Components
   CarouselComponent,
+  EnhancedMediaGalleryComponent,
   
   // 3D Components
   RotatingCubeComponent,

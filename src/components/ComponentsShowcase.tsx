@@ -5,6 +5,7 @@ import ComponentFilters from "./ComponentFilters";
 import ComponentCard from "./ComponentCard";
 import { cn } from "@/lib/utils";
 import { Search } from "lucide-react";
+import EnhancedMediaShowcase from "./media/EnhancedMediaShowcase";
 
 interface ComponentsShowcaseProps {
   initialCategory?: string | null;
@@ -43,6 +44,9 @@ const ComponentsShowcase: React.FC<ComponentsShowcaseProps> = memo(({
     }
   }, [initialCategory]);
 
+  // Show enhanced media showcase when Media category is selected
+  const showMediaShowcase = selectedCategory === 'Media';
+
   return (
     <div>
       {/* Only show filters when not in category-specific view */}
@@ -54,30 +58,38 @@ const ComponentsShowcase: React.FC<ComponentsShowcaseProps> = memo(({
         />
       )}
       
-      {/* Masonry grid layout for components */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredComponents.map((component) => (
-          <ComponentCard
-            key={component.id}
-            component={component}
-          />
-        ))}
-      </div>
+      {/* Show enhanced media showcase when Media category is selected */}
+      {showMediaShowcase && <EnhancedMediaShowcase />}
       
-      {filteredComponents.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-12">
-          <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
-            <Search className="h-10 w-10 text-muted-foreground" />
+      {/* Only show regular component grid when not showing media showcase */}
+      {!showMediaShowcase && (
+        <>
+          {/* Masonry grid layout for components */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredComponents.map((component) => (
+              <ComponentCard
+                key={component.id}
+                component={component}
+              />
+            ))}
           </div>
-          <h3 className="mt-4 text-lg font-semibold">No components found</h3>
-          <p className="mt-2 text-center text-muted-foreground">
-            {searchQuery ? (
-              <>No results for "{searchQuery}". Try another search term.</>
-            ) : (
-              <>No components found in this category.</>
-            )}
-          </p>
-        </div>
+          
+          {filteredComponents.length === 0 && (
+            <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-12">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
+                <Search className="h-10 w-10 text-muted-foreground" />
+              </div>
+              <h3 className="mt-4 text-lg font-semibold">No components found</h3>
+              <p className="mt-2 text-center text-muted-foreground">
+                {searchQuery ? (
+                  <>No results for "{searchQuery}". Try another search term.</>
+                ) : (
+                  <>No components found in this category.</>
+                )}
+              </p>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
