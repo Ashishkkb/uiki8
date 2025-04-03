@@ -8,7 +8,7 @@ const UIKitHero = () => {
     <section className="pt-24 pb-12 px-6 md:px-12 max-w-7xl mx-auto">
       <div className="flex flex-col items-center text-center">
         <div className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary font-medium text-sm mb-4">
-          Introducing ModernKit UI
+          Introducing uiki8
         </div>
         
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-foreground max-w-3xl">
@@ -33,7 +33,7 @@ const UIKitHero = () => {
           
           <Button variant="secondary" className="gap-2 px-8 py-6" size="lg">
             <Package className="h-5 w-5" />
-            npm install modern-kit
+            npm install uiki8
           </Button>
         </div>
         

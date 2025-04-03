@@ -12,7 +12,7 @@ const UIKitCTA = () => {
             Ready to Build Something Amazing?
           </h2>
           <p className="text-xl opacity-90 max-w-3xl mx-auto">
-            Get started with ModernKit UI today and transform your development workflow.
+            Get started with uiki8 today and transform your development workflow.
             Join thousands of developers building better interfaces, faster.
           </p>
         </div>

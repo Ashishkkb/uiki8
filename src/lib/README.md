@@ -1,15 +1,14 @@
-
 <div align="center">
-  <img src="https://via.placeholder.com/150x150?text=Enchant+UI" alt="Enchant UI Logo" width="150" />
-  <h1>Enchant UI</h1>
+  <img src="https://via.placeholder.com/150x150?text=uiki8" alt="uiki8 Logo" width="150" />
+  <h1>uiki8</h1>
   
   <p>A beautiful 3D-enabled UI component library for modern web applications</p>
 
   <div>
-    <img src="https://img.shields.io/github/license/yourusername/enchant-ui?style=flat-square" alt="License" />
-    <img src="https://img.shields.io/github/stars/yourusername/enchant-ui?style=flat-square" alt="Stars" />
-    <img src="https://img.shields.io/npm/v/enchant-ui?style=flat-square" alt="npm version" />
-    <img src="https://img.shields.io/npm/dm/enchant-ui?style=flat-square" alt="Downloads" />
+    <img src="https://img.shields.io/github/license/yourusername/uiki8?style=flat-square" alt="License" />
+    <img src="https://img.shields.io/github/stars/yourusername/uiki8?style=flat-square" alt="Stars" />
+    <img src="https://img.shields.io/npm/v/uiki8?style=flat-square" alt="npm version" />
+    <img src="https://img.shields.io/npm/dm/uiki8?style=flat-square" alt="Downloads" />
   </div>
   
   <br />
@@ -31,17 +30,17 @@
 
 ```bash
 # npm
-npm install enchant-ui
+npm install uiki8
 
 # yarn
-yarn add enchant-ui
+yarn add uiki8
 
 # pnpm
-pnpm add enchant-ui
+pnpm add uiki8
 ```
 
 ```jsx
-import { Button, Scene } from 'enchant-ui';
+import { Button, Scene } from 'uiki8';
 
 function App() {
   return (
@@ -56,7 +55,7 @@ function App() {
 
 ## 📚 Documentation
 
-Visit our [documentation site](https://enchant-ui.com/docs) for:
+Visit our [documentation site](https://uiki8.com/docs) for:
 - Component API references
 - Interactive examples
 - Theme customization
@@ -73,7 +72,7 @@ import {
   CardTitle, 
   Scene,
   TextGenerator
-} from 'enchant-ui';
+} from 'uiki8';
 
 function Example() {
   return (
@@ -94,12 +93,12 @@ function Example() {
 
 ## 🤝 Contributing
 
-We welcome contributions from the community! Enchant UI is an open source project that's better with your involvement.
+We welcome contributions from the community! uiki8 is an open source project that's better with your involvement.
 
 ### How to Contribute
 
 1. **Fork the repository**
-2. **Clone your fork**: `git clone https://github.com/yourusername/enchant-ui.git`
+2. **Clone your fork**: `git clone https://github.com/yourusername/uiki8.git`
 3. **Install dependencies**: `npm install`
 4. **Create a branch**: `git checkout -b feature/amazing-feature`
 5. **Make your changes and commit**: `git commit -m 'Add amazing feature'`
@@ -111,7 +110,7 @@ Check out our [Contributing Guide](./CONTRIBUTING.md) for more details.
 ## ⚙️ Project Structure
 
 ```
-enchant-ui/
+uiki8/
 ├── components/       # UI components
 │   ├── ui/           # Basic UI components  
 │   └── 3d/           # Three.js powered 3D components
@@ -122,17 +121,17 @@ enchant-ui/
 
 ## 📜 License
 
-Enchant UI is [MIT licensed](./LICENSE).
+uiki8 is [MIT licensed](./LICENSE).
 
 ## 💖 Support the Project
 
-If you find Enchant UI valuable, please consider:
-- Starring the [GitHub repository](https://github.com/yourusername/enchant-ui)
+If you find uiki8 valuable, please consider:
+- Starring the [GitHub repository](https://github.com/yourusername/uiki8)
 - Sharing it with friends and colleagues
 - [Sponsoring the project](https://github.com/sponsors/yourusername)
 
 ---
 
 <div align="center">
-  <p>Built with ❤️ by the Enchant UI team and contributors</p>
+  <p>Built with ❤️ by the uiki8 team and contributors</p>
 </div>

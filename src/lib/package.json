@@ -1,6 +1,6 @@
 
 {
-  "name": "enchant-ui",
+  "name": "uiki8",
   "version": "0.2.0",
   "description": "A beautiful UI component library for modern web applications with 3D capabilities",
   "main": "dist/index.js",
@@ -12,7 +12,7 @@
   "sideEffects": false,
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/enchant-ui.git"
+    "url": "https://github.com/yourusername/uiki8.git"
   },
   "keywords": [
     "react",
@@ -27,9 +27,9 @@
   "author": "Your Name",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yourusername/enchant-ui/issues"
+    "url": "https://github.com/yourusername/uiki8/issues"
   },
-  "homepage": "https://enchant-ui.com",
+  "homepage": "https://uiki8.com",
   "peerDependencies": {
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
