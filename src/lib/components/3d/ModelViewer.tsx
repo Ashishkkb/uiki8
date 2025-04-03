@@ -1,4 +1,3 @@
-
 import React, { Suspense, useRef, useState, useEffect, useMemo } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { 
@@ -156,7 +155,7 @@ export default function ModelViewer({
           <Stage 
             environment={preset}
             intensity={0.5}
-            contactShadow={{ opacity: 0.6, blur: 2 }}
+            shadows
             preset="rembrandt"
             adjustCamera={false}
           >
@@ -281,4 +280,3 @@ export default function ModelViewer({
     </div>
   );
 }
-
