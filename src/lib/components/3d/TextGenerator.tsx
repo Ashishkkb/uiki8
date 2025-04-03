@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Text3D, OrbitControls, Center } from '@react-three/drei';
+import { Text, OrbitControls } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface TextGeneratorProps {
@@ -13,22 +13,22 @@ interface TextGeneratorProps {
 
 const TextGeneratorScene: React.FC<{ text: string; color: string }> = ({ text, color }) => {
   return (
-    <Center>
-      <Text3D
-        font="/fonts/helvetiker_regular.typeface.json"
-        size={0.75}
-        height={0.2}
-        curveSegments={12}
-        bevelEnabled
-        bevelThickness={0.02}
-        bevelSize={0.02}
-        bevelOffset={0}
-        bevelSegments={5}
+    <>
+      <Text
+        color={color}
+        fontSize={0.75}
+        maxWidth={200}
+        lineHeight={1}
+        letterSpacing={0.02}
+        textAlign="center"
+        font="https://fonts.gstatic.com/s/raleway/v14/1Ptrg8zYS_SKggPNwK4vaqI.woff"
+        anchorX="center"
+        anchorY="middle"
       >
         {text}
         <meshStandardMaterial color={color} />
-      </Text3D>
-    </Center>
+      </Text>
+    </>
   );
 };
 

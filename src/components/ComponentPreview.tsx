@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect } from 'react';
-import { ProductViewer, RotatingCube, TerrainMap, ParticleSystem, TextGenerator, ModelViewer } from "@/lib/components/3d";
+import { ProductViewer, RotatingCube, TerrainMap, ParticleSystem, TextGenerator, ModelViewer, Scene } from "@/lib/components/3d";
 import { ComponentItem } from "@/types/component";
 
 interface ComponentPreviewProps {
@@ -10,15 +10,12 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
   const [hasError, setHasError] = useState(false);
   const [is3DRendered, setIs3DRendered] = useState(false);
 
-  // Reset error state when component changes
   useEffect(() => {
     setHasError(false);
     setIs3DRendered(false);
   }, [component.id]);
   
-  // Handle 3D components with better error handling and rendering constraints
   const render3DComponent = () => {
-    // Prevent multiple 3D renders which can cause context issues
     if (is3DRendered) {
       return (
         <div className="w-full h-full flex items-center justify-center">
@@ -133,17 +130,14 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
     }
   };
 
-  // If component has errored previously, show fallback
   if (hasError) {
     return <FallbackComponent name={component.name} />;
   }
 
-  // Render 3D components
   if (component.is3D) {
     return render3DComponent();
   }
 
-  // Render React component if available
   if (component.component) {
     const Component = component.component;
     return (
@@ -155,7 +149,6 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
     );
   }
 
-  // For any other components or fallback, use the HTML preview if available
   if (component.previewHtml) {
     return (
       <div
@@ -165,7 +158,6 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
     );
   }
 
-  // Default fallback
   return (
     <div className="w-full h-full flex items-center justify-center">
       <p className="text-gray-500">Preview not available</p>
@@ -173,14 +165,12 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
   );
 };
 
-// Loading fallback when 3D components are loading
 const LoadingFallback = () => (
   <div className="w-full h-full flex items-center justify-center">
     <p className="text-blue-500">Loading 3D component...</p>
   </div>
 );
 
-// Simple fallback component for error cases
 const FallbackComponent = ({ name }: { name: string }) => (
   <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center">
     <p className="text-amber-600 font-medium mb-2">Could not load {name}</p>
@@ -188,7 +178,6 @@ const FallbackComponent = ({ name }: { name: string }) => (
   </div>
 );
 
-// Enhanced error boundary component with onError callback
 class ErrorBoundary extends React.Component<
   { 
     children: React.ReactNode; 
