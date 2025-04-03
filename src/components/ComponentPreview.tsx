@@ -89,7 +89,16 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
               <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
                 <Suspense fallback={<LoadingFallback />}>
                   <div style={{ width: '100%', height: '200px', position: 'relative' }}>
-                    <ModelViewer modelUrl="/placeholder.svg" onLoad={() => setIs3DRendered(true)} />
+                    <ModelViewer 
+                      modelPath="/placeholder.svg" 
+                      onLoad={() => setIs3DRendered(true)} 
+                      showControls={false}
+                      fallbackElement={
+                        <div className="h-full w-full flex items-center justify-center">
+                          <p className="text-muted-foreground">Model preview</p>
+                        </div>
+                      }
+                    />
                   </div>
                 </Suspense>
               </ErrorBoundary>
