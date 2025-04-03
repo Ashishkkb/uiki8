@@ -501,44 +501,6 @@ export default EnhancedMediaGallery;`;
           />
         </div>
       </div>
-      
-      <div className="space-y-4">
-        <h2 className="text-2xl font-bold">Implementation</h2>
-        <CodeBlock language="tsx">
-{`import EnhancedMediaGallery, { MediaItem } from "./EnhancedMediaGallery";
-
-const mediaItems: MediaItem[] = [
-  {
-    id: "1",
-    title: "Mountain Landscapes",
-    description: "Beautiful mountain scenery captured during sunrise",
-    type: "image",
-    thumbnail: "path/to/thumbnail.jpg",
-    source: "path/to/fullsize.jpg",
-    tags: ["nature", "mountains", "landscape"],
-    featured: true
-  },
-  // More items...
-];
-
-// Grid view example
-<EnhancedMediaGallery 
-  items={mediaItems} 
-  title="Media Collection" 
-  subtitle="Browse our curated media content"
-  viewMode="grid"
-/>
-
-// Carousel view example
-<EnhancedMediaGallery 
-  items={mediaItems} 
-  title="Featured Media" 
-  subtitle="Explore our highlighted content"
-  viewMode="carousel"
-  autoplay={true}
-/>`}
-        </CodeBlock>
-      </div>
 
       <Dialog open={isCodeDialogOpen} onOpenChange={setIsCodeDialogOpen}>
         <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
