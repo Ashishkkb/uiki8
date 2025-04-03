@@ -1,21 +1,33 @@
 
-# Enchant UI
+<div align="center">
+  <img src="https://via.placeholder.com/150x150?text=Enchant+UI" alt="Enchant UI Logo" width="150" />
+  <h1>Enchant UI</h1>
+  
+  <p>A beautiful 3D-enabled UI component library for modern web applications</p>
 
-![Enchant UI](https://via.placeholder.com/1200x600?text=Enchant+UI)
+  <div>
+    <img src="https://img.shields.io/github/license/yourusername/enchant-ui?style=flat-square" alt="License" />
+    <img src="https://img.shields.io/github/stars/yourusername/enchant-ui?style=flat-square" alt="Stars" />
+    <img src="https://img.shields.io/npm/v/enchant-ui?style=flat-square" alt="npm version" />
+    <img src="https://img.shields.io/npm/dm/enchant-ui?style=flat-square" alt="Downloads" />
+  </div>
+  
+  <br />
+</div>
 
-A beautiful UI component library for modern web applications, designed with accessibility and developer experience in mind.
+## ✨ Features
 
-## Features
-
-- 🎨 **Beautiful Design**: Carefully crafted components with attention to detail
-- 🛠️ **Framework Agnostic**: Works with React, Vue, Angular, and other modern frameworks
-- 🔍 **Fully Accessible**: Built with accessibility as a priority
+- 🎨 **Beautiful Design**: Meticulously crafted components with attention to detail
+- 🧩 **3D Components**: Built-in Three.js powered 3D components ready to use
+- 🛠️ **Framework Agnostic**: Works seamlessly with React, Vue, Angular, and other modern frameworks
+- 🔍 **Fully Accessible**: Built with WCAG and ARIA guidelines as a priority
 - 📱 **Responsive**: Mobile-first approach for all components
-- 🌙 **Dark Mode Support**: Built-in dark mode for all components
-- 🧩 **Customizable**: Easily theme and adapt components to match your brand
+- 🌙 **Dark Mode**: First-class dark mode support for all components
+- 🎭 **Theme Customization**: Easily adapt components to match your brand identity
+- 🚀 **Performance Optimized**: Lightweight core with tree-shakable imports
 - 📖 **Comprehensive Documentation**: Detailed guides, examples, and API references
 
-## Installation
+## 🚀 Quick Start
 
 ```bash
 # npm
@@ -28,23 +40,30 @@ yarn add enchant-ui
 pnpm add enchant-ui
 ```
 
-## Quick Start
-
 ```jsx
-import { Button } from 'enchant-ui';
+import { Button, Scene } from 'enchant-ui';
 
 function App() {
   return (
-    <Button>Click me</Button>
+    <div>
+      <h1>My Amazing App</h1>
+      <Scene height="300px" />
+      <Button>Get Started</Button>
+    </div>
   );
 }
 ```
 
-## Documentation
+## 📚 Documentation
 
-For full documentation, visit [enchant-ui.com/docs](https://enchant-ui.com/docs)
+Visit our [documentation site](https://enchant-ui.com/docs) for:
+- Component API references
+- Interactive examples
+- Theme customization
+- Accessibility guidelines
+- Integration tutorials
 
-## Examples
+## 🧩 Component Showcase
 
 ```jsx
 import { 
@@ -52,32 +71,68 @@ import {
   Card, 
   CardHeader, 
   CardTitle, 
-  CardContent, 
-  CardFooter 
+  Scene,
+  TextGenerator
 } from 'enchant-ui';
 
 function Example() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Card Title</CardTitle>
+        <CardTitle>Interactive 3D Card</CardTitle>
       </CardHeader>
-      <CardContent>
-        <p>Card content goes here.</p>
-      </CardContent>
-      <CardFooter>
-        <Button>Submit</Button>
-      </CardFooter>
+      <TextGenerator 
+        text="Hello 3D World!" 
+        color="#5f9ea0" 
+        height="200px"
+      />
+      <Button>Explore</Button>
     </Card>
   );
 }
 ```
 
-## Contributing
+## 🤝 Contributing
 
-We welcome contributions! Please see our [contributing guidelines](CONTRIBUTING.md) for details.
+We welcome contributions from the community! Enchant UI is an open source project that's better with your involvement.
 
-## License
+### How to Contribute
 
-MIT © [Your Name](https://github.com/yourusername)
+1. **Fork the repository**
+2. **Clone your fork**: `git clone https://github.com/yourusername/enchant-ui.git`
+3. **Install dependencies**: `npm install`
+4. **Create a branch**: `git checkout -b feature/amazing-feature`
+5. **Make your changes and commit**: `git commit -m 'Add amazing feature'`
+6. **Push to your fork**: `git push origin feature/amazing-feature`
+7. **Open a pull request**
 
+Check out our [Contributing Guide](./CONTRIBUTING.md) for more details.
+
+## ⚙️ Project Structure
+
+```
+enchant-ui/
+├── components/       # UI components
+│   ├── ui/           # Basic UI components  
+│   └── 3d/           # Three.js powered 3D components
+├── hooks/            # Custom React hooks
+├── theme/            # Theming system
+└── utils/            # Utility functions
+```
+
+## 📜 License
+
+Enchant UI is [MIT licensed](./LICENSE).
+
+## 💖 Support the Project
+
+If you find Enchant UI valuable, please consider:
+- Starring the [GitHub repository](https://github.com/yourusername/enchant-ui)
+- Sharing it with friends and colleagues
+- [Sponsoring the project](https://github.com/sponsors/yourusername)
+
+---
+
+<div align="center">
+  <p>Built with ❤️ by the Enchant UI team and contributors</p>
+</div>
