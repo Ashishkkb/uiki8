@@ -5,6 +5,7 @@ import TerrainMap from './TerrainMap';
 import ParticleSystem from './ParticleSystem';
 import TextGenerator from './TextGenerator';
 import ModelViewer from './ModelViewer';
+import Scene from './Scene';
 
 export { 
   RotatingCube,
@@ -12,5 +13,6 @@ export {
   TerrainMap,
   ParticleSystem,
   TextGenerator,
-  ModelViewer
+  ModelViewer,
+  Scene
 };

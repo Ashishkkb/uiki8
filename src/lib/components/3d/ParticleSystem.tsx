@@ -1,6 +1,6 @@
 
-import React, { useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
+import React, { useEffect, useRef } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { OrbitControls } from '@react-three/drei';
 
@@ -28,9 +28,9 @@ const ParticleSystemScene = () => {
   }, []);
 
   // Simple rotation animation
-  const meshRef = React.useRef<THREE.Points>(null);
+  const meshRef = useRef<THREE.Points>(null!);
   
-  React.useFrame(({ clock }) => {
+  useFrame(({ clock }) => {
     if (meshRef.current) {
       meshRef.current.rotation.x = clock.getElapsedTime() * 0.1;
       meshRef.current.rotation.y = clock.getElapsedTime() * 0.1;
