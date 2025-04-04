@@ -14,7 +14,7 @@ const GlobeComponentItem: ComponentItem = {
   isNew: true,
   is3D: true,
   component: () => <Globe />,
-  code: `import React, { useRef, useEffect } from 'react';
+  code: `import React, { useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Environment, Sphere } from '@react-three/drei';
 import * as THREE from 'three';
@@ -69,8 +69,8 @@ const GlobeSphere: React.FC<{
   const atmosphereRef = useRef<THREE.Mesh>(null);
   const markersGroupRef = useRef<THREE.Group>(null);
   
-  // Create texture - ensure canvas creation happens in useEffect
-  const textureRef = useRef<THREE.CanvasTexture | null>(null);
+  // Use state for texture to ensure proper updates
+  const [texture, setTexture] = useState<THREE.CanvasTexture | null>(null);
 
   // Create globe texture in a safe way
   const createGlobeTexture = (highlightColor: string): HTMLCanvasElement => {
@@ -114,12 +114,13 @@ const GlobeSphere: React.FC<{
   // Initialize texture in useEffect to avoid DOM manipulation during render
   useEffect(() => {
     const canvas = createGlobeTexture(highlightColor);
-    textureRef.current = new THREE.CanvasTexture(canvas);
+    const newTexture = new THREE.CanvasTexture(canvas);
+    setTexture(newTexture);
     
     // Cleanup function
     return () => {
-      if (textureRef.current) {
-        textureRef.current.dispose();
+      if (newTexture) {
+        newTexture.dispose();
       }
     };
   }, [highlightColor]);
@@ -143,13 +144,22 @@ const GlobeSphere: React.FC<{
       <group>
         {/* Globe */}
         <Sphere args={[1, 64, 64]} ref={sphereRef}>
-          <meshPhongMaterial 
-            color={globeColor} 
-            wireframe={wireframe} 
-            map={textureRef.current}
-            transparent={true}
-            opacity={0.9}
-          />
+          {texture ? (
+            <meshPhongMaterial 
+              color={globeColor} 
+              wireframe={wireframe} 
+              map={texture}
+              transparent={true}
+              opacity={0.9}
+            />
+          ) : (
+            <meshPhongMaterial 
+              color={globeColor} 
+              wireframe={wireframe} 
+              transparent={true}
+              opacity={0.9}
+            />
+          )}
         </Sphere>
         
         {/* Atmosphere */}
