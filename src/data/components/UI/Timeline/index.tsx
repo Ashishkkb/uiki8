@@ -132,6 +132,7 @@ const Timeline = ({
               iconContainerStyle={iconContainerStyles[variant]}
               variants={animate ? timelineItemVariants : undefined}
               getStatusIcon={getStatusIcon}
+              totalItems={items.length}
             />
           );
         })}
@@ -151,6 +152,7 @@ interface TimelineItemProps {
   iconContainerStyle: string;
   variants?: any;
   getStatusIcon: (status: TimelineItem['status'], customIcon?: React.ReactNode) => React.ReactNode;
+  totalItems: number;
 }
 
 const TimelineItem = React.forwardRef<HTMLDivElement, TimelineItemProps>(
@@ -164,7 +166,8 @@ const TimelineItem = React.forwardRef<HTMLDivElement, TimelineItemProps>(
     iconSize,
     iconContainerStyle,
     variants,
-    getStatusIcon
+    getStatusIcon,
+    totalItems
   }, ref) => {
     const {
       title,
@@ -215,7 +218,7 @@ const TimelineItem = React.forwardRef<HTMLDivElement, TimelineItemProps>(
         </div>
         
         {/* Timeline connector line for horizontal */}
-        {orientation === 'horizontal' && index < item.length - 1 && (
+        {orientation === 'horizontal' && index < totalItems - 1 && (
           <div className="absolute top-0 left-[calc(50%+16px)] right-0 h-px bg-border -z-10" />
         )}
         
@@ -270,13 +273,13 @@ const TimelineItem = React.forwardRef<HTMLDivElement, TimelineItemProps>(
 TimelineItem.displayName = "TimelineItem";
 
 const TimelineDemo = () => {
-  const timelineItems = [
+  const timelineItems: TimelineItem[] = [
     {
       id: 1,
       title: "Project Inception",
       date: "Jan 2023",
       description: "Initial planning and concept development phase for the new product launch.",
-      status: "complete",
+      status: 'complete',
       link: {
         url: "#",
         label: "View project brief"
@@ -287,14 +290,14 @@ const TimelineDemo = () => {
       title: "Design Phase",
       date: "Mar 2023",
       description: "User interface design, wireframing, and user experience testing completed.",
-      status: "complete"
+      status: 'complete'
     },
     {
       id: 3,
       title: "Development",
       date: "Jun 2023",
       description: "Core features implementation and integration with existing systems.",
-      status: "current",
+      status: 'current',
       link: {
         url: "#",
         label: "View GitHub repo"
@@ -305,14 +308,14 @@ const TimelineDemo = () => {
       title: "Beta Testing",
       date: "Aug 2023",
       description: "Limited release to beta testers for feedback and bug reporting.",
-      status: "upcoming"
+      status: 'upcoming'
     },
     {
       id: 5,
       title: "Public Launch",
       date: "Oct 2023",
       description: "Official product launch with marketing campaign and press release.",
-      status: "upcoming"
+      status: 'upcoming'
     }
   ];
 

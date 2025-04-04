@@ -118,6 +118,7 @@ const Timeline = ({
               iconContainerStyle={iconContainerStyles[variant]}
               variants={animate ? timelineItemVariants : undefined}
               getStatusIcon={getStatusIcon}
+              totalItems={items.length} // Pass the total count to access in the component
             />
           );
         })}
@@ -137,6 +138,7 @@ interface TimelineItemProps {
   iconContainerStyle: string;
   variants?: any;
   getStatusIcon: (status: TimelineItem['status'], customIcon?: React.ReactNode) => React.ReactNode;
+  totalItems: number; // Add a prop for total items count
 }
 
 const TimelineItem = React.forwardRef<HTMLDivElement, TimelineItemProps>(
@@ -150,7 +152,8 @@ const TimelineItem = React.forwardRef<HTMLDivElement, TimelineItemProps>(
     iconSize,
     iconContainerStyle,
     variants,
-    getStatusIcon
+    getStatusIcon,
+    totalItems // Access the total items count here
   }, ref) => {
     const {
       title,
@@ -201,7 +204,7 @@ const TimelineItem = React.forwardRef<HTMLDivElement, TimelineItemProps>(
         </div>
         
         {/* Timeline connector line for horizontal */}
-        {orientation === 'horizontal' && index < items.length - 1 && (
+        {orientation === 'horizontal' && index < totalItems - 1 && (
           <div className="absolute top-0 left-[calc(50%+16px)] right-0 h-px bg-border -z-10" />
         )}
         
