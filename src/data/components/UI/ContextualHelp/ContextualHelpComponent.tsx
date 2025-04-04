@@ -68,7 +68,7 @@ const FormField = ({
 }: { 
   label: string; 
   icon?: React.ElementType; 
-  helpText?: string; 
+  helpText?: React.ReactNode; // Changed from string to ReactNode to allow JSX content
   type?: string; 
   placeholder?: string;
 }) => {
