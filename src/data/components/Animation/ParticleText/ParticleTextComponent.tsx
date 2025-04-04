@@ -1,199 +1,260 @@
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, useAnimationControls, AnimatePresence } from 'framer-motion';
 import { cn } from "@/lib/utils";
 
 interface Particle {
+  id: number;
   x: number;
   y: number;
+  originX: number;
+  originY: number;
   size: number;
   color: string;
-  alpha: number;
-  speedX: number;
-  speedY: number;
-  originalX: number;
-  originalY: number;
+  opacity: number;
 }
 
 interface ParticleTextProps {
-  text: string;
+  text?: string;
+  subText?: string;
+  particleSize?: number;
+  particleDensity?: number;
+  colors?: string[];
+  interactive?: boolean;
+  fontSize?: number;
   className?: string;
-  particleColor?: string;
-  particleCount?: number;
-  explodeOnHover?: boolean;
-  textColor?: string;
-  fontSize?: string;
-  fontWeight?: string;
+  onComplete?: () => void;
 }
 
-const ParticleText = ({
-  text,
-  className = "",
-  particleColor = "#7c3aed",
-  particleCount = 800,
-  explodeOnHover = true,
-  textColor = "transparent",
-  fontSize = "3rem",
-  fontWeight = "bold"
-}: ParticleTextProps) => {
+const ParticleTextComponent: React.FC<ParticleTextProps> = ({
+  text = "Interactive",
+  subText = "Particle Text Animation",
+  particleSize = 6,
+  particleDensity = 10,
+  colors = ["#7C3AED", "#EC4899", "#3B82F6", "#10B981", "#F59E0B"],
+  interactive = true,
+  fontSize = 120,
+  className,
+  onComplete,
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const particlesRef = useRef<Particle[]>([]);
-  const frameRef = useRef<number>(0);
-  const textRef = useRef<HTMLDivElement>(null);
+  const [particles, setParticles] = useState<Particle[]>([]);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
-  const [isExploded, setIsExploded] = useState(false);
+  const [mousePosition, setMousePosition] = useState<{ x: number, y: number } | null>(null);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [hasInitialized, setHasInitialized] = useState(false);
+  const animationControls = useAnimationControls();
   
-  // Initialize particles
+  // Generate particles from text
   useEffect(() => {
-    if (!canvasRef.current || !textRef.current) return;
+    if (!canvasRef.current || !containerRef.current) return;
     
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     
-    const textElement = textRef.current;
-    const rect = textElement.getBoundingClientRect();
-    
-    const width = rect.width;
-    const height = rect.height;
+    const { width, height } = containerRef.current.getBoundingClientRect();
+    setDimensions({ width, height });
     
     // Set canvas dimensions
     canvas.width = width;
     canvas.height = height;
-    setDimensions({ width, height });
     
-    // Create particles
-    const particles: Particle[] = [];
+    // Clear canvas
+    ctx.clearRect(0, 0, width, height);
     
-    for (let i = 0; i < particleCount; i++) {
-      const x = Math.random() * width;
-      const y = Math.random() * height;
-      
-      particles.push({
-        x,
-        y,
-        size: Math.random() * 3 + 1,
-        color: particleColor,
-        alpha: Math.random() * 0.8 + 0.2,
-        speedX: 0,
-        speedY: 0,
-        originalX: x,
-        originalY: y
-      });
+    // Setup text rendering
+    ctx.fillStyle = 'white';
+    ctx.font = `bold ${fontSize}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    // Render text to canvas (hidden)
+    ctx.fillText(text, width / 2, height / 2);
+    
+    // Get image data
+    const imageData = ctx.getImageData(0, 0, width, height).data;
+    
+    // Clear canvas after getting data
+    ctx.clearRect(0, 0, width, height);
+    
+    // Generate particles
+    const newParticles: Particle[] = [];
+    const pixelDensity = particleDensity;
+    
+    for (let y = 0; y < height; y += pixelDensity) {
+      for (let x = 0; x < width; x += pixelDensity) {
+        const index = (y * width + x) * 4;
+        const alpha = imageData[index + 3];
+        
+        // Only create particles where the text is (alpha > 0)
+        if (alpha > 128) {
+          const color = colors[Math.floor(Math.random() * colors.length)];
+          const size = Math.random() * particleSize + particleSize / 2;
+          
+          newParticles.push({
+            id: newParticles.length,
+            x: Math.random() * width,
+            y: Math.random() * height,
+            originX: x,
+            originY: y,
+            size,
+            color,
+            opacity: Math.random() * 0.5 + 0.5,
+          });
+        }
+      }
     }
     
-    particlesRef.current = particles;
-    
-    // Start animation
-    const animate = () => {
-      ctx.clearRect(0, 0, width, height);
-      
-      particles.forEach(particle => {
-        ctx.globalAlpha = particle.alpha;
-        ctx.fillStyle = particle.color;
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-        ctx.fill();
-        
-        if (isExploded) {
-          // Move away from original position
-          particle.x += particle.speedX;
-          particle.y += particle.speedY;
-          
-          // Slow down
-          particle.speedX *= 0.98;
-          particle.speedY *= 0.98;
-          
-          // Fade out
-          particle.alpha *= 0.99;
-        } else {
-          // Move back to original position
-          particle.x += (particle.originalX - particle.x) * 0.05;
-          particle.y += (particle.originalY - particle.y) * 0.05;
-          
-          // Restore alpha
-          particle.alpha += (0.8 - particle.alpha) * 0.05;
-        }
-      });
-      
-      frameRef.current = requestAnimationFrame(animate);
-    };
-    
-    animate();
-    
-    return () => {
-      cancelAnimationFrame(frameRef.current);
-    };
-  }, [particleColor, particleCount, isExploded]);
+    setParticles(newParticles);
+    setHasInitialized(true);
+  }, [text, fontSize, colors, particleSize, particleDensity]);
   
-  const handleExplode = () => {
-    if (!explodeOnHover) return;
+  // Initialize animation sequence
+  useEffect(() => {
+    if (hasInitialized && !isAnimating) {
+      setIsAnimating(true);
+      animationControls.start("animate");
+    }
+  }, [hasInitialized, isAnimating, animationControls]);
+  
+  // Handle resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (containerRef.current) {
+        const { width, height } = containerRef.current.getBoundingClientRect();
+        setDimensions({ width, height });
+      }
+    };
     
-    setIsExploded(true);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
+  // Handle mouse interaction
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!interactive || !containerRef.current) return;
     
-    // Set explosion velocities
-    particlesRef.current.forEach(particle => {
-      const dx = particle.x - dimensions.width / 2;
-      const dy = particle.y - dimensions.height / 2;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      
-      // Normalize
-      const nx = dx / distance;
-      const ny = dy / distance;
-      
-      particle.speedX = nx * (Math.random() * 5 + 2);
-      particle.speedY = ny * (Math.random() * 5 + 2);
+    const rect = containerRef.current.getBoundingClientRect();
+    setMousePosition({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
     });
-    
-    // Reset after some time
-    setTimeout(() => {
-      setIsExploded(false);
-    }, 2000);
+  };
+  
+  const handleMouseLeave = () => {
+    setMousePosition(null);
+  };
+  
+  // Variants for animation
+  const containerVariants = {
+    initial: {},
+    animate: {
+      transition: {
+        staggerChildren: 0.003,
+        delayChildren: 0.2,
+      }
+    },
+  };
+  
+  const particleVariants = {
+    initial: (particle: Particle) => ({
+      x: Math.random() * dimensions.width,
+      y: Math.random() * dimensions.height,
+      opacity: 0,
+      scale: 0,
+    }),
+    animate: (particle: Particle) => ({
+      x: particle.originX,
+      y: particle.originY,
+      opacity: particle.opacity,
+      scale: 1,
+      transition: {
+        type: "spring",
+        damping: 15,
+        stiffness: 100,
+        duration: 1.5,
+      }
+    }),
+  };
+
+  // Get distance between two points
+  const getDistance = (x1: number, y1: number, x2: number, y2: number) => {
+    return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
   };
   
   return (
     <div 
-      className={cn("relative inline-block", className)}
-      onMouseEnter={handleExplode}
-      style={{ fontSize, fontWeight }}
+      className={cn(
+        "relative w-full h-[400px] overflow-hidden bg-gradient-to-b from-background to-background/80 rounded-lg shadow-md border border-border/10",
+        className
+      )}
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
     >
       <canvas 
-        ref={canvasRef}
-        className="absolute top-0 left-0 pointer-events-none z-10"
+        ref={canvasRef} 
+        className="absolute top-0 left-0 w-full h-full opacity-0 pointer-events-none"
       />
-      <div 
-        ref={textRef}
-        className="relative"
-        style={{ color: textColor }}
-      >
-        {text}
-      </div>
-    </div>
-  );
-};
-
-const ParticleTextComponent = () => {
-  return (
-    <div className="w-full flex flex-col items-center justify-center p-8 space-y-12">
-      <div className="text-center">
-        <h3 className="text-sm text-muted-foreground mb-3">Hover to Explode</h3>
-        <ParticleText 
-          text="PARTICLES!"
-          particleColor="#7c3aed"
-          className="text-center"
-          fontSize="4rem"
-          textColor="#7c3aed"
-        />
-      </div>
       
-      <div className="text-center">
-        <h3 className="text-sm text-muted-foreground mb-3">Different Colors</h3>
-        <ParticleText 
-          text="AMAZING"
-          particleColor="#ec4899"
-          className="text-center"
-          fontSize="3.5rem"
-          textColor="#ec4899"
-        />
+      <motion.div
+        className="relative w-full h-full"
+        variants={containerVariants}
+        initial="initial"
+        animate={animationControls}
+        onAnimationComplete={() => {
+          if (onComplete) onComplete();
+        }}
+      >
+        {/* Render particles */}
+        {particles.map((particle) => {
+          // Calculate repulsion if mouse is near
+          let x = particle.originX;
+          let y = particle.originY;
+          
+          if (mousePosition) {
+            const distance = getDistance(particle.originX, particle.originY, mousePosition.x, mousePosition.y);
+            const repulsionRadius = 100;
+            
+            if (distance < repulsionRadius) {
+              const repulsionForce = (1 - distance / repulsionRadius) * 80;
+              const angle = Math.atan2(particle.originY - mousePosition.y, particle.originX - mousePosition.x);
+              
+              x += Math.cos(angle) * repulsionForce;
+              y += Math.sin(angle) * repulsionForce;
+            }
+          }
+          
+          return (
+            <motion.div
+              key={particle.id}
+              className="absolute rounded-full"
+              style={{
+                backgroundColor: particle.color,
+                width: particle.size,
+                height: particle.size,
+              }}
+              custom={particle}
+              variants={particleVariants}
+              animate={mousePosition ? { x, y } : undefined}
+              transition={mousePosition ? { type: "spring", damping: 20, stiffness: 300 } : undefined}
+            />
+          );
+        })}
+      </motion.div>
+      
+      {/* Subtitle */}
+      <div className="absolute bottom-8 left-0 right-0 text-center">
+        <motion.p 
+          className="text-xl font-medium text-muted-foreground"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.8 }}
+        >
+          {subText}
+        </motion.p>
       </div>
     </div>
   );

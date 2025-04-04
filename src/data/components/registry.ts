@@ -19,6 +19,7 @@ import ThreeDCardComponentItem from './UI/ThreeDCard';
 import AnimatedCarouselComponentItem from './UI/AnimatedCarousel';
 import TimelineComponentItem from './UI/Timeline';
 import PricingTableComponentItem from './UI/PricingTable';
+import InteractiveCardWallComponentItem from './UI/InteractiveCardWall';
 
 // Layout Components
 import ContainerComponent from './Layout/Container';
@@ -67,9 +68,10 @@ export const getAllComponents = (): ComponentItem[] => [
   ProgressComponent,
   SkeletonComponent,
   ThreeDCardComponentItem,
-  AnimatedCarouselComponentItem, // New
-  TimelineComponentItem, // New
-  PricingTableComponentItem, // New
+  AnimatedCarouselComponentItem,
+  TimelineComponentItem,
+  PricingTableComponentItem,
+  InteractiveCardWallComponentItem, // New 3D Interactive Card Wall
   
   // Layout Components
   ContainerComponent,
@@ -95,7 +97,7 @@ export const getAllComponents = (): ComponentItem[] => [
   
   // Animation Components
   TextEffectComponentItem,
-  ParticleTextComponentItem,
+  ParticleTextComponentItem, // New Particle Text Animation
   GlobeComponentItem,
   
   // Media Components
