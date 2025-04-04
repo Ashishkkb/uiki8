@@ -47,6 +47,11 @@ import NavigationMenuComponent from './Navigation/NavigationMenu';
 import TextEffectComponentItem from './Animation/TextEffect';
 import ParticleTextComponentItem from './Animation/ParticleText';
 import GlobeComponentItem from './Animation/Globe';
+import ThreeDTextComponentItem from './Animation/ThreeDText';
+import LiquidTextComponentItem from './Animation/LiquidText';
+import ParticleButtonComponentItem from './Animation/ParticleButton';
+import ConfettiAnimationComponentItem from './Animation/ConfettiAnimation';
+import MorphingShapesComponentItem from './Animation/MorphingShapes';
 
 // Media Components
 import VideoGalleryComponentItem from './Media/VideoGallery';
@@ -141,6 +146,11 @@ export const getAllComponents = (): ComponentItem[] => [
   TextEffectComponentItem,
   ParticleTextComponentItem,
   GlobeComponentItem,
+  ThreeDTextComponentItem,
+  LiquidTextComponentItem,
+  ParticleButtonComponentItem,
+  ConfettiAnimationComponentItem,
+  MorphingShapesComponentItem,
   
   // Data Display Components
   DataTableComponentItem,
