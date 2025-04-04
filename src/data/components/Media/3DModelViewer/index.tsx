@@ -18,7 +18,7 @@ const ModelViewer3DComponentItem: ComponentItem = {
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF, PerspectiveCamera, Environment, Stage } from '@react-three/drei';
 import { Button } from '@/components/ui/button';
-import { Cube, Sphere, Cylinder, Model, RotateRight, RotateLeft, ZoomIn, ZoomOut } from 'lucide-react';
+import { Box, Disc, Cylinder, Globe, RotateCw, RotateCcw, ZoomIn, ZoomOut } from 'lucide-react';
 
 interface ModelProps {
   modelUrl?: string;
@@ -28,9 +28,9 @@ interface ModelProps {
 }
 
 const defaultModels = {
-  cube: { component: Cube, scale: 1, position: [0, 0, 0] },
-  sphere: { component: Sphere, scale: 1, position: [0, 0, 0] },
-  cylinder: { component: Cylinder, scale: 1, position: [0, 0, 0] },
+  cube: { scale: a1, position: [0, 0, 0] as [number, number, number] },
+  sphere: { scale: 1, position: [0, 0, 0] as [number, number, number] },
+  cylinder: { scale: 1, position: [0, 0, 0] as [number, number, number] },
 };
 
 const Model3D: React.FC<ModelProps> = ({ 
@@ -73,7 +73,7 @@ const ModelViewer3D: React.FC<ModelViewerProps> = ({
   directionalLightIntensity = 1
 }) => {
   const [selectedModel, setSelectedModel] = useState<string | null>(null);
-  const [cameraPosition, setCameraPosition] = useState([0, 0, 5]);
+  const [cameraPosition, setCameraPosition] = useState<[number, number, number]>([0, 0, 5]);
   
   return (
     <div className="w-full h-[500px] relative rounded-xl overflow-hidden">
@@ -127,7 +127,7 @@ const ModelViewer3D: React.FC<ModelViewerProps> = ({
               className="text-white hover:bg-white/20"
               onClick={() => setSelectedModel('cube')}
             >
-              <Cube className="h-5 w-5" />
+              <Box className="h-5 w-5" />
             </Button>
             <Button 
               variant="ghost" 
@@ -135,7 +135,7 @@ const ModelViewer3D: React.FC<ModelViewerProps> = ({
               className="text-white hover:bg-white/20"
               onClick={() => setSelectedModel('sphere')}
             >
-              <Sphere className="h-5 w-5" />
+              <Disc className="h-5 w-5" />
             </Button>
             <Button 
               variant="ghost" 
