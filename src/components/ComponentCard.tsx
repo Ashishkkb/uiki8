@@ -85,7 +85,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
           <div className="grid gap-6">
             <div className="rounded-lg border bg-card p-6">
               <h3 className="text-lg font-medium mb-4">Preview</h3>
-              <div className="h-[500px] bg-muted/30 rounded-lg p-4 flex items-center justify-center overflow-auto">
+              <div className="h-[300px] bg-muted/30 rounded-lg p-4 flex items-center justify-center overflow-auto">
                 {component.id && <ComponentPreview component={component} inCard={false} />}
               </div>
             </div>

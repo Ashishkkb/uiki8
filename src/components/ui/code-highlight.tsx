@@ -26,25 +26,24 @@ export function CodeBlock({
   children: React.ReactNode;
   language?: string;
 }) {
-  // Generate a VSCode-style filename tab
-  const fileName = `Example.${language}`;
-
   return (
     <div
       className={cn(
-        "relative rounded-lg border border-border/30 shadow-sm overflow-hidden",
+        "relative rounded-xl overflow-hidden border border-[#30363d]/80 shadow-md bg-[#0d1117]",
         className
       )}
     >
-      {/* VSCode-style top bar */}
-      <div className="flex items-center bg-[#252526] px-4 py-2 border-b border-border/20">
+      {/* Window style top bar with circles */}
+      <div className="flex items-center bg-[#161b22] px-4 py-2 border-b border-[#30363d]/80">
         <div className="flex items-center space-x-2">
-          <span className="text-xs font-medium text-[#d4d4d4] opacity-80">{fileName}</span>
+          <div className="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
+          <div className="w-3 h-3 rounded-full bg-[#febc2e]"></div>
+          <div className="w-3 h-3 rounded-full bg-[#28c840]"></div>
         </div>
       </div>
       
       {/* Code content */}
-      <div className="bg-[#1e1e1e] p-4 font-mono text-sm text-[#d4d4d4] overflow-x-auto">
+      <div className="bg-[#0d1117] p-4 font-mono text-sm text-[#e6edf3] overflow-x-auto">
         {children}
       </div>
     </div>
