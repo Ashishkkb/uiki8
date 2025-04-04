@@ -27,7 +27,6 @@ interface AnimatedText3DProps {
   bevelEnabled?: boolean;
   bevelSize?: number;
   bevelThickness?: number;
-  font?: string;
   fontSize?: number;
   height?: number;
   rotationSpeed?: number;
@@ -80,7 +79,7 @@ const FloatingText = ({
       onClick={() => setClicked(!clicked)}
     >
       <Text3D
-        font="/fonts/inter_bold.json"
+        font="https://threejs.org/examples/fonts/helvetiker_bold.typeface.json"
         size={fontSize}
         height={height}
         bevelEnabled={bevelEnabled}

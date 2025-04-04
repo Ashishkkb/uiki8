@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Text3D, OrbitControls, Center, PerspectiveCamera } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
@@ -12,7 +12,6 @@ interface AnimatedText3DProps {
   bevelEnabled?: boolean;
   bevelSize?: number;
   bevelThickness?: number;
-  font?: string;
   fontSize?: number;
   height?: number;
   rotationSpeed?: number;
@@ -65,7 +64,7 @@ const FloatingText = ({
       onClick={() => setClicked(!clicked)}
     >
       <Text3D
-        font="/fonts/inter_bold.json"
+        font="https://threejs.org/examples/fonts/helvetiker_bold.typeface.json"
         size={fontSize}
         height={height}
         bevelEnabled={bevelEnabled}
