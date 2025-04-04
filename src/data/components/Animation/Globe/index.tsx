@@ -15,7 +15,7 @@ const GlobeComponentItem: ComponentItem = {
   is3D: true,
   component: () => <Globe />,
   code: `import React, { useRef, useEffect, useState } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 
@@ -105,85 +105,89 @@ const GlobeSphere = ({
   const atmosphereRef = useRef();
   const markersGroupRef = useRef();
   const [texture, setTexture] = useState(null);
+  const [isTextureLoading, setIsTextureLoading] = useState(true);
   
   // Create texture when component mounts or highlightColor changes
   useEffect(() => {
-    const canvas = createGlobeTexture(highlightColor);
+    let isActive = true;
+    setIsTextureLoading(true);
     
-    if (canvas) {
-      const newTexture = new THREE.CanvasTexture(canvas);
-      setTexture(newTexture);
-    }
+    // Create the texture asynchronously
+    const createTexture = async () => {
+      try {
+        const canvas = createGlobeTexture(highlightColor);
+        
+        if (canvas && isActive) {
+          const newTexture = new THREE.CanvasTexture(canvas);
+          setTexture(newTexture);
+          setIsTextureLoading(false);
+        }
+      } catch (error) {
+        console.error("Failed to create globe texture:", error);
+        setIsTextureLoading(false);
+      }
+    };
+    
+    createTexture();
     
     // Cleanup function
     return () => {
+      isActive = false;
       if (texture) {
         texture.dispose();
       }
     };
   }, [highlightColor]);
   
-  useFrame((_, delta) => {
-    if (autoRotate && sphereRef.current) {
-      sphereRef.current.rotation.y += 0.05 * delta;
-      
-      if (markersGroupRef.current) {
-        markersGroupRef.current.rotation.y += 0.05 * delta;
-      }
-    }
-    
-    if (atmosphereRef.current && sphereRef.current) {
-      atmosphereRef.current.rotation.copy(sphereRef.current.rotation);
-    }
-  });
-  
   // Only render when texture is loaded
-  if (!texture) {
-    return null;
+  if (isTextureLoading) {
+    return <group />;
   }
   
   return (
-    <>
-      <group>
-        {/* Globe */}
-        <mesh ref={sphereRef}>
-          <sphereGeometry args={[1, 64, 64]} />
-          <meshPhongMaterial 
-            color={globeColor} 
-            wireframe={wireframe} 
-            map={texture}
-            transparent={true}
-            opacity={0.9}
-          />
-        </mesh>
-        
-        {/* Atmosphere */}
-        {showAtmosphere && (
-          <mesh ref={atmosphereRef}>
-            <sphereGeometry args={[1.02, 64, 64]} />
+    <group>
+      {texture && (
+        <>
+          {/* Globe */}
+          <mesh ref={sphereRef}>
+            <sphereGeometry args={[1, 64, 64]} />
             <meshPhongMaterial 
-              color={highlightColor} 
+              color={globeColor} 
+              wireframe={wireframe} 
+              map={texture}
               transparent={true}
-              opacity={0.1}
-              side={THREE.BackSide}
+              opacity={0.9}
             />
           </mesh>
-        )}
-        
-        {/* Markers */}
-        <group ref={markersGroupRef}>
-          {markers.map((marker, idx) => {
-            const position = latLngToVector3(marker.lat, marker.lng, 1.01);
-            return (
-              <mesh key={idx} position={position}>
-                <sphereGeometry args={[marker.size || 0.02, 16, 16]} />
-                <meshBasicMaterial color={marker.color || '#ff6b6b'} />
-              </mesh>
-            );
-          })}
-        </group>
-      </group>
-    </>
+          
+          {/* Atmosphere */}
+          {showAtmosphere && (
+            <mesh ref={atmosphereRef}>
+              <sphereGeometry args={[1.02, 64, 64]} />
+              <meshPhongMaterial 
+                color={highlightColor} 
+                transparent={true}
+                opacity={0.1}
+                side={THREE.BackSide}
+              />
+            </mesh>
+          )}
+          
+          {/* Markers */}
+          <group ref={markersGroupRef}>
+            {markers.map((marker, idx) => {
+              const position = latLngToVector3(marker.lat, marker.lng, 1.01);
+              return (
+                <mesh key={idx} position={position}>
+                  <sphereGeometry args={[marker.size || 0.02, 16, 16]} />
+                  <meshBasicMaterial color={marker.color || '#ff6b6b'} />
+                </mesh>
+              );
+            })}
+          </group>
+        </>
+      )}
+    </group>
   );
 };
 
