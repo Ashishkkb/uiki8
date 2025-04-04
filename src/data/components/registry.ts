@@ -64,6 +64,18 @@ import ToggleGroupComponentItem from './Form/ToggleGroup';
 import CommandPaletteComponentItem from './Navigation/CommandPalette';
 import WavyBackgroundComponentItem from './UI/WavyBackground';
 
+// Added 10 New Components
+import SwitchComponentItem from './Form/Switch';
+import CheckboxComponentItem from './Form/Checkbox';
+import RadioGroupComponentItem from './Form/RadioGroup';
+import PopoverComponentItem from './UI/Popover';
+import AspectRatioComponentItem from './UI/AspectRatio';
+import HoverCardComponentItem from './UI/HoverCard';
+import CollapsibleComponentItem from './UI/Collapsible';
+import ContextualHelpComponentItem from './UI/ContextualHelp';
+import CarouselComponentItem from './UI/Carousel';
+import PaginationComponentItem from './UI/Pagination';
+
 export const getAllComponents = (): ComponentItem[] => [
   // UI Components
   ButtonComponent,
@@ -87,6 +99,13 @@ export const getAllComponents = (): ComponentItem[] => [
   RatingComponentItem,
   NotificationComponentItem,
   WavyBackgroundComponentItem,
+  PopoverComponentItem,
+  AspectRatioComponentItem,
+  HoverCardComponentItem,
+  CollapsibleComponentItem,
+  ContextualHelpComponentItem,
+  CarouselComponentItem,
+  PaginationComponentItem,
   
   // Layout Components
   ContainerComponent,
@@ -109,6 +128,9 @@ export const getAllComponents = (): ComponentItem[] => [
   TagInputComponentItem,
   FileUploadComponentItem,
   ToggleGroupComponentItem,
+  SwitchComponentItem,
+  CheckboxComponentItem,
+  RadioGroupComponentItem,
   
   // Navigation Components
   BreadcrumbsComponent,
