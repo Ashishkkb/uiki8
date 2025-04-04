@@ -30,9 +30,9 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
         onClick={() => setIsOpen(true)}
       >
         {/* Preview area */}
-        <div className="aspect-[16/9] relative flex items-center justify-center overflow-hidden bg-muted/40 p-6">
+        <div className="aspect-[16/9] relative flex items-center justify-center overflow-hidden bg-muted/40 p-2">
           <div className="w-full h-full flex items-center justify-center">
-            {ComponentPreview && <ComponentPreview />}
+            {component.id && <ComponentPreview component={component} />}
           </div>
           {/* Hover overlay */}
           <div className="absolute inset-0 flex items-center justify-center bg-foreground/5 opacity-0 transition-opacity group-hover:opacity-100">
@@ -86,7 +86,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
             <div className="rounded-lg border bg-card p-6">
               <h3 className="text-lg font-medium mb-4">Preview</h3>
               <div className="h-[500px] bg-muted/30 rounded-lg p-4 flex items-center justify-center overflow-auto">
-                {ComponentPreview && <ComponentPreview />}
+                {component.id && <ComponentPreview component={component} inCard={false} />}
               </div>
             </div>
             

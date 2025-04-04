@@ -1,12 +1,14 @@
 
 import React, { Suspense, useState, useEffect } from 'react';
 import { ComponentItem } from "@/types/component";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface ComponentPreviewProps {
   component: ComponentItem;
+  inCard?: boolean;
 }
 
-const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
+const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component, inCard = true }) => {
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
@@ -17,29 +19,44 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
     return <FallbackComponent name={component.name} />;
   }
 
-  if (component.component) {
-    const Component = component.component;
-    return (
-      <div className="w-full h-full flex items-center justify-center p-4">
+  const PreviewContent = () => {
+    if (component.component) {
+      const Component = component.component;
+      return (
         <ErrorBoundary fallback={<FallbackComponent name={component.name} />}>
           <Component />
         </ErrorBoundary>
-      </div>
-    );
-  }
+      );
+    }
 
-  if (component.previewHtml) {
+    if (component.previewHtml) {
+      return (
+        <div
+          dangerouslySetInnerHTML={{ __html: component.previewHtml }}
+        />
+      );
+    }
+
     return (
-      <div
-        className="w-full h-full flex items-center justify-center"
-        dangerouslySetInnerHTML={{ __html: component.previewHtml }}
-      />
+      <p className="text-gray-500">Preview not available</p>
+    );
+  };
+
+  if (inCard) {
+    return (
+      <Card className="w-full shadow-sm">
+        <CardContent className="p-4">
+          <div className="w-full h-full flex items-center justify-center">
+            <PreviewContent />
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
   return (
-    <div className="w-full h-full flex items-center justify-center">
-      <p className="text-gray-500">Preview not available</p>
+    <div className="w-full h-full flex items-center justify-center p-4">
+      <PreviewContent />
     </div>
   );
 };
