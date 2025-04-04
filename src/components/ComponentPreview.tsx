@@ -1,5 +1,5 @@
+
 import React, { Suspense, useState, useEffect } from 'react';
-import { ProductViewer, RotatingCube, TerrainMap, ParticleSystem, TextGenerator, ModelViewer, Scene } from "@/lib/components/3d";
 import { ComponentItem } from "@/types/component";
 
 interface ComponentPreviewProps {
@@ -8,134 +8,13 @@ interface ComponentPreviewProps {
 
 const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
   const [hasError, setHasError] = useState(false);
-  const [is3DRendered, setIs3DRendered] = useState(false);
 
   useEffect(() => {
     setHasError(false);
-    setIs3DRendered(false);
   }, [component.id]);
   
-  const render3DComponent = () => {
-    if (is3DRendered) {
-      return (
-        <div className="w-full h-full flex items-center justify-center">
-          <p className="text-muted-foreground">3D preview available</p>
-        </div>
-      );
-    }
-
-    try {
-      switch (component.id) {
-        case 101: // Rotating Cube
-          return (
-            <div className="w-full h-full flex items-center justify-center">
-              <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
-                <Suspense fallback={<LoadingFallback />}>
-                  <div style={{ width: '100%', height: '200px', position: 'relative' }}>
-                    <RotatingCube onLoad={() => setIs3DRendered(true)} />
-                  </div>
-                </Suspense>
-              </ErrorBoundary>
-            </div>
-          );
-        
-        case 102: // Product Viewer
-          return (
-            <div className="w-full h-full flex items-center justify-center">
-              <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
-                <Suspense fallback={<LoadingFallback />}>
-                  <div style={{ width: '100%', height: '200px', position: 'relative' }}>
-                    <ProductViewer color="#5f9ea0" onLoad={() => setIs3DRendered(true)} />
-                  </div>
-                </Suspense>
-              </ErrorBoundary>
-            </div>
-          );
-        
-        case 103: // Terrain Map
-          return (
-            <div className="w-full h-full flex items-center justify-center">
-              <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
-                <Suspense fallback={<LoadingFallback />}>
-                  <div style={{ width: '100%', height: '200px', position: 'relative' }}>
-                    <TerrainMap onLoad={() => setIs3DRendered(true)} />
-                  </div>
-                </Suspense>
-              </ErrorBoundary>
-            </div>
-          );
-          
-        case 104: // Particle System
-          return (
-            <div className="w-full h-full flex items-center justify-center">
-              <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
-                <Suspense fallback={<LoadingFallback />}>
-                  <div style={{ width: '100%', height: '200px', position: 'relative' }}>
-                    <ParticleSystem onLoad={() => setIs3DRendered(true)} />
-                  </div>
-                </Suspense>
-              </ErrorBoundary>
-            </div>
-          );
-          
-        case 105: // Text Generator
-          return (
-            <div className="w-full h-full flex items-center justify-center">
-              <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
-                <Suspense fallback={<LoadingFallback />}>
-                  <div style={{ width: '100%', height: '200px', position: 'relative' }}>
-                    <TextGenerator text="Hello 3D" onLoad={() => setIs3DRendered(true)} />
-                  </div>
-                </Suspense>
-              </ErrorBoundary>
-            </div>
-          );
-          
-        case 97: // Scene3D
-          return (
-            <div className="w-full h-full flex items-center justify-center">
-              <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
-                <Suspense fallback={<LoadingFallback />}>
-                  <div style={{ width: '100%', height: '200px', position: 'relative' }}>
-                    <Scene onLoad={() => setIs3DRendered(true)} />
-                  </div>
-                </Suspense>
-              </ErrorBoundary>
-            </div>
-          );
-          
-        case 108: // Model Viewer
-          return (
-            <div className="w-full h-full flex items-center justify-center">
-              <ErrorBoundary fallback={<FallbackComponent name={component.name} />} onError={() => setHasError(true)}>
-                <Suspense fallback={<LoadingFallback />}>
-                  <div style={{ width: '100%', height: '200px', position: 'relative' }}>
-                    <ModelViewer color="#5f9ea0" onLoad={() => setIs3DRendered(true)} />
-                  </div>
-                </Suspense>
-              </ErrorBoundary>
-            </div>
-          );
-          
-        default:
-          return (
-            <div className="w-full h-full flex items-center justify-center">
-              <p className="text-muted-foreground">3D preview not available</p>
-            </div>
-          );
-      }
-    } catch (error) {
-      console.error("Error rendering 3D component:", error);
-      return <FallbackComponent name={component.name} />;
-    }
-  };
-
   if (hasError) {
     return <FallbackComponent name={component.name} />;
-  }
-
-  if (component.is3D) {
-    return render3DComponent();
   }
 
   if (component.component) {
@@ -167,7 +46,7 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component }) => {
 
 const LoadingFallback = () => (
   <div className="w-full h-full flex items-center justify-center">
-    <p className="text-blue-500">Loading 3D component...</p>
+    <p className="text-blue-500">Loading component...</p>
   </div>
 );
 

@@ -2,7 +2,6 @@
 import { 
   getAllComponents, 
   getUIComponents, 
-  get3DComponents, 
   getLayoutComponents,
   getNavigationComponents,
   getFormComponents,
@@ -15,6 +14,5 @@ export {
   getLayoutComponents,
   getNavigationComponents,
   getFormComponents,
-  getMediaComponents,
-  get3DComponents
+  getMediaComponents
 };
