@@ -15,6 +15,8 @@ import AvatarComponent from './UI/Avatar';
 import ContainerComponent from './Layout/Container';
 import GridComponent from './Layout/Grid';
 import DividerComponent from './Layout/Divider';
+import SplitLayoutComponent from './Layout/SplitLayout';
+import ResponsiveColumnsComponent from './Layout/ResponsiveColumns';
 
 // Form Components
 import TextFieldComponent from './Form/TextField';
@@ -52,6 +54,8 @@ export const getAllComponents = (): ComponentItem[] => [
   ContainerComponent,
   GridComponent,
   DividerComponent,
+  SplitLayoutComponent,
+  ResponsiveColumnsComponent,
   
   // Form Components
   TextFieldComponent,
