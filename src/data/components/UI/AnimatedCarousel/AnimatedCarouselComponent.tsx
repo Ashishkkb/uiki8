@@ -85,7 +85,11 @@ const AnimatedCarousel = ({
     <div className={cn("relative overflow-hidden rounded-lg", className)}>
       <Carousel
         className="w-full"
-        onSelect={(selectedIndex) => setActiveIndex(selectedIndex)}
+        onSelect={(selectedIndex) => {
+          if (typeof selectedIndex === 'number') {
+            setActiveIndex(selectedIndex);
+          }
+        }}
       >
         <CarouselContent>
           {items.map((item, index) => (

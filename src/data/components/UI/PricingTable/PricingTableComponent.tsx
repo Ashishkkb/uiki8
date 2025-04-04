@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 export interface PricingFeature {
   id: string;
   name: string;
-  tiers: {
+  tiers?: {
     [key: string]: boolean | string | number;
   };
 }
@@ -25,7 +25,7 @@ export interface PricingTier {
   };
   isMostPopular?: boolean;
   buttonText?: string;
-  buttonVariant?: 'default' | 'outline' | 'secondary' | 'accent';
+  buttonVariant?: 'default' | 'outline' | 'secondary' | 'ghost' | 'link' | 'destructive';
   badge?: string;
   features?: {
     [key: string]: boolean | string | number;
@@ -366,7 +366,7 @@ const PricingTableDemo = () => {
     },
   ];
 
-  const features = [
+  const features: PricingFeature[] = [
     { id: 'storage', name: 'Storage' },
     { id: 'users', name: 'Team members' },
     { id: 'support', name: 'Priority support' },
