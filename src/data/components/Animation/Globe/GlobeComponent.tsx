@@ -173,7 +173,7 @@ const Globe: React.FC<GlobeProps> = ({
   }));
   
   return (
-    <div className={`w-full h-full ${className}`} style={{ background: backgroundColor }}>
+    <div className={"w-full h-full " + className} style={{ background: backgroundColor }}>
       <Canvas 
         shadows 
         dpr={[1, 2]} 
