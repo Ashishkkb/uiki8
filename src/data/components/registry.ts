@@ -34,12 +34,6 @@ import FormComponent from './Form';
 import DatePickerComponent from './Form/DatePicker';
 import SliderComponent from './Form/Slider';
 
-// Media Components
-import CarouselComponent from './Media/Carousel';
-import EnhancedMediaGalleryComponent from './Media/EnhancedMediaGallery';
-import AdvancedMediaGalleryComponent from './Media/AdvancedMediaGallery';
-import VideoPlayerComponent from './Media/VideoPlayer';
-
 // Navigation Components
 import BreadcrumbsComponent from './Navigation/Breadcrumbs';
 import NavigationMenuComponent from './Navigation/NavigationMenu';
@@ -77,12 +71,6 @@ export const getAllComponents = (): ComponentItem[] => [
   FormComponent,
   DatePickerComponent,
   SliderComponent,
-  
-  // Media Components
-  CarouselComponent,
-  EnhancedMediaGalleryComponent,
-  AdvancedMediaGalleryComponent,
-  VideoPlayerComponent,
   
   // Navigation Components
   BreadcrumbsComponent,

@@ -4,8 +4,7 @@ import {
   getUIComponents, 
   getLayoutComponents,
   getNavigationComponents,
-  getFormComponents,
-  getMediaComponents
+  getFormComponents
 } from './registry';
 
 export {
@@ -13,6 +12,5 @@ export {
   getUIComponents,
   getLayoutComponents,
   getNavigationComponents,
-  getFormComponents,
-  getMediaComponents
+  getFormComponents
 };
