@@ -50,42 +50,47 @@ const latLngToVector3 = (lat: number, lng: number, radius: number): THREE.Vector
   return new THREE.Vector3(x, y, z);
 };
 
-function createGlobeTexture(highlightColor: string) {
-  const canvas = document.createElement('canvas');
-  canvas.width = 1024;
-  canvas.height = 512;
-  const context = canvas.getContext('2d');
-  
-  if (!context) return null;
-  
-  // Fill with base color
-  context.fillStyle = '#111827';
-  context.fillRect(0, 0, canvas.width, canvas.height);
-  
-  // Draw grid lines
-  context.strokeStyle = highlightColor;
-  context.lineWidth = 0.5;
-  context.globalAlpha = 0.3;
-  
-  // Parallels
-  for (let i = 0; i <= 18; i++) {
-    const y = i * (canvas.height / 18);
-    context.beginPath();
-    context.moveTo(0, y);
-    context.lineTo(canvas.width, y);
-    context.stroke();
+function createGlobeTexture(highlightColor: string): HTMLCanvasElement | null {
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1024;
+    canvas.height = 512;
+    const context = canvas.getContext('2d');
+    
+    if (!context) return null;
+    
+    // Fill with base color
+    context.fillStyle = '#111827';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw grid lines
+    context.strokeStyle = highlightColor;
+    context.lineWidth = 0.5;
+    context.globalAlpha = 0.3;
+    
+    // Parallels
+    for (let i = 0; i <= 18; i++) {
+      const y = i * (canvas.height / 18);
+      context.beginPath();
+      context.moveTo(0, y);
+      context.lineTo(canvas.width, y);
+      context.stroke();
+    }
+    
+    // Meridians
+    for (let i = 0; i <= 36; i++) {
+      const x = i * (canvas.width / 36);
+      context.beginPath();
+      context.moveTo(x, 0);
+      context.lineTo(x, canvas.height);
+      context.stroke();
+    }
+    
+    return canvas;
+  } catch (error) {
+    console.error("Error creating globe texture:", error);
+    return null;
   }
-  
-  // Meridians
-  for (let i = 0; i <= 36; i++) {
-    const x = i * (canvas.width / 36);
-    context.beginPath();
-    context.moveTo(x, 0);
-    context.lineTo(x, canvas.height);
-    context.stroke();
-  }
-  
-  return canvas;
 }
 
 const GlobeSphere: React.FC<{
@@ -107,15 +112,24 @@ const GlobeSphere: React.FC<{
   const atmosphereRef = useRef<THREE.Mesh>(null);
   const markersGroupRef = useRef<THREE.Group>(null);
   const [texture, setTexture] = useState<THREE.Texture | null>(null);
+  const [isTextureLoaded, setIsTextureLoaded] = useState(false);
   
   // Create texture when component mounts or highlightColor changes
   useEffect(() => {
-    // Create the canvas texture
-    const canvas = createGlobeTexture(highlightColor);
-    if (!canvas) return;
+    let newTexture: THREE.Texture | null = null;
     
-    const newTexture = new THREE.CanvasTexture(canvas);
-    setTexture(newTexture);
+    try {
+      // Create the canvas texture
+      const canvas = createGlobeTexture(highlightColor);
+      if (canvas) {
+        newTexture = new THREE.CanvasTexture(canvas);
+        setTexture(newTexture);
+        setIsTextureLoaded(true);
+      }
+    } catch (error) {
+      console.error("Error creating texture:", error);
+      setIsTextureLoaded(false);
+    }
     
     // Cleanup function
     return () => {
@@ -140,7 +154,9 @@ const GlobeSphere: React.FC<{
   });
   
   // Don't render until texture is ready
-  if (!texture) return null;
+  if (!isTextureLoaded) {
+    return null;
+  }
   
   return (
     <>
@@ -150,7 +166,7 @@ const GlobeSphere: React.FC<{
           <meshPhongMaterial 
             color={globeColor} 
             wireframe={wireframe} 
-            map={texture}
+            map={texture || undefined}
             transparent={true}
             opacity={0.9}
           />
