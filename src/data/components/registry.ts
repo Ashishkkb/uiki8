@@ -20,6 +20,8 @@ import AnimatedCarouselComponentItem from './UI/AnimatedCarousel';
 import TimelineComponentItem from './UI/Timeline';
 import PricingTableComponentItem from './UI/PricingTable';
 import InteractiveCardWallComponentItem from './UI/InteractiveCardWall';
+import WeatherWidgetComponentItem from './UI/WeatherWidget';
+import DragDropListComponentItem from './UI/DragDropList';
 
 // Layout Components
 import ContainerComponent from './Layout/Container';
@@ -38,6 +40,9 @@ import SearchableSelectComponent from './Form/SearchableSelect';
 import FormComponent from './Form';
 import DatePickerComponent from './Form/DatePicker';
 import SliderComponent from './Form/Slider';
+import CodeEditorComponentItem from './Form/CodeEditor';
+import VirtualKeyboardComponentItem from './Form/VirtualKeyboard';
+import RichTextEditorComponentItem from './Form/RichTextEditor';
 
 // Navigation Components
 import BreadcrumbsComponent from './Navigation/Breadcrumbs';
@@ -61,6 +66,7 @@ import AudioPlayerComponentItem from './Media/AudioPlayer';
 import InteractiveGalleryComponentItem from './Media/InteractiveGallery';
 import MediaCarouselComponentItem from './Media/MediaCarousel';
 import VideoPlayerComponentItem from './Media/VideoPlayer';
+import PDFViewerComponentItem from './Media/PDFViewer';
 
 // New Components
 import ColorPickerComponentItem from './Form/ColorPicker';
@@ -116,6 +122,8 @@ export const getAllComponents = (): ComponentItem[] => [
   ContextualHelpComponentItem,
   CarouselComponentItem,
   PaginationComponentItem,
+  WeatherWidgetComponentItem,
+  DragDropListComponentItem,
   
   // Layout Components
   ContainerComponent,
@@ -141,6 +149,9 @@ export const getAllComponents = (): ComponentItem[] => [
   SwitchComponentItem,
   CheckboxComponentItem,
   RadioGroupComponentItem,
+  CodeEditorComponentItem,
+  VirtualKeyboardComponentItem,
+  RichTextEditorComponentItem,
   
   // Navigation Components
   BreadcrumbsComponent,
@@ -168,7 +179,8 @@ export const getAllComponents = (): ComponentItem[] => [
   AudioPlayerComponentItem,
   InteractiveGalleryComponentItem,
   MediaCarouselComponentItem,
-  VideoPlayerComponentItem
+  VideoPlayerComponentItem,
+  PDFViewerComponentItem
 ];
 
 export const getComponentsByCategory = (category: string): ComponentItem[] => {

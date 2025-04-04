@@ -28,7 +28,7 @@ interface ModelProps {
 }
 
 const defaultModels = {
-  cube: { scale: a1, position: [0, 0, 0] as [number, number, number] },
+  cube: { scale: 1, position: [0, 0, 0] as [number, number, number] },
   sphere: { scale: 1, position: [0, 0, 0] as [number, number, number] },
   cylinder: { scale: 1, position: [0, 0, 0] as [number, number, number] },
 };
