@@ -59,28 +59,52 @@ const CustomToggleGroup: React.FC<CustomToggleGroupProps> = ({
     }
   };
 
+  // Render different toggle group components based on type
   return (
     <div className={cn("space-y-2", className)}>
       {label && <Label>{label}</Label>}
-      <ToggleGroup
-        type={type}
-        defaultValue={getDefaultValue()}
-        className="justify-start"
-        onValueChange={onChange}
-      >
-        {items.map(item => (
-          <ToggleGroupItem 
-            key={item.value} 
-            value={item.value}
-            aria-label={item.label || item.value}
-            size={size}
-            variant={variant}
-          >
-            {item.icon}
-            {item.label && <span className="ml-2">{item.label}</span>}
-          </ToggleGroupItem>
-        ))}
-      </ToggleGroup>
+      
+      {type === "single" ? (
+        <ToggleGroup
+          type="single"
+          defaultValue={getDefaultValue() as string}
+          className="justify-start"
+          onValueChange={onChange as (value: string) => void}
+        >
+          {items.map(item => (
+            <ToggleGroupItem 
+              key={item.value} 
+              value={item.value}
+              aria-label={item.label || item.value}
+              size={size}
+              variant={variant}
+            >
+              {item.icon}
+              {item.label && <span className="ml-2">{item.label}</span>}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      ) : (
+        <ToggleGroup
+          type="multiple"
+          defaultValue={getDefaultValue() as string[]}
+          className="justify-start"
+          onValueChange={onChange as (value: string[]) => void}
+        >
+          {items.map(item => (
+            <ToggleGroupItem 
+              key={item.value} 
+              value={item.value}
+              aria-label={item.label || item.value}
+              size={size}
+              variant={variant}
+            >
+              {item.icon}
+              {item.label && <span className="ml-2">{item.label}</span>}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      )}
     </div>
   );
 };
