@@ -56,6 +56,11 @@ import MorphingShapesComponentItem from './Animation/MorphingShapes';
 // Media Components
 import VideoGalleryComponentItem from './Media/VideoGallery';
 import ImageComparisonComponentItem from './Media/ImageComparison';
+import ModelViewer3DComponentItem from './Media/3DModelViewer';
+import AudioPlayerComponentItem from './Media/AudioPlayer';
+import InteractiveGalleryComponentItem from './Media/InteractiveGallery';
+import MediaCarouselComponentItem from './Media/MediaCarousel';
+import VideoPlayerComponentItem from './Media/VideoPlayer';
 
 // New Components
 import ColorPickerComponentItem from './Form/ColorPicker';
@@ -158,7 +163,12 @@ export const getAllComponents = (): ComponentItem[] => [
   
   // Media Components
   VideoGalleryComponentItem,
-  ImageComparisonComponentItem
+  ImageComparisonComponentItem,
+  ModelViewer3DComponentItem,
+  AudioPlayerComponentItem,
+  InteractiveGalleryComponentItem,
+  MediaCarouselComponentItem,
+  VideoPlayerComponentItem
 ];
 
 export const getComponentsByCategory = (category: string): ComponentItem[] => {
