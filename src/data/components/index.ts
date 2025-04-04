@@ -6,7 +6,8 @@ import {
   getNavigationComponents,
   getFormComponents,
   getAnimationComponents,
-  getMediaComponents
+  getMediaComponents,
+  getDataDisplayComponents
 } from './registry';
 
 export {
@@ -16,5 +17,6 @@ export {
   getNavigationComponents,
   getFormComponents,
   getAnimationComponents,
-  getMediaComponents
+  getMediaComponents,
+  getDataDisplayComponents
 };

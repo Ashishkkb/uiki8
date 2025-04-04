@@ -52,6 +52,18 @@ import GlobeComponentItem from './Animation/Globe';
 import VideoGalleryComponentItem from './Media/VideoGallery';
 import ImageComparisonComponentItem from './Media/ImageComparison';
 
+// New Components
+import ColorPickerComponentItem from './Form/ColorPicker';
+import TagInputComponentItem from './Form/TagInput';
+import FileUploadComponentItem from './Form/FileUpload';
+import RatingComponentItem from './UI/Rating';
+import NotificationComponentItem from './UI/Notification';
+import DataTableComponentItem from './DataDisplay/DataTable';
+import StatCardComponentItem from './DataDisplay/StatCard';
+import ToggleGroupComponentItem from './Form/ToggleGroup';
+import CommandPaletteComponentItem from './Navigation/CommandPalette';
+import WavyBackgroundComponentItem from './UI/WavyBackground';
+
 export const getAllComponents = (): ComponentItem[] => [
   // UI Components
   ButtonComponent,
@@ -71,7 +83,10 @@ export const getAllComponents = (): ComponentItem[] => [
   AnimatedCarouselComponentItem,
   TimelineComponentItem,
   PricingTableComponentItem,
-  InteractiveCardWallComponentItem, // New 3D Interactive Card Wall
+  InteractiveCardWallComponentItem,
+  RatingComponentItem,
+  NotificationComponentItem,
+  WavyBackgroundComponentItem,
   
   // Layout Components
   ContainerComponent,
@@ -90,15 +105,24 @@ export const getAllComponents = (): ComponentItem[] => [
   FormComponent,
   DatePickerComponent,
   SliderComponent,
+  ColorPickerComponentItem,
+  TagInputComponentItem,
+  FileUploadComponentItem,
+  ToggleGroupComponentItem,
   
   // Navigation Components
   BreadcrumbsComponent,
   NavigationMenuComponent,
+  CommandPaletteComponentItem,
   
   // Animation Components
   TextEffectComponentItem,
-  ParticleTextComponentItem, // New Particle Text Animation
+  ParticleTextComponentItem,
   GlobeComponentItem,
+  
+  // Data Display Components
+  DataTableComponentItem,
+  StatCardComponentItem,
   
   // Media Components
   VideoGalleryComponentItem,
