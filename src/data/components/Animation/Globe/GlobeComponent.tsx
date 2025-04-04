@@ -54,44 +54,60 @@ const GlobeSphere: React.FC<{
   const atmosphereRef = useRef<THREE.Mesh>(null);
   const markersGroupRef = useRef<THREE.Group>(null);
   
-  // Create texture
-  const texture = useRef(new THREE.CanvasTexture(createGlobeTexture(highlightColor)));
-  
-  function createGlobeTexture(highlightColor: string) {
+  // Create texture - ensure canvas creation happens in useEffect
+  const textureRef = useRef<THREE.CanvasTexture | null>(null);
+
+  // Create globe texture in a safe way
+  const createGlobeTexture = (highlightColor: string): HTMLCanvasElement => {
     const canvas = document.createElement('canvas');
     canvas.width = 1024;
     canvas.height = 512;
-    const context = canvas.getContext('2d')!;
+    const context = canvas.getContext('2d');
     
-    // Fill with base color
-    context.fillStyle = '#111827';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw grid lines
-    context.strokeStyle = highlightColor;
-    context.lineWidth = 0.5;
-    context.globalAlpha = 0.3;
-    
-    // Parallels
-    for (let i = 0; i <= 18; i++) {
-      const y = i * (canvas.height / 18);
-      context.beginPath();
-      context.moveTo(0, y);
-      context.lineTo(canvas.width, y);
-      context.stroke();
-    }
-    
-    // Meridians
-    for (let i = 0; i <= 36; i++) {
-      const x = i * (canvas.width / 36);
-      context.beginPath();
-      context.moveTo(x, 0);
-      context.lineTo(x, canvas.height);
-      context.stroke();
+    if (context) {
+      // Fill with base color
+      context.fillStyle = '#111827';
+      context.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw grid lines
+      context.strokeStyle = highlightColor;
+      context.lineWidth = 0.5;
+      context.globalAlpha = 0.3;
+      
+      // Parallels
+      for (let i = 0; i <= 18; i++) {
+        const y = i * (canvas.height / 18);
+        context.beginPath();
+        context.moveTo(0, y);
+        context.lineTo(canvas.width, y);
+        context.stroke();
+      }
+      
+      // Meridians
+      for (let i = 0; i <= 36; i++) {
+        const x = i * (canvas.width / 36);
+        context.beginPath();
+        context.moveTo(x, 0);
+        context.lineTo(x, canvas.height);
+        context.stroke();
+      }
     }
     
     return canvas;
-  }
+  };
+  
+  // Initialize texture in useEffect to avoid DOM manipulation during render
+  useEffect(() => {
+    const canvas = createGlobeTexture(highlightColor);
+    textureRef.current = new THREE.CanvasTexture(canvas);
+    
+    // Cleanup function
+    return () => {
+      if (textureRef.current) {
+        textureRef.current.dispose();
+      }
+    };
+  }, [highlightColor]);
   
   useFrame((_, delta) => {
     if (autoRotate && sphereRef.current) {
@@ -102,15 +118,10 @@ const GlobeSphere: React.FC<{
       }
     }
     
-    if (atmosphereRef.current) {
-      atmosphereRef.current.rotation.copy(sphereRef.current!.rotation);
+    if (atmosphereRef.current && sphereRef.current) {
+      atmosphereRef.current.rotation.copy(sphereRef.current.rotation);
     }
   });
-  
-  useEffect(() => {
-    // Update texture if highlight color changes
-    texture.current = new THREE.CanvasTexture(createGlobeTexture(highlightColor));
-  }, [highlightColor]);
   
   return (
     <>
@@ -120,7 +131,7 @@ const GlobeSphere: React.FC<{
           <meshPhongMaterial 
             color={globeColor} 
             wireframe={wireframe} 
-            map={texture.current}
+            map={textureRef.current}
             transparent={true}
             opacity={0.9}
           />
