@@ -41,12 +41,23 @@ const CustomToggleGroup: React.FC<CustomToggleGroupProps> = ({
   className,
   onChange
 }) => {
+  // Handle the different types of defaultValue based on the type prop
+  const getDefaultValue = () => {
+    if (type === "single") {
+      // For single mode, ensure it's a string (or undefined)
+      return typeof defaultValue === 'string' ? defaultValue : undefined;
+    } else {
+      // For multiple mode, ensure it's a string[] (or empty array)
+      return Array.isArray(defaultValue) ? defaultValue : [];
+    }
+  };
+
   return (
     <div className={cn("space-y-2", className)}>
       {label && <Label>{label}</Label>}
       <ToggleGroup
         type={type}
-        defaultValue={defaultValue}
+        defaultValue={getDefaultValue()}
         className="justify-start"
         onValueChange={onChange}
       >
