@@ -1,4 +1,3 @@
-
 import { ComponentItem } from "@/types/component";
 
 // UI Components
@@ -44,6 +43,10 @@ import TextEffectComponentItem from './Animation/TextEffect';
 import ParticleTextComponentItem from './Animation/ParticleText';
 import GlobeComponentItem from './Animation/Globe';
 
+// Media Components
+import VideoGalleryComponentItem from './Media/VideoGallery';
+import ImageComparisonComponentItem from './Media/ImageComparison';
+
 export const getAllComponents = (): ComponentItem[] => [
   // UI Components
   ButtonComponent,
@@ -86,7 +89,11 @@ export const getAllComponents = (): ComponentItem[] => [
   // Animation Components
   TextEffectComponentItem,
   ParticleTextComponentItem,
-  GlobeComponentItem
+  GlobeComponentItem,
+  
+  // Media Components
+  VideoGalleryComponentItem,
+  ImageComparisonComponentItem
 ];
 
 export const getComponentsByCategory = (category: string): ComponentItem[] => {
