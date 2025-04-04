@@ -140,7 +140,7 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
     const attrPattern = /\s[a-zA-Z][a-zA-Z0-9]*(?=\s*=)/g;
     let attrMatch = attrPattern.exec(remaining);
     
-    // Pattern for functions
+    // Pattern for functions - FIXED REGEX
     const funcPattern = /\b[a-zA-Z][a-zA-Z0-9]*(?=\()/g;
     let funcMatch = funcPattern.exec(remaining);
     
@@ -176,12 +176,12 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
       }
       
       // Check for attribute names (simplified)
-      if (part && line.match(new RegExp(`\\s${part}\\s*=`))) {
+      if (part && line.includes(' ' + part + '=')) {
         return <CodeToken key={index} type="attr-name">{part}</CodeToken>;
       }
       
-      // Check for function calls - Fixed the invalid regex here
-      if (part && line.match(new RegExp(`${part}\\(`))) {
+      // Check for function calls - Fixed the invalid regex
+      if (part && line.includes(part + '(')) {
         return <CodeToken key={index} type="function">{part}</CodeToken>;
       }
       
