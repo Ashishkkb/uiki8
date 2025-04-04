@@ -1,5 +1,5 @@
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, Environment, Sphere } from '@react-three/drei';
 import * as THREE from 'three';
@@ -35,6 +35,44 @@ const latLngToVector3 = (lat: number, lng: number, radius: number): THREE.Vector
   return new THREE.Vector3(x, y, z);
 };
 
+function createGlobeTexture(highlightColor: string) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1024;
+  canvas.height = 512;
+  const context = canvas.getContext('2d');
+  
+  if (!context) return null;
+  
+  // Fill with base color
+  context.fillStyle = '#111827';
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // Draw grid lines
+  context.strokeStyle = highlightColor;
+  context.lineWidth = 0.5;
+  context.globalAlpha = 0.3;
+  
+  // Parallels
+  for (let i = 0; i <= 18; i++) {
+    const y = i * (canvas.height / 18);
+    context.beginPath();
+    context.moveTo(0, y);
+    context.lineTo(canvas.width, y);
+    context.stroke();
+  }
+  
+  // Meridians
+  for (let i = 0; i <= 36; i++) {
+    const x = i * (canvas.width / 36);
+    context.beginPath();
+    context.moveTo(x, 0);
+    context.lineTo(x, canvas.height);
+    context.stroke();
+  }
+  
+  return canvas;
+}
+
 const GlobeSphere: React.FC<{
   wireframe?: boolean;
   globeColor?: string;
@@ -53,45 +91,24 @@ const GlobeSphere: React.FC<{
   const sphereRef = useRef<THREE.Mesh>(null);
   const atmosphereRef = useRef<THREE.Mesh>(null);
   const markersGroupRef = useRef<THREE.Group>(null);
+  const [texture, setTexture] = useState<THREE.Texture | null>(null);
   
-  // Create texture
-  const texture = useRef(new THREE.CanvasTexture(createGlobeTexture(highlightColor)));
-  
-  function createGlobeTexture(highlightColor: string) {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1024;
-    canvas.height = 512;
-    const context = canvas.getContext('2d')!;
+  // Create texture when component mounts or highlightColor changes
+  useEffect(() => {
+    // Create the canvas texture
+    const canvas = createGlobeTexture(highlightColor);
+    if (!canvas) return;
     
-    // Fill with base color
-    context.fillStyle = '#111827';
-    context.fillRect(0, 0, canvas.width, canvas.height);
+    const newTexture = new THREE.CanvasTexture(canvas);
+    setTexture(newTexture);
     
-    // Draw grid lines
-    context.strokeStyle = highlightColor;
-    context.lineWidth = 0.5;
-    context.globalAlpha = 0.3;
-    
-    // Parallels
-    for (let i = 0; i <= 18; i++) {
-      const y = i * (canvas.height / 18);
-      context.beginPath();
-      context.moveTo(0, y);
-      context.lineTo(canvas.width, y);
-      context.stroke();
-    }
-    
-    // Meridians
-    for (let i = 0; i <= 36; i++) {
-      const x = i * (canvas.width / 36);
-      context.beginPath();
-      context.moveTo(x, 0);
-      context.lineTo(x, canvas.height);
-      context.stroke();
-    }
-    
-    return canvas;
-  }
+    // Cleanup function
+    return () => {
+      if (newTexture) {
+        newTexture.dispose();
+      }
+    };
+  }, [highlightColor]);
   
   useFrame((_, delta) => {
     if (autoRotate && sphereRef.current) {
@@ -102,15 +119,13 @@ const GlobeSphere: React.FC<{
       }
     }
     
-    if (atmosphereRef.current) {
-      atmosphereRef.current.rotation.copy(sphereRef.current!.rotation);
+    if (atmosphereRef.current && sphereRef.current) {
+      atmosphereRef.current.rotation.copy(sphereRef.current.rotation);
     }
   });
   
-  useEffect(() => {
-    // Update texture if highlight color changes
-    texture.current = new THREE.CanvasTexture(createGlobeTexture(highlightColor));
-  }, [highlightColor]);
+  // Don't render until texture is ready
+  if (!texture) return null;
   
   return (
     <>
@@ -120,7 +135,7 @@ const GlobeSphere: React.FC<{
           <meshPhongMaterial 
             color={globeColor} 
             wireframe={wireframe} 
-            map={texture.current}
+            map={texture}
             transparent={true}
             opacity={0.9}
           />
