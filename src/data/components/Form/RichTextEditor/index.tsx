@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ComponentItem } from "@/types/component";
 import RichTextEditor from './RichTextEditorComponent';
@@ -140,7 +141,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
   const handleImageInsert = () => {
     if (imageUrl) {
-      const imgHtml = `<img src="${imageUrl}" alt="${imageAlt}" style="max-width: 100%;" />`;
+      const imgHtml = \`<img src="\${imageUrl}" alt="\${imageAlt}" style="max-width: 100%;" />\`;
       executeCommand('insertHTML', imgHtml);
       setImageUrl('');
       setImageAlt('');
