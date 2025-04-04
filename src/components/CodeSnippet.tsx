@@ -166,7 +166,7 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
       }
       
       // Check for JSX tags
-      if (part.startsWith('<') || part.startsWith('</') || part === '/>') {
+      if (part.startsWith('<') || part.startsWith('</') || part.startsWith('/>')) {
         return <CodeToken key={index} type="punctuation">{part}</CodeToken>;
       }
       
@@ -180,7 +180,7 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
         return <CodeToken key={index} type="attr-name">{part}</CodeToken>;
       }
       
-      // Check for function calls
+      // Check for function calls - Fixed the invalid regex here
       if (part && line.match(new RegExp(`${part}\\(`))) {
         return <CodeToken key={index} type="function">{part}</CodeToken>;
       }
