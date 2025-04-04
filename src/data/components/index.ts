@@ -4,7 +4,8 @@ import {
   getUIComponents, 
   getLayoutComponents,
   getNavigationComponents,
-  getFormComponents
+  getFormComponents,
+  getAnimationComponents
 } from './registry';
 
 export {
@@ -12,5 +13,6 @@ export {
   getUIComponents,
   getLayoutComponents,
   getNavigationComponents,
-  getFormComponents
+  getFormComponents,
+  getAnimationComponents
 };

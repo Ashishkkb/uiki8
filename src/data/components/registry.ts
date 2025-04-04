@@ -41,6 +41,8 @@ import NavigationMenuComponent from './Navigation/NavigationMenu';
 
 // Animation Components
 import TextEffectComponentItem from './Animation/TextEffect';
+import ParticleTextComponentItem from './Animation/ParticleText';
+import GlobeComponentItem from './Animation/Globe';
 
 export const getAllComponents = (): ComponentItem[] => [
   // UI Components
@@ -82,7 +84,9 @@ export const getAllComponents = (): ComponentItem[] => [
   NavigationMenuComponent,
   
   // Animation Components
-  TextEffectComponentItem
+  TextEffectComponentItem,
+  ParticleTextComponentItem,
+  GlobeComponentItem
 ];
 
 export const getComponentsByCategory = (category: string): ComponentItem[] => {
