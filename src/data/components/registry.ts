@@ -15,7 +15,7 @@ import AccordionComponent from './UI/Accordion';
 import TabsComponent from './UI/Tabs';
 import ProgressComponent from './UI/Progress';
 import SkeletonComponent from './UI/Skeleton';
-import ThreeDCardComponent from './UI/ThreeDCard';
+import ThreeDCardComponentItem from './UI/ThreeDCard';
 
 // Layout Components
 import ContainerComponent from './Layout/Container';
@@ -40,7 +40,7 @@ import BreadcrumbsComponent from './Navigation/Breadcrumbs';
 import NavigationMenuComponent from './Navigation/NavigationMenu';
 
 // Animation Components
-import TextEffectComponent from './Animation/TextEffect';
+import TextEffectComponentItem from './Animation/TextEffect';
 
 export const getAllComponents = (): ComponentItem[] => [
   // UI Components
@@ -57,7 +57,7 @@ export const getAllComponents = (): ComponentItem[] => [
   TabsComponent,
   ProgressComponent,
   SkeletonComponent,
-  ThreeDCardComponent,
+  ThreeDCardComponentItem,
   
   // Layout Components
   ContainerComponent,
@@ -82,7 +82,7 @@ export const getAllComponents = (): ComponentItem[] => [
   NavigationMenuComponent,
   
   // Animation Components
-  TextEffectComponent
+  TextEffectComponentItem
 ];
 
 export const getComponentsByCategory = (category: string): ComponentItem[] => {

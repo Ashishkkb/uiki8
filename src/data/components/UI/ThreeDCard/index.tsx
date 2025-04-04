@@ -1,10 +1,9 @@
 
 import React from 'react';
 import { ComponentItem } from "@/types/component";
-import { Card } from "@/components/ui/card";
-import ThreeDCardComponent from './ThreeDCardComponent';
+import ThreeDCard from './ThreeDCardComponent';
 
-const ThreeDCardComponent: ComponentItem = {
+const ThreeDCardComponentItem: ComponentItem = {
   id: 101,
   name: "3D Rotating Card",
   description: "Interactive 3D card with perspective and rotation effects for modern interfaces",
@@ -14,7 +13,7 @@ const ThreeDCardComponent: ComponentItem = {
   tags: ["3D", "Animation", "Interactive", "Card"],
   is3D: true,
   isNew: true,
-  component: () => <ThreeDCardComponent />,
+  component: () => <ThreeDCard />,
   code: `import React, { useState } from 'react';
 import { Card } from "@/components/ui/card";
 
@@ -117,4 +116,4 @@ const ThreeDCardDemo = () => {
 export default ThreeDCardDemo;`
 };
 
-export default ThreeDCardComponent;
+export default ThreeDCardComponentItem;

@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { ComponentItem } from "@/types/component";
-import TextEffectComponent from './TextEffectComponent';
+import TextEffect from './TextEffectComponent';
 
-const TextEffectComponent: ComponentItem = {
+const TextEffectComponentItem: ComponentItem = {
   id: 102,
   name: "Animated Text Effects",
   description: "Advanced text animation effects for engaging user interfaces",
@@ -12,7 +12,7 @@ const TextEffectComponent: ComponentItem = {
   language: "TypeScript",
   tags: ["Text", "Animation", "Effects", "Motion"],
   isNew: true,
-  component: () => <TextEffectComponent />,
+  component: () => <TextEffect />,
   code: `import React, { useEffect, useRef } from 'react';
 import { cn } from "@/lib/utils";
 
@@ -242,7 +242,7 @@ const TextEffectComponent = () => {
       {/* Spotlight Text */}
       <div className="text-center spotlight-container" style={{position: 'relative', overflow: 'hidden'}}>
         <h3 className="text-sm text-muted-foreground mb-3">Spotlight Effect</h3>
-        <style jsx global>{\`
+        <style dangerouslySetInnerHTML={{ __html: \`
           .spotlight-effect {
             position: relative;
           }
@@ -263,7 +263,7 @@ const TextEffectComponent = () => {
             pointer-events: none;
             z-index: 1;
           }
-        \`}</style>
+        \`}} />
         <AnimatedText 
           text="HOVER OVER ME FOR SPOTLIGHT" 
           variant="spotlight"
@@ -289,4 +289,4 @@ const TextEffectComponent = () => {
 export default TextEffectComponent;`
 };
 
-export default TextEffectComponent;
+export default TextEffectComponentItem;

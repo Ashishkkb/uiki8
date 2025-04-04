@@ -228,7 +228,7 @@ const TextEffectComponent = () => {
       {/* Spotlight Text */}
       <div className="text-center spotlight-container" style={{position: 'relative', overflow: 'hidden'}}>
         <h3 className="text-sm text-muted-foreground mb-3">Spotlight Effect</h3>
-        <style jsx global>{`
+        <style dangerouslySetInnerHTML={{ __html: `
           .spotlight-effect {
             position: relative;
           }
@@ -249,7 +249,7 @@ const TextEffectComponent = () => {
             pointer-events: none;
             z-index: 1;
           }
-        `}</style>
+        ` }}/>
         <AnimatedText 
           text="HOVER OVER ME FOR SPOTLIGHT" 
           variant="spotlight"
