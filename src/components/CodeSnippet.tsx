@@ -1,9 +1,10 @@
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { ClipboardCopy, Check } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { CodeBlock, CodeLine, CodeToken } from "@/components/ui/code-highlight";
 
 interface CodeSnippetProps {
   code: string;
@@ -32,29 +33,14 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
     }, 2000);
   };
 
-  // Calculate maximum line number width for padding
-  const lineCount = code.split('\n').length;
-  const maxLineNumberWidth = lineCount.toString().length;
-
-  // Format code with line numbers and syntax highlighting
-  const formattedCode = showLineNumbers 
-    ? code.split('\n').map((line, index) => {
-        // Process line for syntax highlighting
-        const processedLine = highlightSyntax(line, language);
-        
-        return (
-          <div key={index} className="table-row group">
-            <span 
-              className="table-cell pr-4 text-right select-none opacity-40 text-[#6e7681] w-[1%] whitespace-nowrap"
-              style={{ minWidth: `${maxLineNumberWidth + 1}ch` }}
-            >
-              {index + 1}
-            </span>
-            <span className="table-cell">{processedLine}</span>
-          </div>
-        );
-      })
-    : <pre className="text-[#e6edf3]" dangerouslySetInnerHTML={{ __html: highlightSyntax(code, language) }} />;
+  // Format the code with enhanced syntax highlighting
+  const formattedCode = useMemo(() => {
+    return code.split('\n').map((line, index) => {
+      // Apply syntax highlighting based on language
+      const highlightedLine = formatCodeLine(line, language);
+      return <CodeLine key={index}>{highlightedLine}</CodeLine>;
+    });
+  }, [code, language]);
 
   return (
     <div className={cn(
@@ -62,14 +48,17 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
       className
     )}>
       {/* Window style top bar with circles */}
-      <div className="flex items-center bg-[#161b22] px-4 py-2 border-b border-[#30363d]/80">
+      <div className="flex items-center justify-between bg-[#161b22] px-4 py-2 border-b border-[#30363d]/80">
         <div className="flex items-center space-x-2">
           <div className="w-3 h-3 rounded-full bg-[#ff5f57]"></div>
           <div className="w-3 h-3 rounded-full bg-[#febc2e]"></div>
           <div className="w-3 h-3 rounded-full bg-[#28c840]"></div>
+          {language && (
+            <span className="ml-2 text-xs text-[#8b949e]">
+              {language.toUpperCase()}
+            </span>
+          )}
         </div>
-        
-        <div className="flex-1"></div>
         
         {showCopyButton && (
           <Button
@@ -101,53 +90,111 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
       )}>
         {showLineNumbers ? (
           <div className="table w-full">
-            {formattedCode}
+            {code.split('\n').map((line, index) => {
+              const highlightedLine = formatCodeLine(line, language);
+              return (
+                <div key={index} className="table-row group">
+                  <span 
+                    className="table-cell pr-4 text-right select-none opacity-40 text-[#6e7681] w-[1%] whitespace-nowrap"
+                  >
+                    {index + 1}
+                  </span>
+                  <span className="table-cell">{highlightedLine}</span>
+                </div>
+              );
+            })}
           </div>
         ) : (
-          formattedCode
+          <pre className="text-[#e6edf3]">
+            {formattedCode}
+          </pre>
         )}
       </div>
     </div>
   );
 };
 
-// Helper function to add syntax highlighting similar to the image
-// This is a simplified version - in a real application, you might want to use a library like Prism.js
-function highlightSyntax(code: string, language: string): string | React.ReactNode {
-  if (typeof code !== 'string') return code;
-
-  // For JSX/HTML highlighting
-  if (language === 'jsx' || language === 'html') {
-    // Simple regex-based highlighting
-    let highlighted = code
-      // HTML tags
-      .replace(/(&lt;|<)(\/?)([\w\-]+)(?=[\s>])/g, '<span style="color: #ff7b72;">$1$2</span><span style="color: #7ee787;">$3</span>')
-      // Attributes
-      .replace(/(\s+)([\w\-:]+)(\s*=\s*)/g, '$1<span style="color: #79c0ff;">$2</span>$3')
-      // Attribute values
-      .replace(/(".*?"|'.*?')/g, '<span style="color: #a5d6ff;">$1</span>')
-      // Class names specifically
-      .replace(/(class|className)(\s*=\s*)(".*?"|'.*?')/g, '<span style="color: #79c0ff;">$1</span>$2<span style="color: #a5d6ff;">$3</span>')
-      // Special characters
-      .replace(/(&gt;|>|\/&gt;|\/>)/g, '<span style="color: #ff7b72;">$1</span>');
+// Enhanced syntax highlighting function
+function formatCodeLine(line: string, language: string): React.ReactNode {
+  // For JSX/TSX
+  if (language === 'jsx' || language === 'tsx') {
+    // Break down the line into parts for formatting
+    const parts: React.ReactNode[] = [];
     
-    return highlighted;
+    // Match different code elements
+    let remaining = line;
+    let lastIndex = 0;
+    
+    // Handle JSX tags
+    const tagPattern = /<\/?[a-zA-Z][a-zA-Z0-9]*|\/>/g;
+    let tagMatch = tagPattern.exec(remaining);
+    
+    // Handle keywords
+    const keywords = ["import", "export", "from", "const", "let", "var", "function", "return", "if", "else", "switch", "case", "default", "for", "while", "do", "break", "continue", "class", "extends", "implements", "interface", "type", "enum", "namespace", "module", "declare", "require", "new", "try", "catch", "finally", "throw", "async", "await", "static", "public", "private", "protected", "get", "set", "true", "false", "null", "undefined", "this", "super"];
+    
+    // Special pattern for quotes/strings
+    const stringPattern = /"([^"\\]|\\.)*"|'([^'\\]|\\.)*'|`([^`\\]|\\.)*`/g;
+    let stringMatch = stringPattern.exec(remaining);
+    
+    // Pattern for attribute names
+    const attrPattern = /\s[a-zA-Z][a-zA-Z0-9]*(?=\s*=)/g;
+    let attrMatch = attrPattern.exec(remaining);
+    
+    // Pattern for functions
+    const funcPattern = /\b[a-zA-Z][a-zA-Z0-9]*(?=\()/g;
+    let funcMatch = funcPattern.exec(remaining);
+    
+    // Pattern for comments
+    const commentPattern = /\/\/.*$|\/\*[\s\S]*?\*\//g;
+    let commentMatch = commentPattern.exec(remaining);
+    
+    // Simple tokenization of the line
+    return remaining.split(/\b/).map((part, index) => {
+      // Check if part is a keyword
+      if (keywords.includes(part)) {
+        return <CodeToken key={index} type="keyword">{part}</CodeToken>;
+      }
+      
+      // Check for strings/quotes
+      if (part.startsWith('"') || part.startsWith("'") || part.startsWith("`")) {
+        return <CodeToken key={index} type="string">{part}</CodeToken>;
+      }
+      
+      // Check for numbers
+      if (/^\d+$/.test(part)) {
+        return <CodeToken key={index} type="number">{part}</CodeToken>;
+      }
+      
+      // Check for JSX tags
+      if (part.startsWith('<') || part.startsWith('</') || part === '/>') {
+        return <CodeToken key={index} type="punctuation">{part}</CodeToken>;
+      }
+      
+      // Check for tag names (simplified)
+      if (part && (line.includes('<' + part) || line.includes('</' + part))) {
+        return <CodeToken key={index} type="tag">{part}</CodeToken>;
+      }
+      
+      // Check for attribute names (simplified)
+      if (part && line.match(new RegExp(`\\s${part}\\s*=`))) {
+        return <CodeToken key={index} type="attr-name">{part}</CodeToken>;
+      }
+      
+      // Check for function calls
+      if (part && line.match(new RegExp(`${part}\\(`))) {
+        return <CodeToken key={index} type="function">{part}</CodeToken>;
+      }
+      
+      // Default token type
+      return <CodeToken key={index} type="plain">{part}</CodeToken>;
+    });
   }
   
-  // For CSS
-  if (language === 'css') {
-    // Simple implementation - would be more complex in reality
-    return code;
-  }
-  
-  // For JS/TS
-  if (language === 'js' || language === 'javascript' || language === 'ts' || language === 'typescript') {
-    // Simple implementation - would be more complex in reality
-    return code;
-  }
-  
-  // Default - no highlighting
-  return code;
+  // For other languages, provide basic highlighting
+  // This is a simplified version - in a real app, you'd use a proper syntax highlighter library
+  return (
+    <span>{line}</span>
+  );
 }
 
 export default CodeSnippet;

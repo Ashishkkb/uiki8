@@ -93,7 +93,11 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
             {code && (
               <div className="space-y-4">
                 <h3 className="text-lg font-medium">Code</h3>
-                <CodeSnippet code={code} showLineNumbers={true} />
+                <CodeSnippet 
+                  code={code} 
+                  showLineNumbers={true}
+                  language={component.framework?.toLowerCase() === "react" ? "jsx" : "js"}
+                />
               </div>
             )}
           </div>
