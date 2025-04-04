@@ -1,3 +1,4 @@
+
 import { ComponentItem } from "@/types/component";
 
 // UI Components
@@ -15,6 +16,9 @@ import TabsComponent from './UI/Tabs';
 import ProgressComponent from './UI/Progress';
 import SkeletonComponent from './UI/Skeleton';
 import ThreeDCardComponentItem from './UI/ThreeDCard';
+import AnimatedCarouselComponentItem from './UI/AnimatedCarousel';
+import TimelineComponentItem from './UI/Timeline';
+import PricingTableComponentItem from './UI/PricingTable';
 
 // Layout Components
 import ContainerComponent from './Layout/Container';
@@ -63,6 +67,9 @@ export const getAllComponents = (): ComponentItem[] => [
   ProgressComponent,
   SkeletonComponent,
   ThreeDCardComponentItem,
+  AnimatedCarouselComponentItem, // New
+  TimelineComponentItem, // New
+  PricingTableComponentItem, // New
   
   // Layout Components
   ContainerComponent,
