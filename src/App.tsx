@@ -4,9 +4,9 @@ import Index from "./pages/Index";
 import Components from "./pages/Components";
 import NotFound from "./pages/NotFound";
 import Pricing from "./pages/Pricing";
-import { Toaster } from "sonner";
 import Navbar from "./components/Navbar";
 import { ThemeProvider } from "./hooks/useTheme";
+import { Toaster } from "@/components/ui/toaster";
 
 function App() {
   return (
@@ -21,7 +21,7 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
-        <Toaster position="top-right" richColors closeButton />
+        <Toaster />
       </div>
     </ThemeProvider>
   );

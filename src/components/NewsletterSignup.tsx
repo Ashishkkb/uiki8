@@ -3,18 +3,23 @@ import React from "react";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 
 const NewsletterSignup = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Basic email validation
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      toast.error("Please enter a valid email address.");
+      toast({
+        title: "Error",
+        description: "Please enter a valid email address.",
+        variant: "destructive"
+      });
       return;
     }
     
@@ -24,11 +29,18 @@ const NewsletterSignup = () => {
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      toast.success("You've been subscribed to our newsletter.");
+      toast({
+        title: "Success",
+        description: "You've been subscribed to our newsletter."
+      });
       
       setEmail("");
     } catch (error) {
-      toast.error("Something went wrong. Please try again later.");
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again later.",
+        variant: "destructive"
+      });
     } finally {
       setLoading(false);
     }
