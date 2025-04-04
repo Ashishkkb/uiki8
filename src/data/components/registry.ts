@@ -7,6 +7,9 @@ import CardComponent from './Card';
 import AlertComponent from './UI/Alert';
 import ModalComponent from './UI/Modal';
 import DropdownComponent from './UI/Dropdown';
+import ToastComponent from './UI/Toast';
+import TooltipComponent from './UI/Tooltip';
+import AvatarComponent from './UI/Avatar';
 
 // Layout Components
 import ContainerComponent from './Layout/Container';
@@ -41,6 +44,9 @@ export const getAllComponents = (): ComponentItem[] => [
   AlertComponent,
   ModalComponent,
   DropdownComponent,
+  ToastComponent,
+  TooltipComponent,
+  AvatarComponent,
   
   // Layout Components
   ContainerComponent,

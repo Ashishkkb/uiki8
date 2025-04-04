@@ -31,7 +31,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
       >
         {/* Preview area */}
         <div className="aspect-[16/9] relative flex items-center justify-center overflow-hidden bg-muted/40 p-6">
-          <div className="w-full">
+          <div className="w-full h-full flex items-center justify-center">
             {ComponentPreview && <ComponentPreview />}
           </div>
           {/* Hover overlay */}
@@ -85,7 +85,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
           <div className="grid gap-6">
             <div className="rounded-lg border bg-card p-6">
               <h3 className="text-lg font-medium mb-4">Preview</h3>
-              <div className="h-[300px] bg-muted/30 rounded-lg p-4 flex items-center justify-center">
+              <div className="h-[500px] bg-muted/30 rounded-lg p-4 flex items-center justify-center overflow-auto">
                 {ComponentPreview && <ComponentPreview />}
               </div>
             </div>
