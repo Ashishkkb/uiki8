@@ -144,7 +144,7 @@ const GlobeSphere: React.FC<{
             const position = latLngToVector3(marker.lat, marker.lng, 1.01);
             return (
               <mesh key={idx} position={position}>
-                <sphereBufferGeometry args={[marker.size || 0.02, 16, 16]} />
+                <sphereGeometry args={[marker.size || 0.02, 16, 16]} />
                 <meshBasicMaterial color={marker.color || '#ff6b6b'} />
               </mesh>
             );
