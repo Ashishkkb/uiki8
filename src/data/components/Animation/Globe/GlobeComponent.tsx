@@ -1,7 +1,7 @@
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Environment, Sphere } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface LocationMarker {
@@ -97,29 +97,20 @@ const GlobeSphere: React.FC<{
   const atmosphereRef = useRef<THREE.Mesh>(null);
   const markersGroupRef = useRef<THREE.Group>(null);
   const [texture, setTexture] = useState<THREE.Texture | null>(null);
-  const [isTextureLoaded, setIsTextureLoaded] = useState(false);
   
-  // Create texture when component mounts or highlightColor changes
+  // Create texture only once when component mounts or when highlightColor changes
   useEffect(() => {
-    let newTexture: THREE.Texture | null = null;
+    const canvas = createGlobeTexture(highlightColor);
     
-    try {
-      // Create the canvas texture
-      const canvas = createGlobeTexture(highlightColor);
-      if (canvas) {
-        newTexture = new THREE.CanvasTexture(canvas);
-        setTexture(newTexture);
-        setIsTextureLoaded(true);
-      }
-    } catch (error) {
-      console.error("Error creating texture:", error);
-      setIsTextureLoaded(false);
+    if (canvas) {
+      const newTexture = new THREE.CanvasTexture(canvas);
+      setTexture(newTexture);
     }
     
     // Cleanup function
     return () => {
-      if (newTexture) {
-        newTexture.dispose();
+      if (texture) {
+        texture.dispose();
       }
     };
   }, [highlightColor]);
@@ -138,8 +129,8 @@ const GlobeSphere: React.FC<{
     }
   });
   
-  // Don't render until texture is ready
-  if (!isTextureLoaded) {
+  // Only render when texture is loaded
+  if (!texture) {
     return null;
   }
   
@@ -147,26 +138,28 @@ const GlobeSphere: React.FC<{
     <>
       <group>
         {/* Globe */}
-        <Sphere args={[1, 64, 64]} ref={sphereRef}>
+        <mesh ref={sphereRef}>
+          <sphereGeometry args={[1, 64, 64]} />
           <meshPhongMaterial 
             color={globeColor} 
             wireframe={wireframe} 
-            map={texture || undefined}
+            map={texture}
             transparent={true}
             opacity={0.9}
           />
-        </Sphere>
+        </mesh>
         
         {/* Atmosphere */}
         {showAtmosphere && (
-          <Sphere args={[1.02, 64, 64]} ref={atmosphereRef}>
+          <mesh ref={atmosphereRef}>
+            <sphereGeometry args={[1.02, 64, 64]} />
             <meshPhongMaterial 
               color={highlightColor} 
               transparent={true}
               opacity={0.1}
               side={THREE.BackSide}
             />
-          </Sphere>
+          </mesh>
         )}
         
         {/* Markers */}

@@ -16,7 +16,7 @@ const GlobeComponentItem: ComponentItem = {
   component: () => <Globe />,
   code: `import React, { useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, Environment, Sphere } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, Environment } from '@react-three/drei';
 import * as THREE from 'three';
 
 interface LocationMarker {
@@ -93,14 +93,7 @@ function createGlobeTexture(highlightColor: string): HTMLCanvasElement | null {
   }
 }
 
-const GlobeSphere: React.FC<{
-  wireframe?: boolean;
-  globeColor?: string;
-  highlightColor?: string;
-  showAtmosphere?: boolean;
-  autoRotate?: boolean;
-  markers?: LocationMarker[];
-}> = ({ 
+const GlobeSphere = ({ 
   wireframe = false, 
   globeColor = '#1a66a0',
   highlightColor = '#4fb8e7',
@@ -108,33 +101,24 @@ const GlobeSphere: React.FC<{
   autoRotate = true,
   markers = [] 
 }) => {
-  const sphereRef = useRef<THREE.Mesh>(null);
-  const atmosphereRef = useRef<THREE.Mesh>(null);
-  const markersGroupRef = useRef<THREE.Group>(null);
-  const [texture, setTexture] = useState<THREE.Texture | null>(null);
-  const [isTextureLoaded, setIsTextureLoaded] = useState(false);
+  const sphereRef = useRef();
+  const atmosphereRef = useRef();
+  const markersGroupRef = useRef();
+  const [texture, setTexture] = useState(null);
   
   // Create texture when component mounts or highlightColor changes
   useEffect(() => {
-    let newTexture: THREE.Texture | null = null;
+    const canvas = createGlobeTexture(highlightColor);
     
-    try {
-      // Create the canvas texture
-      const canvas = createGlobeTexture(highlightColor);
-      if (canvas) {
-        newTexture = new THREE.CanvasTexture(canvas);
-        setTexture(newTexture);
-        setIsTextureLoaded(true);
-      }
-    } catch (error) {
-      console.error("Error creating texture:", error);
-      setIsTextureLoaded(false);
+    if (canvas) {
+      const newTexture = new THREE.CanvasTexture(canvas);
+      setTexture(newTexture);
     }
     
     // Cleanup function
     return () => {
-      if (newTexture) {
-        newTexture.dispose();
+      if (texture) {
+        texture.dispose();
       }
     };
   }, [highlightColor]);
@@ -153,8 +137,8 @@ const GlobeSphere: React.FC<{
     }
   });
   
-  // Don't render until texture is ready
-  if (!isTextureLoaded) {
+  // Only render when texture is loaded
+  if (!texture) {
     return null;
   }
   
@@ -162,26 +146,28 @@ const GlobeSphere: React.FC<{
     <>
       <group>
         {/* Globe */}
-        <Sphere args={[1, 64, 64]} ref={sphereRef}>
+        <mesh ref={sphereRef}>
+          <sphereGeometry args={[1, 64, 64]} />
           <meshPhongMaterial 
             color={globeColor} 
             wireframe={wireframe} 
-            map={texture || undefined}
+            map={texture}
             transparent={true}
             opacity={0.9}
           />
-        </Sphere>
+        </mesh>
         
         {/* Atmosphere */}
         {showAtmosphere && (
-          <Sphere args={[1.02, 64, 64]} ref={atmosphereRef}>
+          <mesh ref={atmosphereRef}>
+            <sphereGeometry args={[1.02, 64, 64]} />
             <meshPhongMaterial 
               color={highlightColor} 
               transparent={true}
               opacity={0.1}
               side={THREE.BackSide}
             />
-          </Sphere>
+          </mesh>
         )}
         
         {/* Markers */}
@@ -201,7 +187,7 @@ const GlobeSphere: React.FC<{
   );
 };
 
-const Globe: React.FC<GlobeProps> = ({
+const Globe = ({
   markers = [],
   globeColor = '#1a66a0',
   highlightColor = '#4fb8e7',
@@ -255,7 +241,7 @@ const Globe: React.FC<GlobeProps> = ({
 
 const GlobeDemo = () => {
   // Sample markers for major cities
-  const markers: LocationMarker[] = [
+  const markers = [
     { lat: 40.7128, lng: -74.0060, label: "New York", size: 0.03, color: "#ff6b6b" },
     { lat: 51.5074, lng: -0.1278, label: "London", size: 0.03, color: "#4ecdc4" },
     { lat: 35.6762, lng: 139.6503, label: "Tokyo", size: 0.03, color: "#ffbe0b" },
