@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect } from 'react';
-import { ArrowUp, ChevronsUp, Backspace, CornerDownLeft, X, Languages, Maximize2, Minimize2, Keyboard } from 'lucide-react';
+import { ArrowUp, ChevronsUp, Delete, CornerDownLeft, X, Languages, Maximize2, Minimize2, Keyboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   Select,
@@ -138,8 +137,8 @@ const LAYOUTS = {
 
 // Language mappings
 const LANGUAGE_LAYOUTS = {
-  en: {row1: ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], row2: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'], row3: ['z', 'x', 'c', 'v', 'b', 'n', 'm']},
-  es: {row1: ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], row2: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ñ'], row3: ['z', 'x', 'c', 'v', 'b', 'n', 'm']},
+  en: {row1: ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], row2: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'], row3: ['z', 'x', 'c', 'v', 'b', 'n']},
+  es: {row1: ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], row2: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ñ'], row3: ['z', 'x', 'c', 'v', 'b', 'n']},
   fr: {row1: ['a', 'z', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], row2: ['q', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm'], row3: ['w', 'x', 'c', 'v', 'b', 'n']},
   de: {row1: ['q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p', 'ü'], row2: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ö', 'ä'], row3: ['y', 'x', 'c', 'v', 'b', 'n', 'm']},
   ru: {row1: ['й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х'], row2: ['ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э'], row3: ['я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю']},
@@ -203,7 +202,6 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
     setInputValue(value);
   }, [value]);
 
-  // Get current keyboard layout based on selected layout and view (default, shift, numbers)
   const getKeyboardView = () => {
     if (LAYOUTS[currentLayout as keyof typeof LAYOUTS]) {
       const layoutViews = LAYOUTS[currentLayout as keyof typeof LAYOUTS];
@@ -244,11 +242,9 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
       case 'CTRL':
       case 'ALT':
       case 'SHIFT':
-        // Gaming keys - no action in text input
         return;
       default:
         if (key.length > 3 && ['sin', 'cos', 'tan', 'log', 'ln', 'if', 'for', 'var', 'let', 'const', 'function', '=>', 'return'].includes(key)) {
-          // Programming/math functions
           newValue += key + ' ';
         } else {
           newValue += key;
@@ -261,7 +257,6 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
       onChange(newValue);
     }
     
-    // Reset shift after typing a character if it's on
     if (currentView === 'shift' && key.length === 1) {
       setCurrentView('default');
     }
@@ -310,7 +305,7 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
   const renderKeyContent = (key: string) => {
     switch (key) {
       case 'backspace':
-        return <Backspace className="h-4 w-4" />;
+        return <Delete className="h-4 w-4" />;
       case 'enter':
         return <CornerDownLeft className="h-4 w-4" />;
       case 'shift':
@@ -418,7 +413,6 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
 
   return (
     <div className={cn("flex flex-col", className)}>
-      {/* Optional input field */}
       {inputPlaceholder && (
         <div className="relative mb-2">
           <input
@@ -439,7 +433,6 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
         </div>
       )}
 
-      {/* Virtual Keyboard */}
       {showKeyboard && (
         <div className={cn(
           "p-2 rounded-lg shadow-lg transition-all", 
