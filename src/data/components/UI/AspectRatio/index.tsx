@@ -16,7 +16,7 @@ const AspectRatioComponentItem: ComponentItem = {
   isNew: true,
   fileSize: "1.2kb",
   complexity: "simple",
-  lastUpdated: "2025-04-04",
+  lastUpdated: "2025-04-05",
   author: "Lovable UI",
   code: `import React from 'react';
 import { AspectRatio } from "@/components/ui/aspect-ratio";

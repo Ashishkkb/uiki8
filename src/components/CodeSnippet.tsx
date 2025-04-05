@@ -114,87 +114,179 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
   );
 };
 
-// Enhanced syntax highlighting function
+// Enhanced syntax highlighting function with improved language support
 function formatCodeLine(line: string, language: string): React.ReactNode {
   // For JSX/TSX
-  if (language === 'jsx' || language === 'tsx') {
-    // Break down the line into parts for formatting
-    const parts: React.ReactNode[] = [];
+  if (language === 'jsx' || language === 'tsx' || language === 'js' || language === 'ts') {
+    // Break down the line into tokens for precise formatting
+    const tokens: React.ReactNode[] = [];
     
-    // Match different code elements
+    // Keywords for different languages
+    const keywords = [
+      "import", "export", "from", "const", "let", "var", "function", "return", 
+      "if", "else", "switch", "case", "default", "for", "while", "do", "break", 
+      "continue", "class", "extends", "implements", "interface", "type", "enum", 
+      "namespace", "module", "declare", "require", "new", "try", "catch", "finally", 
+      "throw", "async", "await", "static", "public", "private", "protected", "get", 
+      "set", "true", "false", "null", "undefined", "this", "super"
+    ];
+    
+    // Regular expression patterns for different token types
+    const patterns = {
+      keyword: new RegExp(`\\b(${keywords.join('|')})\\b`, 'g'),
+      string: /("([^"\\]|\\.)*"|'([^'\\]|\\.)*'|`([^`\\]|\\.)*`)/g,
+      comment: /(\/\/.*$|\/\*[\s\S]*?\*\/)/g,
+      number: /\b\d+\b/g,
+      tag: /<\/?([a-zA-Z][a-zA-Z0-9]*)|\/>/g,
+      attr: /\b([a-zA-Z][a-zA-Z0-9]*)(?=\s*=\s*["'{])/g,
+      function: /\b([a-zA-Z][a-zA-Z0-9]*)(?=\s*\()/g,
+      punctuation: /[{}[\]()=>;:.,?!|&]/g,
+      jsx: /(<\/?[a-zA-Z][a-zA-Z0-9]*|\/?>)/g
+    };
+    
+    // Special color mappings
+    const colorMap = {
+      import: 'text-[#C678DD]',
+      from: 'text-[#C678DD]',
+      const: 'text-[#C678DD]',
+      let: 'text-[#C678DD]',
+      var: 'text-[#C678DD]',
+      return: 'text-[#C678DD]',
+      if: 'text-[#C678DD]',
+      else: 'text-[#C678DD]',
+      function: 'text-[#C678DD]',
+      interface: 'text-[#C678DD]',
+      export: 'text-[#C678DD]',
+    };
+    
+    // Complex parsing for better token separation
     let remaining = line;
-    let lastIndex = 0;
+    let currentPosition = 0;
     
-    // Handle JSX tags
-    const tagPattern = /<\/?[a-zA-Z][a-zA-Z0-9]*|\/>/g;
-    let tagMatch = tagPattern.exec(remaining);
+    // Parse different parts of the line
     
-    // Handle keywords
-    const keywords = ["import", "export", "from", "const", "let", "var", "function", "return", "if", "else", "switch", "case", "default", "for", "while", "do", "break", "continue", "class", "extends", "implements", "interface", "type", "enum", "namespace", "module", "declare", "require", "new", "try", "catch", "finally", "throw", "async", "await", "static", "public", "private", "protected", "get", "set", "true", "false", "null", "undefined", "this", "super"];
-    
-    // Special pattern for quotes/strings
-    const stringPattern = /"([^"\\]|\\.)*"|'([^'\\]|\\.)*'|`([^`\\]|\\.)*`/g;
-    let stringMatch = stringPattern.exec(remaining);
-    
-    // Pattern for attribute names
-    const attrPattern = /\s[a-zA-Z][a-zA-Z0-9]*(?=\s*=)/g;
-    let attrMatch = attrPattern.exec(remaining);
-    
-    // Pattern for functions - FIXED REGEX
-    const funcPattern = /\b[a-zA-Z][a-zA-Z0-9]*(?=\()/g;
-    let funcMatch = funcPattern.exec(remaining);
-    
-    // Pattern for comments
-    const commentPattern = /\/\/.*$|\/\*[\s\S]*?\*\//g;
-    let commentMatch = commentPattern.exec(remaining);
-    
-    // Simple tokenization of the line
-    return remaining.split(/\b/).map((part, index) => {
-      // Check if part is a keyword
-      if (keywords.includes(part)) {
-        return <CodeToken key={index} type="keyword">{part}</CodeToken>;
+    // Handle jsx tags
+    const jsxTagRegex = /<\/?([a-zA-Z][a-zA-Z0-9]*)|\/>/g;
+    let jsxMatch;
+    while ((jsxMatch = jsxTagRegex.exec(remaining)) !== null) {
+      const beforeTag = remaining.substring(currentPosition, jsxMatch.index);
+      if (beforeTag) {
+        processTextFragment(beforeTag);
       }
       
-      // Check for strings/quotes
-      if (part.startsWith('"') || part.startsWith("'") || part.startsWith("`")) {
-        return <CodeToken key={index} type="string">{part}</CodeToken>;
+      tokens.push(<CodeToken key={tokens.length} type="tag">{jsxMatch[0]}</CodeToken>);
+      currentPosition = jsxMatch.index + jsxMatch[0].length;
+    }
+    
+    // Process any remaining text
+    if (currentPosition < remaining.length) {
+      processTextFragment(remaining.substring(currentPosition));
+    }
+    
+    // Helper function to process text fragments
+    function processTextFragment(text: string) {
+      // Check for strings
+      const stringRegex = /("([^"\\]|\\.)*"|'([^'\\]|\\.)*'|`([^`\\]|\\.)*`)/g;
+      let stringMatch;
+      let lastStringEnd = 0;
+      
+      while ((stringMatch = stringRegex.exec(text)) !== null) {
+        const beforeString = text.substring(lastStringEnd, stringMatch.index);
+        if (beforeString) {
+          processNonStringFragment(beforeString);
+        }
+        
+        tokens.push(<CodeToken key={tokens.length} type="string">{stringMatch[0]}</CodeToken>);
+        lastStringEnd = stringMatch.index + stringMatch[0].length;
       }
       
-      // Check for numbers
-      if (/^\d+$/.test(part)) {
-        return <CodeToken key={index} type="number">{part}</CodeToken>;
+      // Process any remaining non-string text
+      if (lastStringEnd < text.length) {
+        processNonStringFragment(text.substring(lastStringEnd));
+      }
+    }
+    
+    // Process non-string text fragments
+    function processNonStringFragment(text: string) {
+      // Split by keywords, ensuring word boundaries
+      const keywordPattern = new RegExp(`\\b(${keywords.join('|')})\\b`);
+      const parts = text.split(keywordPattern);
+      
+      for (let i = 0; i < parts.length; i++) {
+        const part = parts[i];
+        if (!part) continue;
+        
+        // Check if this part is a keyword
+        if (i % 2 === 1 && keywords.includes(part)) {
+          const colorClass = colorMap[part as keyof typeof colorMap] || 'text-[#C678DD]';
+          tokens.push(
+            <span key={tokens.length} className={colorClass}>{part}</span>
+          );
+        } else {
+          // Further process this non-keyword part
+          processRemainingToken(part);
+        }
+      }
+    }
+    
+    // Process remaining tokens that aren't keywords or strings
+    function processRemainingToken(text: string) {
+      // Check for JSX attributes (simplified)
+      const attrRegex = /\b([a-zA-Z][a-zA-Z0-9]*)(=)({|"|')/g;
+      let attrMatch;
+      let lastAttrEnd = 0;
+      
+      while ((attrMatch = attrRegex.exec(text)) !== null) {
+        // Text before attribute
+        if (attrMatch.index > lastAttrEnd) {
+          tokens.push(<span key={tokens.length}>{text.substring(lastAttrEnd, attrMatch.index)}</span>);
+        }
+        
+        // The attribute name (group 1)
+        tokens.push(<CodeToken key={tokens.length} type="attr-name">{attrMatch[1]}</CodeToken>);
+        
+        // The equals sign (group 2)
+        tokens.push(<span key={tokens.length}>{attrMatch[2]}</span>);
+        
+        // The opening quote or brace (group 3)
+        tokens.push(<span key={tokens.length}>{attrMatch[3]}</span>);
+        
+        lastAttrEnd = attrMatch.index + attrMatch[0].length;
       }
       
-      // Check for JSX tags
-      if (part.startsWith('<') || part.startsWith('</') || part.startsWith('/>')) {
-        return <CodeToken key={index} type="punctuation">{part}</CodeToken>;
+      // Add any remaining text
+      if (lastAttrEnd < text.length) {
+        // Check for numeric literals
+        const numericRegex = /\b(\d+)\b/g;
+        let numMatch;
+        let lastNumEnd = lastAttrEnd;
+        
+        while ((numMatch = numericRegex.exec(text.substring(lastAttrEnd))) !== null) {
+          const absIndex = lastAttrEnd + numMatch.index;
+          
+          // Text before number
+          if (absIndex > lastNumEnd) {
+            tokens.push(<span key={tokens.length}>{text.substring(lastNumEnd, absIndex)}</span>);
+          }
+          
+          // The number
+          tokens.push(<CodeToken key={tokens.length} type="number">{numMatch[0]}</CodeToken>);
+          
+          lastNumEnd = absIndex + numMatch[0].length;
+        }
+        
+        // Add any final remaining text
+        if (lastNumEnd < text.length) {
+          tokens.push(<span key={tokens.length}>{text.substring(lastNumEnd)}</span>);
+        }
       }
-      
-      // Check for tag names (simplified)
-      if (part && (line.includes('<' + part) || line.includes('</' + part))) {
-        return <CodeToken key={index} type="tag">{part}</CodeToken>;
-      }
-      
-      // Check for attribute names (simplified)
-      if (part && line.includes(' ' + part + '=')) {
-        return <CodeToken key={index} type="attr-name">{part}</CodeToken>;
-      }
-      
-      // Check for function calls - Fixed the invalid regex
-      if (part && line.includes(part + '(')) {
-        return <CodeToken key={index} type="function">{part}</CodeToken>;
-      }
-      
-      // Default token type
-      return <CodeToken key={index} type="plain">{part}</CodeToken>;
-    });
+    }
+    
+    return tokens.length > 0 ? <>{tokens}</> : <span>{line}</span>;
   }
   
-  // For other languages, provide basic highlighting
-  // This is a simplified version - in a real app, you'd use a proper syntax highlighter library
-  return (
-    <span>{line}</span>
-  );
+  // Default fallback for other languages
+  return <span>{line}</span>;
 }
 
 export default CodeSnippet;
