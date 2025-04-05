@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ComponentItem } from "@/types/component";
 import VirtualKeyboard from './VirtualKeyboardComponent';
@@ -20,6 +21,7 @@ const VirtualKeyboardComponentItem: ComponentItem = {
         showCloseButton={true}
         alwaysVisible={true}
         inputPlaceholder="Click here to type with the virtual keyboard..."
+        onChange={(value) => console.log('Value changed:', value)}
       />
     </div>
   ),

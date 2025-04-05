@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback } from 'react';
 import { Button } from '@/components/ui/button';
 import { DeleteIcon, ChevronLeft, ArrowUp, ArrowDown, Space } from 'lucide-react';
@@ -12,6 +11,15 @@ interface VirtualKeyboardProps {
   showNumericRow?: boolean;
   allowSpecialChars?: boolean;
   initialCaps?: boolean;
+  darkMode?: boolean;
+  theme?: string;
+  showCloseButton?: boolean;
+  alwaysVisible?: boolean;
+  inputPlaceholder?: string;
+  onClose?: () => void;
+  onChange?: (value: string) => void;
+  value?: string;
+  onEnter?: (text: string) => void;
 }
 
 const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
@@ -22,21 +30,52 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
   showNumericRow = true,
   allowSpecialChars = true,
   initialCaps = false,
+  darkMode = false,
+  theme = 'default',
+  showCloseButton = false,
+  alwaysVisible = true,
+  inputPlaceholder,
+  onClose,
+  onChange,
+  value,
+  onEnter,
 }) => {
   const [capsLock, setCapsLock] = useState(initialCaps);
   const [shift, setShift] = useState(false);
   const [showSymbols, setShowSymbols] = useState(false);
+  const [inputValue, setInputValue] = useState(value || '');
 
   const handleKeyPress = useCallback((key: string) => {
     if (onKeyPress) {
       onKeyPress(key);
     }
     
+    // Handle internal input if onChange is provided
+    if (onChange) {
+      let newValue = inputValue;
+      
+      if (key === 'Backspace') {
+        newValue = inputValue.slice(0, -1);
+      } else if (key === 'Enter') {
+        if (onEnter) {
+          onEnter(inputValue);
+        }
+        return;
+      } else if (key === ' ') {
+        newValue += ' ';
+      } else if (key.length === 1) {
+        newValue += key;
+      }
+      
+      setInputValue(newValue);
+      onChange(newValue);
+    }
+    
     // Reset shift after key press if active
     if (shift) {
       setShift(false);
     }
-  }, [onKeyPress, shift]);
+  }, [onKeyPress, shift, onChange, inputValue, onEnter]);
 
   const renderKey = (key: string, display?: React.ReactNode, className?: string) => {
     let keyToUse = key;
@@ -212,11 +251,56 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
     );
   };
   
+  const renderInputField = () => {
+    if (inputPlaceholder && onChange) {
+      return (
+        <div className="relative mb-2">
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => {
+              setInputValue(e.target.value);
+              if (onChange) onChange(e.target.value);
+            }}
+            className={cn(
+              "w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2",
+              darkMode ? "bg-slate-800 text-white border-slate-700" : "bg-white border-slate-300"
+            )}
+            placeholder={inputPlaceholder}
+          />
+        </div>
+      );
+    }
+    return null;
+  };
+  
+  const renderCloseButton = () => {
+    if (showCloseButton && onClose) {
+      return (
+        <div className="flex justify-end mb-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className="h-6 w-6 p-0"
+          >
+            <span className="sr-only">Close</span>
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    }
+    return null;
+  };
+  
   return (
     <div className={cn(
       "p-2 border rounded-lg shadow-sm bg-background",
+      darkMode ? "bg-slate-900 text-white" : "",
       className
     )}>
+      {renderInputField()}
+      {renderCloseButton()}
       {layout === 'standard' ? renderStandardLayout() : renderNumericLayout()}
     </div>
   );
