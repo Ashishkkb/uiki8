@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ComponentItem } from "@/types/component";
 import VirtualKeyboard from './VirtualKeyboardComponent';
@@ -32,7 +31,7 @@ const VirtualKeyboardComponentItem: ComponentItem = {
       <div>
         <h3 className="text-lg font-medium mb-2">Numeric Keyboard</h3>
         <VirtualKeyboard 
-          layout="numeric"
+          layout="numpad"
           darkMode={false}
           theme="default"
           showCloseButton={false}
@@ -74,6 +73,61 @@ const VirtualKeyboardComponentItem: ComponentItem = {
           onChange={(value) => console.log('Value changed:', value)}
         />
       </div>
+      
+      {/* Math keyboard */}
+      <div>
+        <h3 className="text-lg font-medium mb-2">Math Keyboard</h3>
+        <VirtualKeyboard 
+          layout="math"
+          theme="rounded"
+          showTooltips={true}
+          onChange={(value) => console.log('Value changed:', value)}
+        />
+      </div>
+      
+      {/* Programming keyboard */}
+      <div>
+        <h3 className="text-lg font-medium mb-2">Programming Keyboard</h3>
+        <VirtualKeyboard 
+          layout="programming"
+          darkMode={true}
+          theme="minimal"
+          onChange={(value) => console.log('Value changed:', value)}
+        />
+      </div>
+      
+      {/* Compact keyboard with animation */}
+      <div>
+        <h3 className="text-lg font-medium mb-2">Compact Keyboard with Animation</h3>
+        <VirtualKeyboard 
+          layout="compact"
+          animateKeys={true}
+          transparentKeys={true}
+          inputPlaceholder="Animated compact keyboard..."
+          onChange={(value) => console.log('Value changed:', value)}
+        />
+      </div>
+      
+      {/* Symbols keyboard */}
+      <div>
+        <h3 className="text-lg font-medium mb-2">Symbols Keyboard</h3>
+        <VirtualKeyboard 
+          layout="symbols"
+          showTooltips={true}
+          onChange={(value) => console.log('Value changed:', value)}
+        />
+      </div>
+      
+      {/* Gaming keyboard */}
+      <div>
+        <h3 className="text-lg font-medium mb-2">Gaming Keyboard</h3>
+        <VirtualKeyboard 
+          layout="gaming"
+          darkMode={true}
+          showTooltips={true}
+          onChange={(value) => console.log('Value changed:', value)}
+        />
+      </div>
     </div>
   ),
   code: `import React, { useState, useEffect } from 'react';
@@ -92,6 +146,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { Button } from '@/components/ui/button';
 
 // Define keyboard layouts
 const LAYOUTS = {
@@ -217,7 +272,10 @@ const LANGUAGE_LAYOUTS = {
   en: {row1: ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], row2: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'], row3: ['z', 'x', 'c', 'v', 'b', 'n', 'm']},
   es: {row1: ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], row2: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ñ'], row3: ['z', 'x', 'c', 'v', 'b', 'n', 'm']},
   fr: {row1: ['a', 'z', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], row2: ['q', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm'], row3: ['w', 'x', 'c', 'v', 'b', 'n']},
-  de: {row1: ['q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p', 'ü'], row2: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ö', 'ä'], row3: ['y', 'x', 'c', 'v', 'b', 'n', 'm']}
+  de: {row1: ['q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p', 'ü'], row2: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ö', 'ä'], row3: ['y', 'x', 'c', 'v', 'b', 'n', 'm']},
+  ru: {row1: ['й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х'], row2: ['ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э'], row3: ['я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю']},
+  ar: {row1: ['ض', 'ص', 'ث', 'ق', 'ف', 'غ', 'ع', 'ه', 'خ', 'ح', 'ج'], row2: ['ش', 'س', 'ي', 'ب', 'ل', 'ا', 'ت', 'ن', 'م', 'ك', 'ط'], row3: ['ئ', 'ء', 'ؤ', 'ر', 'لا', 'ى', 'ة', 'و', 'ز', 'ظ']},
+  zh: {row1: ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], row2: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'], row3: ['z', 'x', 'c', 'v', 'b', 'n', 'm']}
 };
 
 interface VirtualKeyboardProps {
