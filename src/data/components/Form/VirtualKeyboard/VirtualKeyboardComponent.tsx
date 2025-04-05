@@ -1,263 +1,223 @@
 
-import React, { useState, useEffect } from 'react';
-import { ArrowUp, ChevronsUp, Backspace, CornerDownLeft, X } from 'lucide-react';
+import React, { useState, useCallback } from 'react';
+import { Button } from '@/components/ui/button';
+import { DeleteIcon, ChevronLeft, ArrowUp, ArrowDown, Space } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-const LAYOUTS = {
-  standard: {
-    default: [
-      ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-      ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-      ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-      ['shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace'],
-      ['numbers', 'space', 'enter']
-    ],
-    shift: [
-      ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'],
-      ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-      ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-      ['shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'backspace'],
-      ['numbers', 'space', 'enter']
-    ],
-    numbers: [
-      ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-      ['-', '/', ':', ';', '(', ')', '$', '&', '@', '"'],
-      ['.', ',', '?', '!', "'", '`', '~', '+', '='],
-      ['#+=', '%', '*', '[', ']', '{', '}', '<', '>'],
-      ['abc', 'space', 'enter']
-    ]
-  },
-  compact: {
-    default: [
-      ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-      ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-      ['shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace'],
-      ['numbers', 'space', 'enter']
-    ],
-    shift: [
-      ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-      ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-      ['shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'backspace'],
-      ['numbers', 'space', 'enter']
-    ],
-    numbers: [
-      ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-      ['-', '/', ':', ';', '(', ')', '$', '&', '@'],
-      ['#+=', '.', ',', '?', '!', "'", 'backspace'],
-      ['abc', 'space', 'enter']
-    ]
-  },
-  numpad: {
-    default: [
-      ['7', '8', '9'],
-      ['4', '5', '6'],
-      ['1', '2', '3'],
-      ['0', '.', 'backspace'],
-      ['enter']
-    ]
-  },
-  phone: {
-    default: [
-      ['1', '2', '3'],
-      ['4', '5', '6'],
-      ['7', '8', '9'],
-      ['*', '0', '#'],
-      ['enter']
-    ]
-  }
-};
 
 interface VirtualKeyboardProps {
   onKeyPress?: (key: string) => void;
-  onEnter?: (text: string) => void;
-  value?: string;
-  onChange?: (value: string) => void;
-  layout?: 'standard' | 'compact' | 'numpad' | 'phone';
-  darkMode?: boolean;
-  theme?: 'default' | 'minimal' | 'rounded';
-  showCloseButton?: boolean;
-  inputClassName?: string;
+  layout?: 'standard' | 'numeric';
   className?: string;
-  onClose?: () => void;
-  alwaysVisible?: boolean;
-  inputPlaceholder?: string;
+  variant?: 'default' | 'compact' | 'expanded';
+  showNumericRow?: boolean;
+  allowSpecialChars?: boolean;
+  initialCaps?: boolean;
 }
 
 const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
   onKeyPress,
-  onEnter,
-  value = '',
-  onChange,
   layout = 'standard',
-  darkMode = false,
-  theme = 'default',
-  showCloseButton = true,
-  inputClassName,
   className,
-  onClose,
-  alwaysVisible = true,
-  inputPlaceholder = 'Type something...',
+  variant = 'default',
+  showNumericRow = true,
+  allowSpecialChars = true,
+  initialCaps = false,
 }) => {
-  const [currentLayout, setCurrentLayout] = useState<string>('default');
-  const [inputValue, setInputValue] = useState<string>(value);
-  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const [capsLock, setCapsLock] = useState(initialCaps);
+  const [shift, setShift] = useState(false);
+  const [showSymbols, setShowSymbols] = useState(false);
 
-  useEffect(() => {
-    setInputValue(value);
-  }, [value]);
-
-  const getKeyboardView = () => LAYOUTS[layout as keyof typeof LAYOUTS][currentLayout as keyof (typeof LAYOUTS)[typeof layout]];
-
-  const handleKeyPress = (key: string) => {
+  const handleKeyPress = useCallback((key: string) => {
     if (onKeyPress) {
       onKeyPress(key);
     }
-
-    let newValue = inputValue;
-
-    switch (key) {
-      case 'backspace':
-        newValue = inputValue.slice(0, -1);
-        break;
-      case 'enter':
-        if (onEnter) {
-          onEnter(inputValue);
-        }
-        return;
-      case 'shift':
-        setCurrentLayout(currentLayout === 'shift' ? 'default' : 'shift');
-        return;
-      case 'numbers':
-        setCurrentLayout('numbers');
-        return;
-      case 'abc':
-        setCurrentLayout('default');
-        return;
-      case 'space':
-        newValue += ' ';
-        break;
-      default:
-        newValue += key;
-    }
-
-    setInputValue(newValue);
     
-    if (onChange) {
-      onChange(newValue);
+    // Reset shift after key press if active
+    if (shift) {
+      setShift(false);
     }
-  };
+  }, [onKeyPress, shift]);
 
-  const getButtonClassName = (key: string) => {
-    const baseClasses = cn(
-      "flex items-center justify-center rounded select-none transition-colors",
-      darkMode 
-        ? "bg-slate-800 text-white hover:bg-slate-700" 
-        : "bg-slate-100 text-slate-900 hover:bg-slate-200",
-      theme === 'default' ? "border" : "",
-      theme === 'rounded' ? "rounded-full" : "rounded",
-      key === 'backspace' || key === 'enter' || key === 'shift' || key === 'space' || key === 'numbers' || key === 'abc'
-        ? "font-medium" 
-        : ""
+  const renderKey = (key: string, display?: React.ReactNode, className?: string) => {
+    let keyToUse = key;
+    let displayContent = display || key;
+    
+    // Handle case conversion based on caps and shift state
+    if (key.length === 1 && key.match(/[a-z]/i)) {
+      const isCaps = (capsLock && !shift) || (!capsLock && shift);
+      keyToUse = isCaps ? key.toUpperCase() : key.toLowerCase();
+      displayContent = keyToUse;
+    }
+    
+    return (
+      <Button
+        variant="outline"
+        className={cn("h-10 md:h-12 w-8 md:w-10 p-0", className)}
+        onClick={() => handleKeyPress(keyToUse)}
+      >
+        {displayContent}
+      </Button>
     );
+  };
 
-    switch (key) {
-      case 'space':
-        return cn(baseClasses, "col-span-3 px-12 py-3");
-      case 'enter':
-        return cn(baseClasses, "col-span-2 px-4 py-3", 
-          darkMode ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600 text-white"
+  const renderStandardLayout = () => {
+    // Number row
+    const numberRow = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+    const shiftedNumberRow = ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')'];
+    const symbolsRow1 = ['~', '`', '|', '•', '√', 'π', '÷', '×', '¶', '∆'];
+    const symbolsRow2 = ['£', '¢', '€', '¥', '©', '®', '™', '℅', '[', ']'];
+    const symbolsRow3 = ['{', '}', '\\', ':', ';', '"', '\'', '<', '>', '?'];
+    
+    // Letter rows
+    const row1 = ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'];
+    const row2 = ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'];
+    const row3 = ['z', 'x', 'c', 'v', 'b', 'n', 'm'];
+    
+    const renderNumberRow = () => {
+      if (showSymbols) {
+        return (
+          <div className="flex justify-center space-x-1 my-1">
+            {symbolsRow1.map(key => renderKey(key))}
+          </div>
         );
-      case 'backspace':
-        return cn(baseClasses, "px-4 py-3");
-      case 'shift':
-      case 'numbers':
-      case 'abc':
-        return cn(baseClasses, "col-span-2 px-4 py-3");
-      default:
-        return cn(baseClasses, "px-3 py-3 min-w-10");
-    }
-  };
-
-  const renderKeyContent = (key: string) => {
-    switch (key) {
-      case 'backspace':
-        return <Backspace className="h-4 w-4" />;
-      case 'enter':
-        return <CornerDownLeft className="h-4 w-4" />;
-      case 'shift':
-        return currentLayout === 'shift' ? <ChevronsUp className="h-4 w-4" /> : <ArrowUp className="h-4 w-4" />;
-      case 'space':
-        return 'Space';
-      case 'numbers':
-        return '123';
-      case 'abc':
-        return 'ABC';
-      default:
-        return key;
-    }
-  };
-
-  const showKeyboard = alwaysVisible || isFocused;
-
-  return (
-    <div className={cn("flex flex-col", className)}>
-      {/* Optional input field */}
-      <div className="relative mb-2">
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => {
-            setInputValue(e.target.value);
-            if (onChange) onChange(e.target.value);
-          }}
-          onFocus={() => setIsFocused(true)}
-          className={cn(
-            "w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2",
-            darkMode ? "bg-slate-800 text-white border-slate-700 focus:ring-blue-600" : "bg-white border-slate-300 focus:ring-blue-500",
-            inputClassName
-          )}
-          placeholder={inputPlaceholder}
-        />
-      </div>
-
-      {/* Virtual Keyboard */}
-      {showKeyboard && (
-        <div className={cn(
-          "mt-2 p-2 rounded-lg shadow-lg", 
-          darkMode ? "bg-slate-900" : "bg-white border",
-          theme === 'minimal' ? "shadow-sm" : "shadow-lg"
-        )}>
-          {showCloseButton && (
-            <div className="flex justify-end mb-1">
-              <button
-                className={cn(
-                  "p-1 rounded-md",
-                  darkMode ? "hover:bg-slate-800" : "hover:bg-slate-100"
-                )}
-                onClick={onClose}
-              >
-                <X className="h-4 w-4" />
-              </button>
+      }
+      
+      const rowToUse = shift ? shiftedNumberRow : numberRow;
+      return (
+        <div className="flex justify-center space-x-1 my-1">
+          {rowToUse.map(key => renderKey(key))}
+        </div>
+      );
+    };
+    
+    return (
+      <div className="space-y-1">
+        {showNumericRow && renderNumberRow()}
+        
+        {showSymbols ? (
+          <>
+            <div className="flex justify-center space-x-1 my-1">
+              {symbolsRow2.map(key => renderKey(key))}
             </div>
+            <div className="flex justify-center space-x-1 my-1">
+              {symbolsRow3.map(key => renderKey(key))}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex justify-center space-x-1 my-1">
+              {row1.map(key => renderKey(key))}
+            </div>
+            <div className="flex justify-center space-x-1 my-1 px-4">
+              {row2.map(key => renderKey(key))}
+            </div>
+            <div className="flex justify-center space-x-1 my-1">
+              <Button
+                variant="outline"
+                className="h-10 md:h-12 w-12 md:w-16"
+                onClick={() => {
+                  setShift(!shift);
+                }}
+              >
+                <ArrowUp className="h-4 w-4" />
+              </Button>
+              
+              {row3.map(key => renderKey(key))}
+              
+              <Button
+                variant="outline"
+                className="h-10 md:h-12 w-12 md:w-16"
+                onClick={() => {
+                  handleKeyPress('Backspace');
+                }}
+              >
+                <DeleteIcon className="h-4 w-4" />
+              </Button>
+            </div>
+          </>
+        )}
+        
+        <div className="flex justify-center space-x-1 my-1">
+          <Button
+            variant="outline"
+            className="h-10 md:h-12 w-16 md:w-20"
+            onClick={() => {
+              setCapsLock(!capsLock);
+            }}
+          >
+            CAPS
+          </Button>
+          
+          {allowSpecialChars && (
+            <Button
+              variant="outline"
+              className="h-10 md:h-12 w-16 md:w-20"
+              onClick={() => setShowSymbols(!showSymbols)}
+              data-state={showSymbols ? 'on' : 'off'}
+            >
+              {showSymbols ? 'ABC' : '!@#'}
+            </Button>
           )}
           
-          <div className="grid gap-1">
-            {getKeyboardView().map((row, rowIndex) => (
-              <div key={rowIndex} className="flex justify-center gap-1">
-                {row.map((key, keyIndex) => (
-                  <button
-                    key={`${rowIndex}-${keyIndex}`}
-                    className={getButtonClassName(key)}
-                    onClick={() => handleKeyPress(key)}
-                  >
-                    {renderKeyContent(key)}
-                  </button>
-                ))}
-              </div>
-            ))}
-          </div>
+          <Button
+            variant="outline"
+            className="h-10 md:h-12 w-32 md:w-48"
+            onClick={() => handleKeyPress(' ')}
+          >
+            <Space className="h-4 w-4" />
+          </Button>
+          
+          <Button
+            variant="outline"
+            className="h-10 md:h-12 w-16 md:w-20"
+            onClick={() => handleKeyPress('Enter')}
+          >
+            Enter
+          </Button>
         </div>
-      )}
+      </div>
+    );
+  };
+  
+  const renderNumericLayout = () => {
+    const numPad = [
+      ['7', '8', '9'],
+      ['4', '5', '6'],
+      ['1', '2', '3'],
+      ['0', '.', ',']
+    ];
+    
+    return (
+      <div className="grid grid-cols-3 gap-2">
+        {numPad.map((row, rowIndex) => (
+          <React.Fragment key={`row-${rowIndex}`}>
+            {row.map(key => renderKey(key, undefined, "w-full"))}
+          </React.Fragment>
+        ))}
+        <Button
+          variant="outline"
+          className="h-10 md:h-12 col-span-2"
+          onClick={() => handleKeyPress(' ')}
+        >
+          <Space className="h-4 w-4" />
+        </Button>
+        <Button
+          variant="outline"
+          className="h-10 md:h-12"
+          onClick={() => handleKeyPress('Backspace')}
+        >
+          <DeleteIcon className="h-4 w-4" />
+        </Button>
+      </div>
+    );
+  };
+  
+  return (
+    <div className={cn(
+      "p-2 border rounded-lg shadow-sm bg-background",
+      className
+    )}>
+      {layout === 'standard' ? renderStandardLayout() : renderNumericLayout()}
     </div>
   );
 };

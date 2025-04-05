@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Bold, Italic, Underline, Strikethrough, Link, AlignLeft, AlignCenter, 
   AlignRight, AlignJustify, List, ListOrdered, Heading1, Heading2, 
@@ -63,6 +63,19 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const [imageAlt, setImageAlt] = useState('');
   const [selectedFormats, setSelectedFormats] = useState<Format[]>([]);
   const editorRef = React.useRef<HTMLDivElement>(null);
+  const [isEmpty, setIsEmpty] = useState(initialHtml === '');
+
+  // Setup placeholder behavior using CSS
+  useEffect(() => {
+    if (editorRef.current) {
+      // Using data attributes for proper placeholder functionality
+      if (isEmpty) {
+        editorRef.current.setAttribute('data-placeholder', placeholder);
+      } else {
+        editorRef.current.removeAttribute('data-placeholder');
+      }
+    }
+  }, [isEmpty, placeholder]);
 
   const executeCommand = (command: string, value?: string) => {
     document.execCommand(command, false, value);
@@ -74,6 +87,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
     if (editorRef.current) {
       const newHtml = editorRef.current.innerHTML;
       setHtml(newHtml);
+      setIsEmpty(newHtml === '' || newHtml === '<br>');
       
       if (onChange) {
         onChange(newHtml);
@@ -104,7 +118,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
   const handleImageInsert = () => {
     if (imageUrl) {
-      const imgHtml = `<img src="${imageUrl}" alt="${imageAlt}" style="max-width: 100%;" />`;
+      const imgHtml = '<img src="' + imageUrl + '" alt="' + imageAlt + '" style="max-width: 100%;" />';
       executeCommand('insertHTML', imgHtml);
       setImageUrl('');
       setImageAlt('');
@@ -367,6 +381,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
         className={cn(
           "p-3 focus:outline-none",
           readOnly ? "bg-muted/30" : "",
+          isEmpty ? "before:content-[attr(data-placeholder)] before:text-muted-foreground before:pointer-events-none" : "",
           editorClassName
         )}
         contentEditable={!readOnly}
@@ -380,7 +395,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
           maxHeight: maxHeight !== 'none' ? maxHeight : undefined,
           overflowY: 'auto'
         }}
-        placeholder={placeholder}
       />
       
       {toolbarPosition === 'bottom' && !readOnly && renderToolbar()}
