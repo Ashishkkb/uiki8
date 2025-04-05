@@ -65,12 +65,29 @@ export function CodeLine({
   );
 }
 
-export function CodeBlock({
+// Add the LineHighlight component
+export function LineHighlight({
   children,
   className
 }: {
   children: React.ReactNode;
   className?: string;
+}) {
+  return (
+    <div className={cn("bg-primary/10 -mx-4 px-4", className)}>
+      {children}
+    </div>
+  );
+}
+
+export function CodeBlock({
+  children,
+  className,
+  language // Add support for language prop
+}: {
+  children: React.ReactNode;
+  className?: string;
+  language?: string; // Make this optional
 }) {
   return (
     <pre className={cn("overflow-x-auto font-mono text-sm leading-[1.5]", className)}>
