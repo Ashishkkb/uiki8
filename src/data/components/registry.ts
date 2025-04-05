@@ -92,6 +92,13 @@ import ContextualHelpComponentItem from './UI/ContextualHelp';
 import CarouselComponentItem from './UI/Carousel';
 import PaginationComponentItem from './UI/Pagination';
 
+// Adding 5 More Components
+import HorizontalScrollComponentItem from './UI/HorizontalScroll';
+import ThemeToggleComponentItem from './UI/ThemeToggle';
+import InfoCardComponentItem from './UI/InfoCard';
+import ShimmerComponentItem from './UI/Shimmer';
+import CopyButtonComponentItem from './UI/CopyButton';
+
 export const getAllComponents = (): ComponentItem[] => [
   // UI Components
   ButtonComponent,
@@ -124,6 +131,11 @@ export const getAllComponents = (): ComponentItem[] => [
   PaginationComponentItem,
   WeatherWidgetComponentItem,
   DragDropListComponentItem,
+  HorizontalScrollComponentItem,
+  ThemeToggleComponentItem,
+  InfoCardComponentItem,
+  ShimmerComponentItem,
+  CopyButtonComponentItem,
   
   // Layout Components
   ContainerComponent,
