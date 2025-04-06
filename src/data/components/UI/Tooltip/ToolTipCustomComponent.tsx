@@ -1,15 +1,5 @@
 
-import React from 'react';
-import { ComponentItem } from "@/types/component";
-import TooltipCustomComponent from "./ToolTipCustomComponent";
-
-const TooltipCustomComponentItem: ComponentItem = {
-  id: 114,
-  name: "Tooltip Custom",
-  category: "UI",
-  framework: "React",
-  description: "A customizable tooltip component with multiple positions, delay control, and interactive options.",
-  code: `import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
 
 interface TooltipCustomProps {
@@ -25,7 +15,7 @@ interface TooltipCustomProps {
   interactive?: boolean;
 }
 
-const TooltipCustom: React.FC<TooltipCustomProps> = ({
+const TooltipCustomComponent: React.FC<TooltipCustomProps> = ({
   children,
   content,
   className,
@@ -108,12 +98,4 @@ const TooltipCustom: React.FC<TooltipCustomProps> = ({
   );
 };
 
-export default TooltipCustom;`,
-  component: TooltipCustomComponent,
-  tags: ["UI", "tooltip", "hover", "information"],
-  isNew: true,
-  fileSize: "2.0 KB",
-  complexity: "simple"
-};
-
-export default TooltipCustomComponentItem;
+export default TooltipCustomComponent;

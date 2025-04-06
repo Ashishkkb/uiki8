@@ -92,12 +92,35 @@ import ContextualHelpComponentItem from './UI/ContextualHelp';
 import CarouselComponentItem from './UI/Carousel';
 import PaginationComponentItem from './UI/Pagination';
 
-// Adding 5 More Components
+// Added 5 More Components
 import HorizontalScrollComponentItem from './UI/HorizontalScroll';
 import ThemeToggleComponentItem from './UI/ThemeToggle';
 import InfoCardComponentItem from './UI/InfoCard';
 import ShimmerComponentItem from './UI/Shimmer';
 import CopyButtonComponentItem from './UI/CopyButton';
+
+// Added 20 New Components
+import SpinnerComponentItem from './UI/Spinner';
+import BreadcrumbComponentItem from './UI/Breadcrumb';
+import StepsComponentItem from './UI/Steps';
+import CountdownTimerComponentItem from './UI/CountdownTimer';
+import ConfettiComponentItem from './UI/Confetti';
+import ExpandableComponentItem from './UI/Expandable';
+import FileCardComponentItem from './UI/FileCard';
+import KbdComponentItem from './UI/Kbd';
+import MetricComponentItem from './UI/Metric';
+import VerificationCodeComponentItem from './UI/VerificationCode';
+import FeatureComparisonComponentItem from './UI/FeatureComparison';
+import OTPInputComponentItem from './Form/OTPInput';
+import PasswordStrengthComponentItem from './Form/PasswordStrength';
+import LoadingDotsComponentItem from './UI/LoadingDots';
+import TooltipCustomComponentItem from './UI/Tooltip';
+import GradientButtonComponentItem from './UI/GradientButton';
+import GlassCardComponentItem from './UI/GlassCard';
+import Badge3DComponentItem from './UI/Badge3D';
+import DividerComponentItem from './UI/Divider';
+import AlertActionComponentItem from './UI/Alert/AlertActionIndex';
+import ProgressBarComponentItem from './UI/ProgressBar';
 
 export const getAllComponents = (): ComponentItem[] => [
   // UI Components
@@ -136,6 +159,26 @@ export const getAllComponents = (): ComponentItem[] => [
   InfoCardComponentItem,
   ShimmerComponentItem,
   CopyButtonComponentItem,
+  // New 20 Components
+  SpinnerComponentItem,
+  BreadcrumbComponentItem,
+  StepsComponentItem,
+  CountdownTimerComponentItem,
+  ConfettiComponentItem,
+  ExpandableComponentItem,
+  FileCardComponentItem,
+  KbdComponentItem,
+  MetricComponentItem,
+  VerificationCodeComponentItem,
+  FeatureComparisonComponentItem,
+  LoadingDotsComponentItem,
+  TooltipCustomComponentItem,
+  GradientButtonComponentItem,
+  GlassCardComponentItem,
+  Badge3DComponentItem,
+  DividerComponentItem,
+  AlertActionComponentItem,
+  ProgressBarComponentItem,
   
   // Layout Components
   ContainerComponent,
@@ -164,6 +207,8 @@ export const getAllComponents = (): ComponentItem[] => [
   CodeEditorComponentItem,
   VirtualKeyboardComponentItem,
   RichTextEditorComponentItem,
+  OTPInputComponentItem,
+  PasswordStrengthComponentItem,
   
   // Navigation Components
   BreadcrumbsComponent,
@@ -208,3 +253,4 @@ export const getDataDisplayComponents = (): ComponentItem[] => getComponentsByCa
 export const getChartComponents = (): ComponentItem[] => getComponentsByCategory('Chart');
 export const getAnimationComponents = (): ComponentItem[] => getComponentsByCategory('Animation');
 export const getMediaComponents = (): ComponentItem[] => getComponentsByCategory('Media');
+
