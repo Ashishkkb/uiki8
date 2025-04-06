@@ -7,7 +7,7 @@ import {
   FileImageIcon, 
   FileVideoIcon, 
   FileAudioIcon, 
-  FilePdfIcon,
+  FilePdf,
   Download,
   Trash,
   Eye
@@ -57,7 +57,7 @@ const FileCardComponent: React.FC<FileCardProps> = ({
       case 'audio':
         return <FileAudioIcon className="h-full w-full" />;
       case 'pdf':
-        return <FilePdfIcon className="h-full w-full" />;
+        return <FilePdf className="h-full w-full" />;
       default:
         return <FileIcon className="h-full w-full" />;
     }
