@@ -122,6 +122,16 @@ import DividerComponentItem from './UI/Divider';
 import AlertActionComponentItem from './UI/Alert/AlertActionIndex';
 import ProgressBarComponentItem from './UI/ProgressBar';
 
+// Added 10 More New Components
+import AvatarGroupComponentItem from './UI/AvatarGroup';
+import CalloutComponentItem from './UI/Callout';
+import ImageHoverComponentItem from './UI/ImageHover';
+import EmptyStateComponentItem from './UI/EmptyState';
+import PresenceComponentItem from './UI/Presence';
+import CommandItemComponentItem from './UI/CommandItem';
+import InputCurrencyComponentItem from './Form/InputCurrency';
+import InputNumberComponentItem from './Form/InputNumber';
+
 export const getAllComponents = (): ComponentItem[] => [
   // UI Components
   ButtonComponent,
@@ -159,7 +169,7 @@ export const getAllComponents = (): ComponentItem[] => [
   InfoCardComponentItem,
   ShimmerComponentItem,
   CopyButtonComponentItem,
-  // New 20 Components
+  // Added 20 Components
   SpinnerComponentItem,
   BreadcrumbComponentItem,
   StepsComponentItem,
@@ -179,6 +189,13 @@ export const getAllComponents = (): ComponentItem[] => [
   DividerComponentItem,
   AlertActionComponentItem,
   ProgressBarComponentItem,
+  // Added 10 More Components
+  AvatarGroupComponentItem,
+  CalloutComponentItem,
+  ImageHoverComponentItem,
+  EmptyStateComponentItem,
+  PresenceComponentItem,
+  CommandItemComponentItem,
   
   // Layout Components
   ContainerComponent,
@@ -209,6 +226,8 @@ export const getAllComponents = (): ComponentItem[] => [
   RichTextEditorComponentItem,
   OTPInputComponentItem,
   PasswordStrengthComponentItem,
+  InputCurrencyComponentItem,
+  InputNumberComponentItem,
   
   // Navigation Components
   BreadcrumbsComponent,

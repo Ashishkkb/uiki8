@@ -1,23 +1,5 @@
 
 import React from 'react';
-import { ComponentItem } from "@/types/component";
-import TimelineItemComponent from "./TimelineItemComponent";
-import TimelineListComponent from "./TimelineListComponent";
-
-// Create and export TimelineComponents
-const TimelineComponents = {
-  Item: TimelineItemComponent,
-  List: TimelineListComponent
-};
-
-// Export the Timeline component item
-const TimelineComponentItem: ComponentItem = {
-  id: 132,
-  name: "Timeline",
-  category: "UI",
-  framework: "React",
-  description: "A set of components for creating vertical timelines to show chronological events.",
-  code: `import React from 'react';
 import { cn } from "@/lib/utils";
 
 interface TimelineItemProps {
@@ -30,7 +12,7 @@ interface TimelineItemProps {
   last?: boolean;
 }
 
-const TimelineItem: React.FC<TimelineItemProps> = ({
+const TimelineItemComponent: React.FC<TimelineItemProps> = ({
   children,
   title,
   icon,
@@ -86,47 +68,4 @@ const TimelineItem: React.FC<TimelineItemProps> = ({
   );
 };
 
-interface TimelineListProps {
-  children: React.ReactNode;
-  className?: string;
-}
-
-const TimelineList: React.FC<TimelineListProps> = ({
-  children,
-  className
-}) => {
-  // Count the number of children to mark the last item
-  const childrenArray = React.Children.toArray(children);
-  
-  // Add the "last" prop to the last child
-  const childrenWithProps = React.Children.map(childrenArray, (child, index) => {
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, {
-        last: index === childrenArray.length - 1
-      });
-    }
-    return child;
-  });
-
-  return (
-    <div className={cn("space-y-1", className)}>
-      {childrenWithProps}
-    </div>
-  );
-};
-
-// Export the Timeline components
-const Timeline = {
-  Item: TimelineItem,
-  List: TimelineList
-};
-
-export default Timeline;`,
-  component: TimelineComponents.List,
-  tags: ["UI", "timeline", "history", "events", "activity"],
-  isNew: true,
-  fileSize: "2.8 KB",
-  complexity: "medium"
-};
-
-export default TimelineComponentItem;
+export default TimelineItemComponent;
