@@ -19,7 +19,7 @@ const TimelineListComponent: React.FC<TimelineListProps> = ({
     if (React.isValidElement(child)) {
       return React.cloneElement(child, {
         last: index === childrenArray.length - 1
-      });
+      } as { last: boolean });
     }
     return child;
   });
