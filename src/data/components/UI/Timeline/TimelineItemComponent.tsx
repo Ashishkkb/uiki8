@@ -2,7 +2,7 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
 
-interface TimelineItemProps {
+export interface TimelineItemProps {
   children: React.ReactNode;
   title?: string;
   icon?: React.ReactNode;
@@ -18,7 +18,7 @@ const TimelineItemComponent: React.FC<TimelineItemProps> = ({
   icon,
   date,
   variant = 'default',
-  className,
+  className = "",
   last = false
 }) => {
   const variantClasses = {

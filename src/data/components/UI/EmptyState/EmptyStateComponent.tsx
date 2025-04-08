@@ -18,7 +18,7 @@ const EmptyStateComponent: React.FC<EmptyStateProps> = ({
   description,
   icon,
   children,
-  className,
+  className = "",
   variant = 'default',
   align = 'center'
 }) => {

@@ -60,7 +60,7 @@ const itemVariants = {
 
 const AnimatedCarousel = ({
   items = [], // Provide default empty array
-  className,
+  className = "",
   autoPlay = true,
   interval = 5000,
   effect = 'fade',
@@ -69,20 +69,21 @@ const AnimatedCarousel = ({
   aspectRatio = 'video',
 }: AnimatedCarouselProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const safeItems = Array.isArray(items) ? items : [];
 
   // Auto-advance slides if autoPlay is enabled
   React.useEffect(() => {
-    if (!autoPlay || items.length === 0) return; // Check items length
+    if (!autoPlay || safeItems.length <= 1) return;
     
     const timer = setInterval(() => {
-      setActiveIndex((prev) => (prev + 1) % items.length);
+      setActiveIndex((prev) => (prev + 1) % safeItems.length);
     }, interval);
     
     return () => clearInterval(timer);
-  }, [autoPlay, interval, items.length]);
+  }, [autoPlay, interval, safeItems.length]);
 
   // If no items, return empty placeholder
-  if (!items || items.length === 0) {
+  if (safeItems.length === 0) {
     return (
       <div className={cn("relative overflow-hidden rounded-lg bg-muted/30", className)}>
         <div className="aspect-video flex items-center justify-center text-muted-foreground">
@@ -103,24 +104,24 @@ const AnimatedCarousel = ({
         }}
       >
         <CarouselContent>
-          {items.map((item, index) => (
-            <CarouselItem key={item.id}>
-              <div className={cn("relative overflow-hidden", aspectRatioClasses[aspectRatio])}>
+          {safeItems.map((item, index) => (
+            <CarouselItem key={item.id || index}>
+              <div className={cn("relative overflow-hidden", aspectRatioClasses[aspectRatio] || aspectRatioClasses.video)}>
                 <motion.div
                   className="h-full w-full"
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  variants={itemVariants[effect]}
+                  variants={itemVariants[effect] || itemVariants.fade}
                 >
                   <img
                     src={item.image}
-                    alt={item.title}
+                    alt={item.title || `Slide ${index + 1}`}
                     className="h-full w-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                   <div className="absolute bottom-0 left-0 p-4 text-white">
-                    <h3 className="text-xl font-bold mb-1">{item.title}</h3>
+                    <h3 className="text-xl font-bold mb-1">{item.title || `Slide ${index + 1}`}</h3>
                     {item.description && (
                       <p className="text-sm opacity-90">{item.description}</p>
                     )}
@@ -131,7 +132,7 @@ const AnimatedCarousel = ({
           ))}
         </CarouselContent>
         
-        {showArrows && items.length > 1 && (
+        {showArrows && safeItems.length > 1 && (
           <>
             <CarouselPrevious 
               className="absolute left-2 top-1/2 -translate-y-1/2" 
@@ -151,9 +152,9 @@ const AnimatedCarousel = ({
         )}
       </Carousel>
       
-      {showIndicators && items.length > 1 && (
+      {showIndicators && safeItems.length > 1 && (
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
-          {items.map((_, index) => (
+          {safeItems.map((_, index) => (
             <button
               key={index}
               className={cn(

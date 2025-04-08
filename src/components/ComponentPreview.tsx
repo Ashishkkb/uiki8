@@ -8,8 +8,15 @@ interface ComponentPreviewProps {
   inCard?: boolean;
 }
 
-const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component, inCard = true }) => {
+const ComponentPreview: React.FC<ComponentPreviewProps> = ({ 
+  component, 
+  inCard = true 
+}) => {
   const [hasError, setHasError] = useState(false);
+
+  if (!component) {
+    return <FallbackComponent name="Component" />;
+  }
 
   useEffect(() => {
     if (component && component.id) {
@@ -17,7 +24,7 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component, inCard =
     }
   }, [component?.id]);
   
-  if (hasError || !component) {
+  if (hasError) {
     return <FallbackComponent name={component?.name || 'Component'} />;
   }
 
@@ -26,7 +33,7 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component, inCard =
       const Component = component.component;
       return (
         <ErrorBoundary 
-          fallback={<FallbackComponent name={component.name} />}
+          fallback={<FallbackComponent name={component.name || 'Component'} />}
           onError={() => setHasError(true)}
         >
           <Component />

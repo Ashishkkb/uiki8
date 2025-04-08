@@ -16,10 +16,10 @@ const AvatarGroupComponent: React.FC<AvatarGroupProps> = ({
   max = 5,
   spacing = 'normal',
   size = 'md',
-  className,
+  className = "",
   showCount = true
 }) => {
-  const childrenArray = React.Children.toArray(children);
+  const childrenArray = React.Children.toArray(children).filter(Boolean);
   const totalAvatars = childrenArray.length;
   const visibleAvatars = Math.min(totalAvatars, max);
   const remainingCount = totalAvatars - visibleAvatars;
@@ -39,6 +39,10 @@ const AvatarGroupComponent: React.FC<AvatarGroupProps> = ({
   // Default values if spacing or size is invalid
   const spacingClass = spacingClasses[spacing] || spacingClasses.normal;
   const sizeClass = sizeClasses[size] || sizeClasses.md;
+
+  if (totalAvatars === 0) {
+    return null;
+  }
 
   return (
     <div className={cn("flex items-center", className)}>

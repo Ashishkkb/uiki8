@@ -17,7 +17,9 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
   component,
   className
 }) => {
-  const { name, description, tags, component: ComponentPreview, isNew, code } = component;
+  if (!component) return null;
+  
+  const { name, description, tags, component: ComponentPreviewComponent, isNew, code } = component;
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -52,12 +54,12 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
         {/* Component info */}
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
-            <h3 className="font-medium text-lg">{name}</h3>
+            <h3 className="font-medium text-lg">{name || "Unnamed Component"}</h3>
             <Code className="h-4 w-4 text-muted-foreground" />
           </div>
-          <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{description}</p>
+          <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{description || "No description available"}</p>
 
-          {tags?.length > 0 && (
+          {tags && tags.length > 0 && (
             <div className="mt-3 flex flex-wrap gap-1">
               {tags.slice(0, 3).map((tag, index) => (
                 <div
@@ -80,7 +82,7 @@ const ComponentCard: React.FC<ComponentCardProps> = ({
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className="sm:max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>{name}</DialogTitle>
+            <DialogTitle>{name || "Unnamed Component"}</DialogTitle>
           </DialogHeader>
           <div className="grid gap-6">
             <div className="rounded-lg border bg-card p-6">

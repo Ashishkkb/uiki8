@@ -21,7 +21,7 @@ const ComponentsShowcase: React.FC<ComponentsShowcaseProps> = memo(({
   
   // Extract unique categories, with fallback to empty array
   const categories = Array.from(
-    new Set(allComponents.filter(comp => comp?.category).map(component => component.category))
+    new Set(allComponents.filter(comp => comp && comp.category).map(component => component.category))
   ).sort();
   
   // Filter components by selected category and search query
@@ -33,9 +33,9 @@ const ComponentsShowcase: React.FC<ComponentsShowcaseProps> = memo(({
       : true;
       
     const matchesSearch = searchQuery
-      ? (component.name && component.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+      ? ((component.name && component.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (component.description && component.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
-        (component.tags && component.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())))
+        (component.tags && component.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))))
       : true;
     
     return matchesCategory && matchesSearch;

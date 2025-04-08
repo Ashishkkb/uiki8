@@ -16,7 +16,7 @@ interface CommandItemProps {
 
 const CommandItemComponent: React.FC<CommandItemProps> = ({
   children,
-  className,
+  className = "",
   command,
   onSelect,
   disabled = false,
