@@ -29,6 +29,9 @@ const TimelineItemComponent: React.FC<TimelineItemProps> = ({
     info: "border-blue-200 bg-blue-100 text-blue-600"
   };
 
+  // Default to 'default' if variant is not recognized
+  const variantClass = variantClasses[variant] || variantClasses.default;
+
   return (
     <div className={cn("relative", className)}>
       {/* Timeline connector */}
@@ -43,7 +46,7 @@ const TimelineItemComponent: React.FC<TimelineItemProps> = ({
         {/* Icon/bullet */}
         <div className={cn(
           "relative z-10 flex h-10 w-10 items-center justify-center rounded-full border-2",
-          variantClasses[variant]
+          variantClass
         )}>
           {icon}
         </div>

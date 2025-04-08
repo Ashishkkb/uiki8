@@ -59,7 +59,7 @@ const itemVariants = {
 };
 
 const AnimatedCarousel = ({
-  items,
+  items = [], // Provide default empty array
   className,
   autoPlay = true,
   interval = 5000,
@@ -72,7 +72,7 @@ const AnimatedCarousel = ({
 
   // Auto-advance slides if autoPlay is enabled
   React.useEffect(() => {
-    if (!autoPlay) return;
+    if (!autoPlay || items.length === 0) return; // Check items length
     
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % items.length);
@@ -80,6 +80,17 @@ const AnimatedCarousel = ({
     
     return () => clearInterval(timer);
   }, [autoPlay, interval, items.length]);
+
+  // If no items, return empty placeholder
+  if (!items || items.length === 0) {
+    return (
+      <div className={cn("relative overflow-hidden rounded-lg bg-muted/30", className)}>
+        <div className="aspect-video flex items-center justify-center text-muted-foreground">
+          No items to display
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={cn("relative overflow-hidden rounded-lg", className)}>
@@ -120,7 +131,7 @@ const AnimatedCarousel = ({
           ))}
         </CarouselContent>
         
-        {showArrows && (
+        {showArrows && items.length > 1 && (
           <>
             <CarouselPrevious 
               className="absolute left-2 top-1/2 -translate-y-1/2" 
@@ -140,7 +151,7 @@ const AnimatedCarousel = ({
         )}
       </Carousel>
       
-      {showIndicators && (
+      {showIndicators && items.length > 1 && (
         <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5">
           {items.map((_, index) => (
             <button

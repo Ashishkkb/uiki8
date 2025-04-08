@@ -12,18 +12,23 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({ component, inCard =
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
-    setHasError(false);
-  }, [component.id]);
+    if (component && component.id) {
+      setHasError(false);
+    }
+  }, [component?.id]);
   
-  if (hasError) {
-    return <FallbackComponent name={component.name} />;
+  if (hasError || !component) {
+    return <FallbackComponent name={component?.name || 'Component'} />;
   }
 
   const PreviewContent = () => {
     if (component.component) {
       const Component = component.component;
       return (
-        <ErrorBoundary fallback={<FallbackComponent name={component.name} />}>
+        <ErrorBoundary 
+          fallback={<FallbackComponent name={component.name} />}
+          onError={() => setHasError(true)}
+        >
           <Component />
         </ErrorBoundary>
       );

@@ -36,6 +36,10 @@ const AvatarGroupComponent: React.FC<AvatarGroupProps> = ({
     lg: 'h-12 w-12 text-base'
   };
 
+  // Default values if spacing or size is invalid
+  const spacingClass = spacingClasses[spacing] || spacingClasses.normal;
+  const sizeClass = sizeClasses[size] || sizeClasses.md;
+
   return (
     <div className={cn("flex items-center", className)}>
       <div className="flex">
@@ -44,7 +48,7 @@ const AvatarGroupComponent: React.FC<AvatarGroupProps> = ({
             key={index} 
             className={cn(
               "relative rounded-full border-2 border-background inline-block",
-              spacingClasses[spacing]
+              spacingClass
             )}
             style={{ zIndex: visibleAvatars - index }}
           >
@@ -56,8 +60,8 @@ const AvatarGroupComponent: React.FC<AvatarGroupProps> = ({
           <div 
             className={cn(
               "relative rounded-full bg-muted flex items-center justify-center font-medium text-muted-foreground border-2 border-background",
-              spacingClasses[spacing],
-              sizeClasses[size]
+              spacingClass,
+              sizeClass
             )}
             style={{ zIndex: 0 }}
           >

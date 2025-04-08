@@ -35,8 +35,8 @@ const EmptyStateComponent: React.FC<EmptyStateProps> = ({
   return (
     <div className={cn(
       "w-full flex flex-col",
-      variantClasses[variant],
-      alignClasses[align],
+      variantClasses[variant] || variantClasses.default,
+      alignClasses[align] || alignClasses.center,
       className
     )}>
       {icon ? (

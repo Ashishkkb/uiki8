@@ -17,19 +17,24 @@ const ComponentsShowcase: React.FC<ComponentsShowcaseProps> = memo(({
   searchQuery = "",
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(initialCategory);
-  const allComponents = getAllComponents();
+  const allComponents = getAllComponents() || [];
   
-  // Extract unique categories
+  // Extract unique categories, with fallback to empty array
   const categories = Array.from(
-    new Set(allComponents.map((component) => component.category))
+    new Set(allComponents.filter(comp => comp?.category).map(component => component.category))
   ).sort();
   
   // Filter components by selected category and search query
   const filteredComponents = allComponents.filter((component) => {
-    const matchesCategory = selectedCategory ? component.category === selectedCategory : true;
+    if (!component) return false;
+    
+    const matchesCategory = selectedCategory 
+      ? component.category === selectedCategory 
+      : true;
+      
     const matchesSearch = searchQuery
-      ? component.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        component.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ? (component.name && component.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        (component.description && component.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
         (component.tags && component.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())))
       : true;
     
@@ -46,7 +51,7 @@ const ComponentsShowcase: React.FC<ComponentsShowcaseProps> = memo(({
   return (
     <div>
       {/* Only show filters when not in category-specific view */}
-      {initialCategory === null && (
+      {initialCategory === null && categories.length > 0 && (
         <ComponentFilters
           categories={categories}
           selectedCategory={selectedCategory}

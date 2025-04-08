@@ -24,6 +24,13 @@ const CommandItemComponent: React.FC<CommandItemProps> = ({
   shortcut,
   showArrow = false
 }) => {
+  // Safe click handler that only executes if not disabled and onSelect exists
+  const handleClick = () => {
+    if (!disabled && typeof onSelect === 'function') {
+      onSelect();
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -31,7 +38,7 @@ const CommandItemComponent: React.FC<CommandItemProps> = ({
         disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer hover:bg-accent",
         className
       )}
-      onClick={disabled ? undefined : onSelect}
+      onClick={handleClick}
       data-command={command}
       aria-disabled={disabled}
     >
