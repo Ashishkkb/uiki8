@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { cn } from "@/lib/utils";
 import { X, Bell, Info, AlertCircle, CheckCircle, Clock } from "lucide-react";
@@ -16,20 +15,7 @@ interface NotificationProps {
 }
 
 const NotificationDemo = () => {
-  const [notifications, setNotifications] = useState<(NotificationProps & { id: string })[]>([
-    {
-      id: '1',
-      title: 'New message received',
-      description: 'You have a new message from Jane Smith.',
-      type: 'info'
-    },
-    {
-      id: '2',
-      title: 'Payment successful',
-      description: 'Your payment of $49.99 has been processed.',
-      type: 'success'
-    }
-  ]);
+  const [notifications, setNotifications] = useState<(NotificationProps & { id: string })[]>([]);
   
   const handleClose = (id: string) => {
     setNotifications(prev => prev.filter(notification => notification.id !== id));
@@ -126,7 +112,6 @@ const Notification: React.FC<NotificationProps> = ({
     setTimeout(onClose, 300); // Allow exit animation to play
   };
   
-  // Get icon and colors based on notification type
   const getTypeStyles = () => {
     switch (type) {
       case 'info':

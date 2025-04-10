@@ -22,7 +22,7 @@ interface CopyButtonProps {
 }
 
 const CopyButtonComponent: React.FC<CopyButtonProps> = ({
-  value,
+  value = "Sample text to copy",  // Default value to prevent undefined errors
   onCopy,
   className,
   successDuration = 2000,
