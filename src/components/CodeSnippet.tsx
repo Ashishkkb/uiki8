@@ -4,7 +4,7 @@ import { ClipboardCopy, Check } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { CodeBlock, CodeLine, CodeToken } from "@/components/ui/code-highlight";
+import { CodeBlock, CodeLine, CodeToken, LineHighlight } from "@/components/ui/code-highlight";
 
 interface CodeSnippetProps {
   code: string;
@@ -12,6 +12,7 @@ interface CodeSnippetProps {
   showLineNumbers?: boolean;
   showCopyButton?: boolean;
   className?: string;
+  highlightLines?: number[];
 }
 
 const CodeSnippet: React.FC<CodeSnippetProps> = ({
@@ -20,6 +21,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
   showLineNumbers = true,
   showCopyButton = true,
   className,
+  highlightLines = [],
 }) => {
   const [copied, setCopied] = useState(false);
   
@@ -38,9 +40,20 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
     return code.split('\n').map((line, index) => {
       // Apply syntax highlighting based on language
       const highlightedLine = formatCodeLine(line, language);
+      
+      const shouldHighlight = highlightLines.includes(index + 1);
+      
+      if (shouldHighlight) {
+        return (
+          <LineHighlight key={index}>
+            {highlightedLine}
+          </LineHighlight>
+        );
+      }
+      
       return <CodeLine key={index}>{highlightedLine}</CodeLine>;
     });
-  }, [code, language]);
+  }, [code, language, highlightLines]);
 
   return (
     <div className={cn(
@@ -92,20 +105,25 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
           <div className="table w-full">
             {code.split('\n').map((line, index) => {
               const highlightedLine = formatCodeLine(line, language);
+              const shouldHighlight = highlightLines.includes(index + 1);
+              
               return (
-                <div key={index} className="table-row group">
+                <div key={index} className={cn(
+                  "table-row group",
+                  shouldHighlight && "bg-primary/10"
+                )}>
                   <span 
                     className="table-cell pr-4 text-right select-none opacity-40 text-[#6e7681] w-[1%] whitespace-nowrap"
                   >
                     {index + 1}
                   </span>
-                  <span className="table-cell whitespace-pre">{highlightedLine}</span>
+                  <span className="table-cell whitespace-pre overflow-visible">{highlightedLine}</span>
                 </div>
               );
             })}
           </div>
         ) : (
-          <pre className="text-[#e6edf3]">
+          <pre className="text-[#e6edf3] whitespace-pre overflow-x-auto">
             {formattedCode}
           </pre>
         )}
@@ -116,22 +134,22 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
 
 // Enhanced syntax highlighting function with improved whitespace handling
 function formatCodeLine(line: string, language: string): React.ReactNode {
-  // For JSX/TSX
+  // Preserve exact whitespace at the beginning
+  const leadingSpaces = line.match(/^(\s*)/)?.[0] || '';
+  const contentAfterSpaces = line.substring(leadingSpaces.length);
+  
+  if (!contentAfterSpaces) {
+    return <span className="whitespace-pre">{leadingSpaces}</span>; // Return just the spaces if line is empty
+  }
+  
+  // For JSX/TSX/JS/TS
   if (language === 'jsx' || language === 'tsx' || language === 'js' || language === 'ts') {
-    // Preserve leading whitespace
-    const leadingSpaces = line.match(/^(\s*)/)?.[0] || '';
-    const contentAfterSpaces = line.substring(leadingSpaces.length);
-    
-    if (!contentAfterSpaces) {
-      return <span>{leadingSpaces}</span>; // Return just the spaces if line is empty
-    }
-    
     // Break down the line into tokens for precise formatting
     const tokens: React.ReactNode[] = [];
     
     // Add leading spaces
     if (leadingSpaces) {
-      tokens.push(<span key="leading-space">{leadingSpaces}</span>);
+      tokens.push(<span key="leading-space" className="whitespace-pre">{leadingSpaces}</span>);
     }
     
     // Keywords for different languages
@@ -159,7 +177,7 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
       export: 'text-[#C678DD]',
     };
     
-    // Complex parsing for better token separation
+    // Process the line with proper whitespace preservation
     let remaining = contentAfterSpaces;
     let currentPosition = 0;
     
@@ -175,7 +193,7 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
         processTextFragment(beforeTag);
       }
       
-      tokens.push(<CodeToken key={tokens.length} type="tag">{jsxMatch[0]}</CodeToken>);
+      tokens.push(<CodeToken key={`tag-${tokens.length}`} type="tag">{jsxMatch[0]}</CodeToken>);
       currentPosition = jsxMatch.index + jsxMatch[0].length;
     }
     
@@ -199,7 +217,7 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
           processNonStringFragment(beforeString);
         }
         
-        tokens.push(<CodeToken key={tokens.length} type="string">{stringMatch[0]}</CodeToken>);
+        tokens.push(<CodeToken key={`string-${tokens.length}`} type="string">{stringMatch[0]}</CodeToken>);
         lastStringEnd = stringMatch.index + stringMatch[0].length;
       }
       
@@ -239,8 +257,10 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
           tempParts.push(currentText.substring(lastIndex));
         }
         
-        currentText = tempParts.join('');
-        parts = tempParts;
+        if (tempParts.length > 0) {
+          currentText = tempParts.join('');
+          parts = tempParts;
+        }
       }
       
       // If no keywords were found, just use the original text
@@ -256,7 +276,7 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
           const keyword = keywordMatch[1];
           const colorClass = colorMap[keyword as keyof typeof colorMap] || 'text-[#C678DD]';
           tokens.push(
-            <span key={tokens.length} className={colorClass}>{keyword}</span>
+            <span key={`keyword-${tokens.length}`} className={colorClass}>{keyword}</span>
           );
         } else {
           // Further process this non-keyword part
@@ -277,17 +297,17 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
         attrMatchFound = true;
         // Text before attribute
         if (attrMatch.index > lastAttrEnd) {
-          tokens.push(<span key={tokens.length}>{text.substring(lastAttrEnd, attrMatch.index)}</span>);
+          tokens.push(<span key={`text-${tokens.length}`} className="whitespace-pre">{text.substring(lastAttrEnd, attrMatch.index)}</span>);
         }
         
         // The attribute name (group 1)
-        tokens.push(<CodeToken key={tokens.length} type="attr-name">{attrMatch[1]}</CodeToken>);
+        tokens.push(<CodeToken key={`attr-${tokens.length}`} type="attr-name">{attrMatch[1]}</CodeToken>);
         
         // The equals sign (group 2)
-        tokens.push(<span key={tokens.length}>{attrMatch[2]}</span>);
+        tokens.push(<span key={`equals-${tokens.length}`}>{attrMatch[2]}</span>);
         
         // The opening quote or brace (group 3)
-        tokens.push(<span key={tokens.length}>{attrMatch[3]}</span>);
+        tokens.push(<span key={`bracket-${tokens.length}`}>{attrMatch[3]}</span>);
         
         lastAttrEnd = attrMatch.index + attrMatch[0].length;
       }
@@ -306,23 +326,23 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
           numMatchFound = true;
           // Text before number
           if (numMatch.index > lastNumEnd) {
-            tokens.push(<span key={tokens.length}>{remainingText.substring(lastNumEnd, numMatch.index)}</span>);
+            tokens.push(<span key={`text-num-${tokens.length}`} className="whitespace-pre">{remainingText.substring(lastNumEnd, numMatch.index)}</span>);
           }
           
           // The number
-          tokens.push(<CodeToken key={tokens.length} type="number">{numMatch[0]}</CodeToken>);
+          tokens.push(<CodeToken key={`num-${tokens.length}`} type="number">{numMatch[0]}</CodeToken>);
           
           lastNumEnd = numMatch.index + numMatch[0].length;
         }
         
         // Add any final remaining text
         if (!numMatchFound || lastNumEnd < remainingText.length) {
-          tokens.push(<span key={tokens.length}>{remainingText.substring(lastNumEnd)}</span>);
+          tokens.push(<span key={`text-final-${tokens.length}`} className="whitespace-pre">{remainingText.substring(lastNumEnd)}</span>);
         }
       }
     }
     
-    return tokens.length > 0 ? <>{tokens}</> : <span>{line}</span>;
+    return tokens.length > 0 ? <>{tokens}</> : <span className="whitespace-pre">{line}</span>;
   }
   
   // Default fallback for other languages - preserve whitespace

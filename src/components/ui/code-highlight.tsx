@@ -45,7 +45,7 @@ export function CodeToken({ children, type, className }: CodeTokenProps) {
   };
 
   return (
-    <span className={cn(getTokenColor(), className)}>
+    <span className={cn(getTokenColor(), "whitespace-pre-wrap", className)}>
       {children}
     </span>
   );
@@ -59,7 +59,7 @@ export function CodeLine({
   className?: string;
 }) {
   return (
-    <div className={cn("min-h-[1.5em] leading-[1.5] whitespace-pre", className)}>
+    <div className={cn("min-h-[1.5em] leading-[1.5] whitespace-pre overflow-visible", className)}>
       {children}
     </div>
   );
@@ -74,7 +74,7 @@ export function LineHighlight({
   className?: string;
 }) {
   return (
-    <div className={cn("bg-primary/10 -mx-4 px-4", className)}>
+    <div className={cn("bg-primary/10 -mx-4 px-4 whitespace-pre overflow-visible", className)}>
       {children}
     </div>
   );
