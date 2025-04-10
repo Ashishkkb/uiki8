@@ -99,7 +99,7 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
                   >
                     {index + 1}
                   </span>
-                  <span className="table-cell">{highlightedLine}</span>
+                  <span className="table-cell whitespace-pre">{highlightedLine}</span>
                 </div>
               );
             })}
@@ -114,12 +114,25 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
   );
 };
 
-// Enhanced syntax highlighting function with improved language support
+// Enhanced syntax highlighting function with improved whitespace handling
 function formatCodeLine(line: string, language: string): React.ReactNode {
   // For JSX/TSX
   if (language === 'jsx' || language === 'tsx' || language === 'js' || language === 'ts') {
+    // Preserve leading whitespace
+    const leadingSpaces = line.match(/^(\s*)/)?.[0] || '';
+    const contentAfterSpaces = line.substring(leadingSpaces.length);
+    
+    if (!contentAfterSpaces) {
+      return <span>{leadingSpaces}</span>; // Return just the spaces if line is empty
+    }
+    
     // Break down the line into tokens for precise formatting
     const tokens: React.ReactNode[] = [];
+    
+    // Add leading spaces
+    if (leadingSpaces) {
+      tokens.push(<span key="leading-space">{leadingSpaces}</span>);
+    }
     
     // Keywords for different languages
     const keywords = [
@@ -130,19 +143,6 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
       "throw", "async", "await", "static", "public", "private", "protected", "get", 
       "set", "true", "false", "null", "undefined", "this", "super"
     ];
-    
-    // Regular expression patterns for different token types
-    const patterns = {
-      keyword: new RegExp(`\\b(${keywords.join('|')})\\b`, 'g'),
-      string: /("([^"\\]|\\.)*"|'([^'\\]|\\.)*'|`([^`\\]|\\.)*`)/g,
-      comment: /(\/\/.*$|\/\*[\s\S]*?\*\/)/g,
-      number: /\b\d+\b/g,
-      tag: /<\/?([a-zA-Z][a-zA-Z0-9]*)|\/>/g,
-      attr: /\b([a-zA-Z][a-zA-Z0-9]*)(?=\s*=\s*["'{])/g,
-      function: /\b([a-zA-Z][a-zA-Z0-9]*)(?=\s*\()/g,
-      punctuation: /[{}[\]()=>;:.,?!|&]/g,
-      jsx: /(<\/?[a-zA-Z][a-zA-Z0-9]*|\/?>)/g
-    };
     
     // Special color mappings
     const colorMap = {
@@ -160,15 +160,16 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
     };
     
     // Complex parsing for better token separation
-    let remaining = line;
+    let remaining = contentAfterSpaces;
     let currentPosition = 0;
     
-    // Parse different parts of the line
-    
-    // Handle jsx tags
+    // Process JSX tags first
     const jsxTagRegex = /<\/?([a-zA-Z][a-zA-Z0-9]*)|\/>/g;
     let jsxMatch;
+    let matchFound = false;
+    
     while ((jsxMatch = jsxTagRegex.exec(remaining)) !== null) {
+      matchFound = true;
       const beforeTag = remaining.substring(currentPosition, jsxMatch.index);
       if (beforeTag) {
         processTextFragment(beforeTag);
@@ -179,7 +180,7 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
     }
     
     // Process any remaining text
-    if (currentPosition < remaining.length) {
+    if (!matchFound || currentPosition < remaining.length) {
       processTextFragment(remaining.substring(currentPosition));
     }
     
@@ -189,8 +190,10 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
       const stringRegex = /("([^"\\]|\\.)*"|'([^'\\]|\\.)*'|`([^`\\]|\\.)*`)/g;
       let stringMatch;
       let lastStringEnd = 0;
+      let stringMatchFound = false;
       
       while ((stringMatch = stringRegex.exec(text)) !== null) {
+        stringMatchFound = true;
         const beforeString = text.substring(lastStringEnd, stringMatch.index);
         if (beforeString) {
           processNonStringFragment(beforeString);
@@ -201,7 +204,7 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
       }
       
       // Process any remaining non-string text
-      if (lastStringEnd < text.length) {
+      if (!stringMatchFound || lastStringEnd < text.length) {
         processNonStringFragment(text.substring(lastStringEnd));
       }
     }
@@ -209,18 +212,51 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
     // Process non-string text fragments
     function processNonStringFragment(text: string) {
       // Split by keywords, ensuring word boundaries
-      const keywordPattern = new RegExp(`\\b(${keywords.join('|')})\\b`);
-      const parts = text.split(keywordPattern);
+      let parts: string[] = [];
+      let currentText = text;
       
-      for (let i = 0; i < parts.length; i++) {
-        const part = parts[i];
-        if (!part) continue;
+      // Find all keyword matches
+      for (const keyword of keywords) {
+        const regex = new RegExp(`\\b(${keyword})\\b`, 'g');
+        let match;
+        let lastIndex = 0;
+        let tempParts: string[] = [];
         
-        // Check if this part is a keyword
-        if (i % 2 === 1 && keywords.includes(part)) {
-          const colorClass = colorMap[part as keyof typeof colorMap] || 'text-[#C678DD]';
+        while ((match = regex.exec(currentText)) !== null) {
+          // Add text before keyword
+          if (match.index > lastIndex) {
+            tempParts.push(currentText.substring(lastIndex, match.index));
+          }
+          
+          // Add the keyword with special marking
+          tempParts.push(`__KEYWORD_${keyword}__`);
+          
+          lastIndex = match.index + keyword.length;
+        }
+        
+        // Add any remaining text
+        if (lastIndex < currentText.length) {
+          tempParts.push(currentText.substring(lastIndex));
+        }
+        
+        currentText = tempParts.join('');
+        parts = tempParts;
+      }
+      
+      // If no keywords were found, just use the original text
+      if (parts.length === 0) {
+        parts = [text];
+      }
+      
+      // Process each part
+      for (const part of parts) {
+        // Check if this is a keyword
+        const keywordMatch = part.match(/__KEYWORD_(.+)__/);
+        if (keywordMatch) {
+          const keyword = keywordMatch[1];
+          const colorClass = colorMap[keyword as keyof typeof colorMap] || 'text-[#C678DD]';
           tokens.push(
-            <span key={tokens.length} className={colorClass}>{part}</span>
+            <span key={tokens.length} className={colorClass}>{keyword}</span>
           );
         } else {
           // Further process this non-keyword part
@@ -231,12 +267,14 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
     
     // Process remaining tokens that aren't keywords or strings
     function processRemainingToken(text: string) {
-      // Check for JSX attributes (simplified)
+      // Check for JSX attributes
       const attrRegex = /\b([a-zA-Z][a-zA-Z0-9]*)(=)({|"|')/g;
       let attrMatch;
       let lastAttrEnd = 0;
+      let attrMatchFound = false;
       
       while ((attrMatch = attrRegex.exec(text)) !== null) {
+        attrMatchFound = true;
         // Text before attribute
         if (attrMatch.index > lastAttrEnd) {
           tokens.push(<span key={tokens.length}>{text.substring(lastAttrEnd, attrMatch.index)}</span>);
@@ -255,29 +293,31 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
       }
       
       // Add any remaining text
-      if (lastAttrEnd < text.length) {
-        // Check for numeric literals
-        const numericRegex = /\b(\d+)\b/g;
-        let numMatch;
-        let lastNumEnd = lastAttrEnd;
+      if (!attrMatchFound || lastAttrEnd < text.length) {
+        const remainingText = text.substring(lastAttrEnd);
         
-        while ((numMatch = numericRegex.exec(text.substring(lastAttrEnd))) !== null) {
-          const absIndex = lastAttrEnd + numMatch.index;
-          
+        // Check for numeric literals
+        const numericRegex = /\b(\d+(\.\d+)?)\b/g;
+        let numMatch;
+        let lastNumEnd = 0;
+        let numMatchFound = false;
+        
+        while ((numMatch = numericRegex.exec(remainingText)) !== null) {
+          numMatchFound = true;
           // Text before number
-          if (absIndex > lastNumEnd) {
-            tokens.push(<span key={tokens.length}>{text.substring(lastNumEnd, absIndex)}</span>);
+          if (numMatch.index > lastNumEnd) {
+            tokens.push(<span key={tokens.length}>{remainingText.substring(lastNumEnd, numMatch.index)}</span>);
           }
           
           // The number
           tokens.push(<CodeToken key={tokens.length} type="number">{numMatch[0]}</CodeToken>);
           
-          lastNumEnd = absIndex + numMatch[0].length;
+          lastNumEnd = numMatch.index + numMatch[0].length;
         }
         
         // Add any final remaining text
-        if (lastNumEnd < text.length) {
-          tokens.push(<span key={tokens.length}>{text.substring(lastNumEnd)}</span>);
+        if (!numMatchFound || lastNumEnd < remainingText.length) {
+          tokens.push(<span key={tokens.length}>{remainingText.substring(lastNumEnd)}</span>);
         }
       }
     }
@@ -285,8 +325,8 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
     return tokens.length > 0 ? <>{tokens}</> : <span>{line}</span>;
   }
   
-  // Default fallback for other languages
-  return <span>{line}</span>;
+  // Default fallback for other languages - preserve whitespace
+  return <span className="whitespace-pre">{line}</span>;
 }
 
 export default CodeSnippet;

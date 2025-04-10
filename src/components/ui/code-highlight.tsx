@@ -59,7 +59,7 @@ export function CodeLine({
   className?: string;
 }) {
   return (
-    <div className={cn("min-h-[1.5em] leading-[1.5]", className)}>
+    <div className={cn("min-h-[1.5em] leading-[1.5] whitespace-pre", className)}>
       {children}
     </div>
   );
@@ -90,7 +90,7 @@ export function CodeBlock({
   language?: string; // Make this optional
 }) {
   return (
-    <pre className={cn("overflow-x-auto font-mono text-sm leading-[1.5]", className)}>
+    <pre className={cn("overflow-x-auto font-mono text-sm leading-[1.5] whitespace-pre", className)}>
       {children}
     </pre>
   );
