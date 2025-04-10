@@ -33,18 +33,52 @@ const CalendarComponent: React.FC<CalendarComponentProps> = ({
     }
   };
 
-  return (
-    <Calendar
-      mode={mode}
-      selected={date}
-      onSelect={handleSelect}
-      className={cn("rounded-md border", className)}
-      disabled={disabled}
-      initialFocus={initialFocus}
-      numberOfMonths={numberOfMonths}
-      showOutsideDays={showOutsideDays}
-    />
-  );
+  // We need to conditionally render the Calendar based on mode to satisfy TypeScript
+  if (mode === "single") {
+    return (
+      <Calendar
+        mode="single"
+        selected={date}
+        onSelect={handleSelect}
+        className={cn("rounded-md border", className)}
+        disabled={disabled}
+        initialFocus={initialFocus}
+        numberOfMonths={numberOfMonths}
+        showOutsideDays={showOutsideDays}
+      />
+    );
+  } else if (mode === "multiple") {
+    // For multiple mode, we need to handle an array of dates
+    return (
+      <Calendar
+        mode="multiple"
+        selected={date ? [date] : []} // Convert to array for multiple mode
+        onSelect={(dates) => handleSelect(dates?.[0])} // Take first date from array
+        className={cn("rounded-md border", className)}
+        disabled={disabled}
+        initialFocus={initialFocus}
+        numberOfMonths={numberOfMonths}
+        showOutsideDays={showOutsideDays}
+      />
+    );
+  } else {
+    // For range mode
+    return (
+      <Calendar
+        mode="range"
+        selected={{
+          from: date,
+          to: date
+        }}
+        onSelect={(range) => handleSelect(range?.from)}
+        className={cn("rounded-md border", className)}
+        disabled={disabled}
+        initialFocus={initialFocus}
+        numberOfMonths={numberOfMonths}
+        showOutsideDays={showOutsideDays}
+      />
+    );
+  }
 };
 
 export default CalendarComponent;

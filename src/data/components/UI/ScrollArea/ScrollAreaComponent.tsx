@@ -18,15 +18,20 @@ const ScrollAreaComponent: React.FC<ScrollAreaProps> = ({
   orientation = "vertical",
   showScrollbar = true
 }) => {
+  // The orientation prop is not available on ScrollArea from shadcn/ui
+  // We'll implement it with CSS and data attributes instead
   return (
     <ScrollArea 
       className={cn(
         "rounded-md border", 
         showScrollbar ? "p-4" : "", 
-        className
+        className,
+        orientation === "horizontal" ? "overflow-x-auto" : "",
+        orientation === "vertical" ? "overflow-y-auto" : "",
+        orientation === "both" ? "overflow-auto" : ""
       )}
       style={{ height }}
-      orientation={orientation}
+      data-orientation={orientation}
     >
       {children}
     </ScrollArea>
