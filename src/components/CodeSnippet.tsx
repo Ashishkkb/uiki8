@@ -37,6 +37,8 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
 
   // Format the code with enhanced syntax highlighting
   const formattedCode = useMemo(() => {
+    if (!code) return []; // Check if code is undefined or empty
+    
     return code.split('\n').map((line, index) => {
       // Apply syntax highlighting based on language
       const highlightedLine = formatCodeLine(line, language);
@@ -54,6 +56,10 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
       return <CodeLine key={index}>{highlightedLine}</CodeLine>;
     });
   }, [code, language, highlightLines]);
+
+  if (!code) {
+    return <div className="p-4 text-red-500">No code provided</div>;
+  }
 
   return (
     <div className={cn(
@@ -134,6 +140,8 @@ const CodeSnippet: React.FC<CodeSnippetProps> = ({
 
 // Enhanced syntax highlighting function with improved whitespace handling
 function formatCodeLine(line: string, language: string): React.ReactNode {
+  if (!line) return <span className="whitespace-pre"></span>;
+  
   // Preserve exact whitespace at the beginning
   const leadingSpaces = line.match(/^(\s*)/)?.[0] || '';
   const contentAfterSpaces = line.substring(leadingSpaces.length);
@@ -163,7 +171,7 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
     ];
     
     // Special color mappings
-    const colorMap = {
+    const colorMap: {[key: string]: string} = {
       import: 'text-[#C678DD]',
       from: 'text-[#C678DD]',
       const: 'text-[#C678DD]',
@@ -274,7 +282,7 @@ function formatCodeLine(line: string, language: string): React.ReactNode {
         const keywordMatch = part.match(/__KEYWORD_(.+)__/);
         if (keywordMatch) {
           const keyword = keywordMatch[1];
-          const colorClass = colorMap[keyword as keyof typeof colorMap] || 'text-[#C678DD]';
+          const colorClass = colorMap[keyword] || 'text-[#C678DD]';
           tokens.push(
             <span key={`keyword-${tokens.length}`} className={colorClass}>{keyword}</span>
           );

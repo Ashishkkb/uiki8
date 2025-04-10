@@ -29,6 +29,10 @@ const ComponentPreview: React.FC<ComponentPreviewProps> = ({
   }
 
   const PreviewContent = () => {
+    if (!component) {
+      return <FallbackComponent name="Component" />;
+    }
+
     if (component.component) {
       const Component = component.component;
       return (

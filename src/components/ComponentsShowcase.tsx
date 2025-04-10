@@ -17,7 +17,10 @@ const ComponentsShowcase: React.FC<ComponentsShowcaseProps> = memo(({
   searchQuery = "",
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(initialCategory);
-  const allComponents = getAllComponents() || [];
+  const componentsArray = getAllComponents() || [];
+  
+  // Filter out any null or undefined items
+  const allComponents = componentsArray.filter(comp => comp !== null && comp !== undefined);
   
   // Extract unique categories, with fallback to empty array
   const categories = Array.from(

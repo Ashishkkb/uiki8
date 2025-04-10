@@ -22,7 +22,7 @@ interface CopyButtonProps {
 }
 
 const CopyButtonComponent: React.FC<CopyButtonProps> = ({
-  value = "Sample text to copy",  // Default value to prevent undefined errors
+  value = "",  // Default value to prevent undefined errors
   onCopy,
   className,
   successDuration = 2000,
@@ -33,12 +33,14 @@ const CopyButtonComponent: React.FC<CopyButtonProps> = ({
     copy: "Copy",
     copied: "Copied!",
   },
-  showToast = true,
+  showToast = false, // Changed to false by default to prevent automatic toasts
   toastMessage = "Copied to clipboard"
 }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const copyToClipboard = async () => {
+    if (!value) return; // Prevent copying if value is undefined or empty
+
     try {
       await navigator.clipboard.writeText(value);
       setIsCopied(true);
@@ -70,7 +72,7 @@ const CopyButtonComponent: React.FC<CopyButtonProps> = ({
         isCopied && "bg-green-100 text-green-700 border-green-200 hover:bg-green-200 hover:text-green-800",
         className
       )}
-      disabled={isCopied}
+      disabled={isCopied || !value}
     >
       {isCopied ? (
         <Check className="h-3.5 w-3.5 text-green-600" />

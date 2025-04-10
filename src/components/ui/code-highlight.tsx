@@ -2,7 +2,7 @@
 import { cn } from "@/lib/utils";
 import React from "react";
 
-type TokenType = 
+export type TokenType = 
   | "keyword" 
   | "string" 
   | "number" 
@@ -65,7 +65,6 @@ export function CodeLine({
   );
 }
 
-// Add the LineHighlight component
 export function LineHighlight({
   children,
   className
@@ -83,11 +82,11 @@ export function LineHighlight({
 export function CodeBlock({
   children,
   className,
-  language // Add support for language prop
+  language
 }: {
   children: React.ReactNode;
   className?: string;
-  language?: string; // Make this optional
+  language?: string;
 }) {
   return (
     <pre className={cn("overflow-x-auto font-mono text-sm leading-[1.5] whitespace-pre", className)}>
