@@ -1,4 +1,3 @@
-
 import { ComponentItem } from "@/types/component";
 
 // UI Components
@@ -132,6 +131,15 @@ import CommandItemComponentItem from './UI/CommandItem';
 import InputCurrencyComponentItem from './Form/InputCurrency';
 import InputNumberComponentItem from './Form/InputNumber';
 
+// Added 10 More Components (The final batch)
+import ScrollAreaComponentItem from './UI/ScrollArea';
+import ResizablePanelComponentItem from './UI/ResizablePanel';
+import DialogComponentItem from './UI/Dialog';
+import CalendarComponentItem from './UI/Calendar';
+import DrawerComponentItem from './UI/Drawer';
+import ComboBoxComponentItem from './Form/ComboBox';
+import DataGridComponentItem from './DataDisplay/DataGrid';
+
 export const getAllComponents = (): ComponentItem[] => [
   // UI Components
   ButtonComponent,
@@ -196,6 +204,12 @@ export const getAllComponents = (): ComponentItem[] => [
   EmptyStateComponentItem,
   PresenceComponentItem,
   CommandItemComponentItem,
+  // Added 10 Final Components
+  ScrollAreaComponentItem,
+  ResizablePanelComponentItem,
+  DialogComponentItem,
+  CalendarComponentItem,
+  DrawerComponentItem,
   
   // Layout Components
   ContainerComponent,
@@ -228,6 +242,7 @@ export const getAllComponents = (): ComponentItem[] => [
   PasswordStrengthComponentItem,
   InputCurrencyComponentItem,
   InputNumberComponentItem,
+  ComboBoxComponentItem,
   
   // Navigation Components
   BreadcrumbsComponent,
@@ -247,6 +262,7 @@ export const getAllComponents = (): ComponentItem[] => [
   // Data Display Components
   DataTableComponentItem,
   StatCardComponentItem,
+  DataGridComponentItem,
   
   // Media Components
   VideoGalleryComponentItem,
@@ -272,4 +288,3 @@ export const getDataDisplayComponents = (): ComponentItem[] => getComponentsByCa
 export const getChartComponents = (): ComponentItem[] => getComponentsByCategory('Chart');
 export const getAnimationComponents = (): ComponentItem[] => getComponentsByCategory('Animation');
 export const getMediaComponents = (): ComponentItem[] => getComponentsByCategory('Media');
-
