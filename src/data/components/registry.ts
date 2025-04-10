@@ -1,3 +1,4 @@
+
 import { ComponentItem } from "@/types/component";
 
 // UI Components
@@ -121,7 +122,7 @@ import DividerComponentItem from './UI/Divider';
 import AlertActionComponentItem from './UI/Alert/AlertActionIndex';
 import ProgressBarComponentItem from './UI/ProgressBar';
 
-// Added 10 More New Components
+// Added 10 More Components
 import AvatarGroupComponentItem from './UI/AvatarGroup';
 import CalloutComponentItem from './UI/Callout';
 import ImageHoverComponentItem from './UI/ImageHover';
@@ -139,6 +140,23 @@ import CalendarComponentItem from './UI/Calendar';
 import DrawerComponentItem from './UI/Drawer';
 import ComboBoxComponentItem from './Form/ComboBox';
 import DataGridComponentItem from './DataDisplay/DataGrid';
+
+// 15 New Components
+import CookieConsentComponentItem from './UI/CookieConsent';
+import SocialShareComponentItem from './UI/SocialShare';
+import CreditCardInputComponentItem from './Form/CreditCardInput';
+import DragDropUploadComponentItem from './Form/DragDropUpload';
+import FeaturedTestimonialComponentItem from './UI/FeaturedTestimonial';
+import NotificationBadgeComponentItem from './UI/NotificationBadge';
+import PricingCardComponentItem from './UI/PricingCard';
+import CircularProgressComponentItem from './UI/CircularProgress';
+import FeatureGridComponentItem from './UI/FeatureGrid';
+import DataStatsComponentItem from './DataDisplay/DataStats';
+import ColorSwatchComponentItem from './UI/ColorSwatch';
+import UserAvatarComponentItem from './UI/UserAvatar';
+import StatusChipComponentItem from './UI/StatusChip';
+import AlertBannerComponentItem from './UI/AlertBanner';
+import TabCardComponentItem from './UI/TabCard';
 
 export const getAllComponents = (): ComponentItem[] => [
   // UI Components
@@ -272,7 +290,24 @@ export const getAllComponents = (): ComponentItem[] => [
   InteractiveGalleryComponentItem,
   MediaCarouselComponentItem,
   VideoPlayerComponentItem,
-  PDFViewerComponentItem
+  PDFViewerComponentItem,
+  
+  // 15 New Components
+  CookieConsentComponentItem,
+  SocialShareComponentItem,
+  CreditCardInputComponentItem,
+  DragDropUploadComponentItem,
+  FeaturedTestimonialComponentItem,
+  NotificationBadgeComponentItem,
+  PricingCardComponentItem,
+  CircularProgressComponentItem,
+  FeatureGridComponentItem,
+  DataStatsComponentItem,
+  ColorSwatchComponentItem,
+  UserAvatarComponentItem,
+  StatusChipComponentItem,
+  AlertBannerComponentItem,
+  TabCardComponentItem
 ];
 
 export const getComponentsByCategory = (category: string): ComponentItem[] => {
