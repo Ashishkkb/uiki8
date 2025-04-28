@@ -158,6 +158,11 @@ import StatusChipComponentItem from './UI/StatusChip';
 import AlertBannerComponentItem from './UI/AlertBanner';
 import TabCardComponentItem from './UI/TabCard';
 
+// Security Components
+import TwoFactorAuthComponentItem from './Security/TwoFactorAuth';
+import PasswordStrengthSecurityComponentItem from './Security/PasswordStrength';
+import SecureFileUploadComponentItem from './Security/SecureFileUpload';
+
 export const getAllComponents = (): ComponentItem[] => [
   // UI Components
   ButtonComponent,
@@ -307,7 +312,12 @@ export const getAllComponents = (): ComponentItem[] => [
   UserAvatarComponentItem,
   StatusChipComponentItem,
   AlertBannerComponentItem,
-  TabCardComponentItem
+  TabCardComponentItem,
+  
+  // Security Components (New)
+  TwoFactorAuthComponentItem,
+  PasswordStrengthSecurityComponentItem,
+  SecureFileUploadComponentItem
 ];
 
 export const getComponentsByCategory = (category: string): ComponentItem[] => {
@@ -323,3 +333,4 @@ export const getDataDisplayComponents = (): ComponentItem[] => getComponentsByCa
 export const getChartComponents = (): ComponentItem[] => getComponentsByCategory('Chart');
 export const getAnimationComponents = (): ComponentItem[] => getComponentsByCategory('Animation');
 export const getMediaComponents = (): ComponentItem[] => getComponentsByCategory('Media');
+export const getSecurityComponents = (): ComponentItem[] => getComponentsByCategory('Security');
