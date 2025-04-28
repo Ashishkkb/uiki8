@@ -14,6 +14,8 @@ export * from './UI/ResizablePanel';
 export * from './UI/Tooltip';
 export * from './UI/Steps';
 export * from './UI/Breadcrumb';
+export * from './UI/KanbanBoard';
+export * from './UI/FeatureComparison';
 
 // Form Components
 export * from './Form/ComboBox';

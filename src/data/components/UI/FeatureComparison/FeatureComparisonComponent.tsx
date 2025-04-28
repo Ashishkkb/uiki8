@@ -30,14 +30,23 @@ interface FeatureComparisonProps {
 }
 
 const FeatureComparisonComponent: React.FC<FeatureComparisonProps> = ({
-  features,
-  plans,
+  features = [],
+  plans = [],
   className,
   categorized = false,
   hideEmptyRows = false,
   renderCheck,
   renderPlanHeader
 }) => {
+  // Early return if there are no features or plans
+  if (!features?.length || !plans?.length) {
+    return (
+      <div className="p-4 text-center text-muted-foreground">
+        No comparison data available
+      </div>
+    );
+  }
+
   const renderFeatureValue = (value: boolean | string | null) => {
     if (renderCheck) {
       return renderCheck(value);
@@ -58,7 +67,7 @@ const FeatureComparisonComponent: React.FC<FeatureComparisonProps> = ({
     return <span className="text-sm">{value}</span>;
   };
 
-  const categories = categorized 
+  const categories = categorized && features.length > 0
     ? Array.from(new Set(features.map(f => f.category || 'General').filter(Boolean)))
     : ['Features'];
 
