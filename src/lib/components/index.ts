@@ -12,9 +12,13 @@ export * from './UI/Calendar';
 export * from './UI/ScrollArea';
 export * from './UI/ResizablePanel';
 export * from './UI/Tooltip';
+export * from './UI/Steps';
+export * from './UI/Breadcrumb';
 
 // Form Components
 export * from './Form/ComboBox';
+export * from './Form/OTPInput';
 
 // Data Display Components
 export * from './DataDisplay/DataGrid';
+export * from './DataDisplay/HeatMap';

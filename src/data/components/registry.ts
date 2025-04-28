@@ -163,6 +163,10 @@ import TwoFactorAuthComponentItem from './Security/TwoFactorAuth';
 import PasswordStrengthSecurityComponentItem from './Security/PasswordStrength';
 import SecureFileUploadComponentItem from './Security/SecureFileUpload';
 
+// New Amazing Hard Components (Phase 1)
+import HeatMapComponentItem from './DataDisplay/HeatMap';
+import KanbanBoardComponentItem from './UI/KanbanBoard';
+
 export const getAllComponents = (): ComponentItem[] => [
   // UI Components
   ButtonComponent,
@@ -286,6 +290,7 @@ export const getAllComponents = (): ComponentItem[] => [
   DataTableComponentItem,
   StatCardComponentItem,
   DataGridComponentItem,
+  HeatMapComponentItem,
   
   // Media Components
   VideoGalleryComponentItem,
@@ -317,7 +322,10 @@ export const getAllComponents = (): ComponentItem[] => [
   // Security Components (New)
   TwoFactorAuthComponentItem,
   PasswordStrengthSecurityComponentItem,
-  SecureFileUploadComponentItem
+  SecureFileUploadComponentItem,
+  
+  // New Amazing Hard Components (Phase 1)
+  KanbanBoardComponentItem
 ];
 
 export const getComponentsByCategory = (category: string): ComponentItem[] => {
