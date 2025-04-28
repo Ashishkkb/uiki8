@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Shield, Copy, RefreshCw, Key, Smartphone, CheckCircle, AlertCircle } from 'lucide-react';
+import { Shield, Copy, RefreshCw, Key, Smartphone, CheckCircle, AlertCircle, Download } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
@@ -8,6 +8,16 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Badge } from "@/components/ui/badge";
 
 // Mock function to generate a TOTP secret
 const generateTOTPSecret = () => {
@@ -39,6 +49,18 @@ const validateTOTPCode = (code: string, secret: string): Promise<boolean> => {
   });
 };
 
+// Mock function to validate a recovery code
+const validateRecoveryCode = (code: string): Promise<boolean> => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      // In a real app, this would validate against stored recovery codes
+      // For demonstration, any code with the format XXXX-XXXX-XX is valid
+      const recoveryCodeRegex = /^[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{2}$/;
+      resolve(recoveryCodeRegex.test(code));
+    }, 1000);
+  });
+};
+
 interface TwoFactorAuthProps {
   account?: string;
   issuer?: string;
@@ -64,6 +86,9 @@ const TwoFactorAuthComponent: React.FC<TwoFactorAuthProps> = ({
   const [verificationProgress, setVerificationProgress] = useState(0);
   const [backupCodesList, setBackupCodesList] = useState<string[]>([]);
   const [recoveryCodesVisible, setRecoveryCodesVisible] = useState(false);
+  const [recoveryCodeValue, setRecoveryCodeValue] = useState("");
+  const [showBackupCodesDialog, setShowBackupCodesDialog] = useState(false);
+  const [isUsingRecoveryCode, setIsUsingRecoveryCode] = useState(false);
 
   // Generate backup codes when component mounts
   useEffect(() => {
@@ -119,10 +144,22 @@ const TwoFactorAuthComponent: React.FC<TwoFactorAuthProps> = ({
   const copyBackupCodes = async () => {
     try {
       await navigator.clipboard.writeText(backupCodesList.join('\n'));
-      toast.success("Backup codes copied to clipboard");
+      toast.success("Recovery codes copied to clipboard");
     } catch (err) {
-      toast.error("Failed to copy backup codes");
+      toast.error("Failed to copy recovery codes");
     }
+  };
+
+  const downloadBackupCodes = () => {
+    const text = `# ${issuer} Recovery Codes\n# Generated on ${new Date().toLocaleString()}\n# For account: ${account}\n\n${backupCodesList.join('\n')}\n\nKeep these codes safe and private. Each code can only be used once.`;
+    const element = document.createElement('a');
+    const file = new Blob([text], { type: 'text/plain' });
+    element.href = URL.createObjectURL(file);
+    element.download = `${issuer.replace(/\s/g, '_')}_recovery_codes.txt`;
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    toast.success("Recovery codes downloaded");
   };
 
   const verifyCode = async () => {
@@ -130,14 +167,28 @@ const TwoFactorAuthComponent: React.FC<TwoFactorAuthProps> = ({
     setError(null);
     
     try {
-      const isValid = await validateTOTPCode(value, secret);
+      let isValid: boolean;
+      
+      if (isUsingRecoveryCode) {
+        // Validate recovery code
+        isValid = await validateRecoveryCode(recoveryCodeValue);
+      } else {
+        // Validate OTP code
+        isValid = await validateTOTPCode(value, secret);
+      }
       
       if (isValid) {
-        setIsSetupComplete(true);
+        if (mode === 'setup') {
+          setIsSetupComplete(true);
+          toast.success("Two-factor authentication enabled successfully");
+        } else {
+          toast.success("Authentication successful");
+        }
+        
         if (onVerify) onVerify(true);
-        toast.success("Two-factor authentication enabled successfully");
       } else {
-        setError("Invalid verification code. Please try again.");
+        const codeType = isUsingRecoveryCode ? "recovery" : "verification";
+        setError(`Invalid ${codeType} code. Please try again.`);
         if (onVerify) onVerify(false);
       }
     } catch (error) {
@@ -146,6 +197,13 @@ const TwoFactorAuthComponent: React.FC<TwoFactorAuthProps> = ({
     } finally {
       setIsVerifying(false);
     }
+  };
+
+  const toggleRecoveryCodeInput = () => {
+    setIsUsingRecoveryCode(!isUsingRecoveryCode);
+    setError(null);
+    setValue("");
+    setRecoveryCodeValue("");
   };
 
   if (mode === 'verify') {
@@ -162,20 +220,46 @@ const TwoFactorAuthComponent: React.FC<TwoFactorAuthProps> = ({
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex justify-center mb-4">
-              <InputOTP
-                maxLength={6}
-                value={value}
-                onChange={setValue}
-                render={({ slots }) => (
-                  <InputOTPGroup>
-                    {slots.map((slot, index) => (
-                      <InputOTPSlot key={index} {...slot} index={index} />
-                    ))}
-                  </InputOTPGroup>
-                )}
-              />
-            </div>
+            {!isUsingRecoveryCode ? (
+              <div className="flex justify-center mb-4">
+                <InputOTP
+                  maxLength={6}
+                  value={value}
+                  onChange={setValue}
+                  render={({ slots }) => (
+                    <InputOTPGroup>
+                      {slots.map((slot, i) => (
+                        <InputOTPSlot key={i} {...slot} index={i} />
+                      ))}
+                    </InputOTPGroup>
+                  )}
+                />
+              </div>
+            ) : (
+              <div className="mb-4">
+                <div className="flex flex-col space-y-2">
+                  <label className="text-sm text-muted-foreground">
+                    Recovery Code
+                  </label>
+                  <InputOTP
+                    maxLength={12}
+                    placeholder="XXXX-XXXX-XX"
+                    value={recoveryCodeValue}
+                    onChange={setRecoveryCodeValue}
+                    render={({ slots }) => (
+                      <InputOTPGroup>
+                        {slots.map((slot, i) => (
+                          <InputOTPSlot key={i} {...slot} index={i} />
+                        ))}
+                      </InputOTPGroup>
+                    )}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Format: XXXX-XXXX-XX (each code can only be used once)
+                  </p>
+                </div>
+              </div>
+            )}
             
             {error && (
               <Alert variant="destructive" className="mb-4">
@@ -194,37 +278,25 @@ const TwoFactorAuthComponent: React.FC<TwoFactorAuthProps> = ({
             <Button 
               onClick={verifyCode} 
               className="w-full"
-              disabled={value.length !== 6 || isVerifying}
+              disabled={
+                (isUsingRecoveryCode 
+                  ? recoveryCodeValue.length < 10 
+                  : value.length !== 6) || isVerifying
+              }
             >
               {isVerifying ? "Verifying..." : "Verify Identity"}
             </Button>
             
             <div className="mt-4 text-center">
               <Button
-                variant="link"
-                onClick={() => setRecoveryCodesVisible(!recoveryCodesVisible)}
+                variant="ghost"
+                onClick={toggleRecoveryCodeInput}
                 className="text-sm"
               >
-                Use recovery code instead
+                {isUsingRecoveryCode 
+                  ? "Use authenticator code instead" 
+                  : "Use recovery code instead"}
               </Button>
-              
-              {recoveryCodesVisible && (
-                <div className="mt-2">
-                  <InputOTP
-                    maxLength={12}
-                    value={value}
-                    onChange={setValue}
-                    placeholder="XXXX-XXXX-XX"
-                    render={({ slots }) => (
-                      <InputOTPGroup>
-                        {slots.map((slot, index) => (
-                          <InputOTPSlot key={index} {...slot} index={index} />
-                        ))}
-                      </InputOTPGroup>
-                    )}
-                  />
-                </div>
-              )}
             </div>
           </div>
         </CardContent>
@@ -260,31 +332,49 @@ const TwoFactorAuthComponent: React.FC<TwoFactorAuthProps> = ({
               </p>
             </div>
             
-            <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mt-4 mb-6">
-              <h4 className="text-amber-800 dark:text-amber-300 font-medium mb-2">Recovery Codes</h4>
-              <p className="text-sm text-amber-700 dark:text-amber-400 mb-4">
-                Save these recovery codes in a secure location. You can use these codes to access your account if you lose your authentication device.
-              </p>
-              
-              <div className="bg-white dark:bg-gray-800 p-3 rounded border border-amber-200 dark:border-amber-800 mb-3">
-                <div className="grid grid-cols-2 gap-2">
-                  {backupCodesList.map((code, i) => (
-                    <code key={i} className="block font-mono text-xs p-1">
-                      {code}
-                    </code>
-                  ))}
-                </div>
-              </div>
-              
+            <div className="flex flex-col space-y-4 mb-6">
               <Button 
                 variant="outline" 
-                size="sm" 
-                onClick={copyBackupCodes} 
-                className="w-full"
+                onClick={() => setShowBackupCodesDialog(true)}
+                className="flex items-center justify-center gap-2"
               >
-                <Copy className="h-4 w-4 mr-2" />
-                Copy Recovery Codes
+                <Key className="h-4 w-4" />
+                View Recovery Codes
               </Button>
+              
+              <Collapsible className="w-full">
+                <CollapsibleTrigger asChild>
+                  <Button variant="ghost" className="flex items-center justify-center gap-2 w-full">
+                    <Smartphone className="h-4 w-4" />
+                    Set Up Another Device
+                  </Button>
+                </CollapsibleTrigger>
+                <CollapsibleContent className="mt-4">
+                  <div className="bg-muted p-4 rounded-lg">
+                    <div className="flex justify-center mb-4">
+                      <img
+                        src={qrCodeURL}
+                        alt="QR Code for Two-Factor Authentication"
+                        className="h-40 w-40 border border-border rounded-md"
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="bg-background border border-border rounded-md p-3 flex items-center justify-between mb-2">
+                      <div className="font-mono text-xs overflow-x-auto whitespace-nowrap pr-2">
+                        {secret}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={copySecret}
+                        className="flex-shrink-0"
+                      >
+                        <Copy className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+                </CollapsibleContent>
+              </Collapsible>
             </div>
             
             <Button
@@ -295,6 +385,59 @@ const TwoFactorAuthComponent: React.FC<TwoFactorAuthProps> = ({
               <RefreshCw className="h-4 w-4 mr-2" />
               Setup Again
             </Button>
+            
+            <Dialog open={showBackupCodesDialog} onOpenChange={setShowBackupCodesDialog}>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle className="flex items-center gap-2">
+                    <Key className="h-5 w-5" />
+                    Recovery Codes
+                  </DialogTitle>
+                  <DialogDescription>
+                    Save these recovery codes in a secure location. You can use them to access your account if you lose your authentication device.
+                  </DialogDescription>
+                </DialogHeader>
+                
+                <div className="bg-muted/50 p-4 rounded-lg mb-4">
+                  <div className="grid grid-cols-2 gap-2">
+                    {backupCodesList.map((code, i) => (
+                      <div key={i} className="flex items-center">
+                        <Badge variant="outline" className="font-mono text-xs p-1.5 w-full">
+                          {code}
+                        </Badge>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                
+                <Alert className="bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-800">
+                  <AlertTitle className="text-amber-800 dark:text-amber-300">
+                    Important
+                  </AlertTitle>
+                  <AlertDescription className="text-amber-700 dark:text-amber-400 text-sm">
+                    Each recovery code can only be used once. Store them securely and don't share them with anyone.
+                  </AlertDescription>
+                </Alert>
+                
+                <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-0">
+                  <Button
+                    variant="outline"
+                    onClick={copyBackupCodes}
+                    className="w-full sm:w-auto"
+                  >
+                    <Copy className="h-4 w-4 mr-2" />
+                    Copy Codes
+                  </Button>
+                  <Button 
+                    onClick={downloadBackupCodes}
+                    className="w-full sm:w-auto"
+                  >
+                    <Download className="h-4 w-4 mr-2" />
+                    Download Codes
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </div>
         ) : (
           <>
@@ -305,7 +448,7 @@ const TwoFactorAuthComponent: React.FC<TwoFactorAuthProps> = ({
                     <Smartphone className="h-4 w-4 mr-2" />
                     App Setup
                   </TabsTrigger>
-                  <TabsTrigger value="sms">
+                  <TabsTrigger value="manual">
                     <Key className="h-4 w-4 mr-2" />
                     Manual Setup
                   </TabsTrigger>
@@ -343,8 +486,8 @@ const TwoFactorAuthComponent: React.FC<TwoFactorAuthProps> = ({
                         onChange={setValue}
                         render={({ slots }) => (
                           <InputOTPGroup>
-                            {slots.map((slot, index) => (
-                              <InputOTPSlot key={index} {...slot} index={index} />
+                            {slots.map((slot, i) => (
+                              <InputOTPSlot key={i} {...slot} index={i} />
                             ))}
                           </InputOTPGroup>
                         )}
@@ -372,7 +515,7 @@ const TwoFactorAuthComponent: React.FC<TwoFactorAuthProps> = ({
                   </div>
                 </TabsContent>
                 
-                <TabsContent value="sms" className="space-y-4">
+                <TabsContent value="manual" className="space-y-4">
                   <div className="bg-muted p-4 rounded-lg">
                     <h3 className="text-lg font-medium mb-2">Step 1: Get Secret Key</h3>
                     <p className="text-sm text-muted-foreground mb-4">
@@ -412,8 +555,8 @@ const TwoFactorAuthComponent: React.FC<TwoFactorAuthProps> = ({
                         onChange={setValue}
                         render={({ slots }) => (
                           <InputOTPGroup>
-                            {slots.map((slot, index) => (
-                              <InputOTPSlot key={index} {...slot} index={index} />
+                            {slots.map((slot, i) => (
+                              <InputOTPSlot key={i} {...slot} index={i} />
                             ))}
                           </InputOTPGroup>
                         )}
