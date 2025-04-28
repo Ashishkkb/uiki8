@@ -52,7 +52,7 @@ const defaultRules: PasswordRule[] = [
 const defaultStrengthLabels = ['Very weak', 'Weak', 'Medium', 'Strong', 'Very strong'];
 
 const PasswordStrengthComponent: React.FC<PasswordStrengthProps> = ({
-  password,
+  password = "", // Provide default empty string to prevent undefined
   className,
   strengthMeterClassName,
   ruleListClassName,
@@ -63,7 +63,8 @@ const PasswordStrengthComponent: React.FC<PasswordStrengthProps> = ({
   minLength = 0
 }) => {
   // Skip strength calculation for very short passwords
-  if (password.length < minLength) {
+  // Ensure password is a string before checking length
+  if (!password || (typeof password === 'string' && password.length < minLength)) {
     return null;
   }
 

@@ -23,7 +23,7 @@ interface InputNumberProps {
 }
 
 const InputNumberComponent: React.FC<InputNumberProps> = ({
-  value,
+  value = 0, // Provide default value to prevent undefined
   onChange,
   min,
   max,
@@ -37,7 +37,7 @@ const InputNumberComponent: React.FC<InputNumberProps> = ({
   id,
   name,
   required = false,
-  formatter = (val) => val.toString(),
+  formatter = (val) => val?.toString() || "0", // Add null check
   parser = (val) => parseFloat(val)
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
