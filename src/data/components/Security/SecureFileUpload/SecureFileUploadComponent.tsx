@@ -109,10 +109,11 @@ const SecureFileUploadComponent: React.FC<SecureFileUploadComponentProps> = ({
         preview = URL.createObjectURL(file);
       }
       
+      // Fixed: Explicitly typed as 'uploading' (one of the allowed status types)
       const newFile: FileWithPreview = Object.assign(file, {
         id: generateId(),
         preview,
-        status: 'uploading',
+        status: 'uploading' as const,
         progress: 0,
       });
       

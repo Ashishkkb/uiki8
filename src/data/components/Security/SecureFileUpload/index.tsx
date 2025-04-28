@@ -1,4 +1,3 @@
-
 import { ComponentItem } from "@/types/component";
 import SecureFileUploadComponent from "./SecureFileUploadComponent";
 
@@ -405,7 +404,7 @@ export const SecureFileUpload: React.FC<SecureFileUploadProps> = ({
   isNew: true,
   tags: ["security", "upload", "file", "scan", "protection", "validation"],
   fileSize: "9.1kb",
-  complexity: "advanced",
+  complexity: "complex",
   lastUpdated: "2025-04-27",
   author: "Enchant UI Team"
 };
