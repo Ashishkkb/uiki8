@@ -18,8 +18,8 @@ interface TestimonialProps {
 }
 
 const FeaturedTestimonialComponent: React.FC<TestimonialProps> = ({
-  quote,
-  author,
+  quote = "",
+  author = { name: "Anonymous" }, // Provide default author
   rating = 5,
   className,
   variant = 'default'
@@ -68,17 +68,17 @@ const FeaturedTestimonialComponent: React.FC<TestimonialProps> = ({
       
       <div className="flex items-center gap-3">
         <Avatar className="h-10 w-10 border">
-          {author.avatar ? (
+          {author?.avatar ? (
             <AvatarImage src={author.avatar} alt={author.name} />
           ) : null}
           <AvatarFallback className="bg-primary/10 text-primary">
-            {author.initials || author.name.split(' ').map(n => n[0]).join('')}
+            {author?.initials || author?.name?.split(' ').map(n => n[0]).join('') || 'A'}
           </AvatarFallback>
         </Avatar>
         
         <div>
-          <div className="font-medium">{author.name}</div>
-          {author.title && (
+          <div className="font-medium">{author?.name || 'Anonymous'}</div>
+          {author?.title && (
             <div className="text-sm text-muted-foreground">{author.title}</div>
           )}
         </div>

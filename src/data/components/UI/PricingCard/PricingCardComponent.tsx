@@ -44,17 +44,18 @@ interface PricingCardProps {
 const PricingCardComponent: React.FC<PricingCardProps> = ({
   title,
   description,
-  price,
-  features,
+  price = { monthly: 0, currency: '$', suffix: '/mo' }, // Provide default price object
+  features = [], // Provide default empty array for features
   popular = false,
   buttonText = "Get Started",
   onButtonClick,
   className,
   interval = 'monthly'
 }) => {
-  const currentPrice = interval === 'monthly' ? price.monthly : (price.annually || price.monthly);
-  const currency = price.currency || '$';
-  const suffix = price.suffix || (interval === 'monthly' ? '/mo' : '/yr');
+  // Add null check for price
+  const currentPrice = price && interval === 'monthly' ? price.monthly : (price?.annually || price?.monthly);
+  const currency = price?.currency || '$';
+  const suffix = price?.suffix || (interval === 'monthly' ? '/mo' : '/yr');
 
   // Format price to handle string or number
   const formattedPrice = typeof currentPrice === 'number' 

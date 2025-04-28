@@ -37,7 +37,11 @@ interface FileCardProps {
 }
 
 const FileCardComponent: React.FC<FileCardProps> = ({
-  file,
+  file = {  // Provide a default file object
+    name: "Unknown file",
+    size: "0 KB",
+    type: "generic"
+  },
   className,
   variant = 'default',
   size = 'md',
@@ -47,6 +51,8 @@ const FileCardComponent: React.FC<FileCardProps> = ({
   onDelete
 }) => {
   const getFileIcon = () => {
+    if (!file) return <FileIcon className="h-full w-full" />;
+    
     switch (file.type) {
       case 'document':
         return <FileTextIcon className="h-full w-full" />;
@@ -126,6 +132,20 @@ const FileCardComponent: React.FC<FileCardProps> = ({
       </button>
     );
   };
+
+  // Return early with placeholder if file is not defined
+  if (!file) {
+    return (
+      <div className={cn(
+        "rounded-lg flex items-center",
+        variantClasses[variant],
+        sizeClasses[size].card,
+        className
+      )}>
+        <div className="text-muted-foreground">No file data available</div>
+      </div>
+    );
+  }
 
   return (
     <div className={cn(

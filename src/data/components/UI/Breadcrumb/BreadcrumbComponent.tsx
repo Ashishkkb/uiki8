@@ -19,20 +19,28 @@ export interface BreadcrumbProps {
 }
 
 const BreadcrumbComponent: React.FC<BreadcrumbProps> = ({
-  items,
+  items = [], // Provide default empty array for items
   className,
   separator,
   homeIcon = true,
   maxItems = 0,
   truncate = false
 }) => {
-  const displayedItems = maxItems > 0 && items.length > maxItems
+  // Ensure items is always an array
+  const safeItems = Array.isArray(items) ? items : [];
+  
+  const displayedItems = maxItems > 0 && safeItems.length > maxItems
     ? [
-        ...items.slice(0, 1),
+        ...safeItems.slice(0, 1),
         { label: '...', href: '#', icon: null },
-        ...items.slice(items.length - (maxItems - 1))
+        ...safeItems.slice(safeItems.length - (maxItems - 1))
       ]
-    : items;
+    : safeItems;
+
+  // Return early with simple message if no items
+  if (displayedItems.length === 0) {
+    return <nav className={cn("flex text-sm text-muted-foreground", className)}>No breadcrumb items</nav>;
+  }
 
   return (
     <nav className={cn("flex", className)} aria-label="Breadcrumb">
