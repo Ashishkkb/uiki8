@@ -42,25 +42,6 @@ const plans: Plan[] = [
     ],
   },
   {
-    name: "Pro",
-    price: 49,
-    description: "For professional developers and teams",
-    buttonText: "Purchase License",
-    features: [
-      { text: "40+ Components", included: true },
-      { text: "Tailwind CSS Support", included: true },
-      { text: "Advanced Customization", included: true },
-      { text: "Responsive Design", included: true },
-      { text: "Community Support", included: true },
-      { text: "TypeScript Support", included: true },
-      { text: "Advanced Theming", included: true },
-      { text: "Premium Components", included: true },
-      { text: "Priority Support", included: false },
-      { text: "Commercial License", included: true },
-    ],
-    highlighted: true,
-  },
-  {
     name: "Enterprise",
     price: "Contact Us",
     description: "Custom solutions for large organizations",
@@ -77,6 +58,7 @@ const plans: Plan[] = [
       { text: "Priority Support", included: true },
       { text: "Commercial License", included: true },
     ],
+    highlighted: true,
   },
 ];
 
@@ -104,7 +86,7 @@ const faqs = [
   {
     question: "Can I use the components in multiple projects?",
     answer:
-      "For the Starter plan, you can use components in personal projects only. Pro and Enterprise plans allow usage in multiple commercial projects based on the license terms.",
+      "For the Starter plan, you can use components in personal projects only. Enterprise plans allow usage in multiple commercial projects based on the license terms.",
   },
 ];
 
@@ -128,7 +110,7 @@ const PricingPage = () => {
             </div>
 
             {/* Pricing Cards */}
-            <div className="mx-auto mt-16 grid grid-cols-1 gap-8 md:max-w-5xl md:grid-cols-3">
+            <div className="mx-auto mt-16 grid grid-cols-1 gap-8 md:max-w-5xl md:grid-cols-2">
               {plans.map((plan, i) => (
                 <div
                   key={i}
@@ -232,9 +214,6 @@ const PricingPage = () => {
                         <span className="text-primary">40+ components</span>
                       </td>
                       <td className="py-4 px-6">
-                        <span className="text-primary">50+ components</span>
-                      </td>
-                      <td className="py-4 px-6">
                         <span className="text-primary">All components</span>
                       </td>
                     </tr>
@@ -242,12 +221,10 @@ const PricingPage = () => {
                       <td className="py-4 font-medium">Use in Projects</td>
                       <td className="py-4 px-6">Personal only</td>
                       <td className="py-4 px-6">Unlimited</td>
-                      <td className="py-4 px-6">Unlimited</td>
                     </tr>
                     <tr className="border-b">
                       <td className="py-4 font-medium">Support</td>
                       <td className="py-4 px-6">Community</td>
-                      <td className="py-4 px-6">Email</td>
                       <td className="py-4 px-6">Priority</td>
                     </tr>
                     <tr className="border-b">
@@ -258,15 +235,9 @@ const PricingPage = () => {
                       <td className="py-4 px-6">
                         <Check className="h-5 w-5 text-primary" />
                       </td>
-                      <td className="py-4 px-6">
-                        <Check className="h-5 w-5 text-primary" />
-                      </td>
                     </tr>
                     <tr className="border-b">
                       <td className="py-4 font-medium">Private Slack</td>
-                      <td className="py-4 px-6">
-                        <X className="h-5 w-5 text-muted-foreground" />
-                      </td>
                       <td className="py-4 px-6">
                         <X className="h-5 w-5 text-muted-foreground" />
                       </td>
