@@ -20,8 +20,8 @@ interface StepsProps {
 }
 
 const StepsComponent: React.FC<StepsProps> = ({
-  steps,
-  currentStep,
+  steps = [], // Provide default empty array for steps
+  currentStep = 0,
   className,
   orientation = 'horizontal',
   variant = 'default',
@@ -49,6 +49,11 @@ const StepsComponent: React.FC<StepsProps> = ({
   const lineClasses = isVertical
     ? "w-0.5 h-full absolute left-4 top-10 bottom-0 -translate-x-1/2 bg-muted"
     : "flex-1 h-0.5 bg-muted";
+
+  // If steps is undefined or empty, return simple message instead of trying to map
+  if (!steps || steps.length === 0) {
+    return <div className={cn(containerClasses, className)}>No steps available</div>;
+  }
 
   return (
     <div className={cn(containerClasses, className)}>
