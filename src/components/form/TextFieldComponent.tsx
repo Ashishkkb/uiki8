@@ -1,89 +1,118 @@
-
-import React from "react";
+import React, { forwardRef } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 
-export interface TextFieldComponentProps {
+type HTMLInputType = 
+  | "text" | "password" | "email" | "number" 
+  | "tel" | "url" | "search" | "date" 
+  | "time" | "datetime-local";
+
+interface TextFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> {
   label?: string;
-  placeholder?: string;
-  type?: "text" | "password" | "email" | "number" | "tel";
-  value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  type?: HTMLInputType;
   error?: string;
-  disabled?: boolean;
-  required?: boolean;
-  className?: string;
-  id?: string;
   helperText?: string;
   startIcon?: React.ReactNode;
   endIcon?: React.ReactNode;
+  fullWidth?: boolean;
+  inputClassName?: string;
+  labelClassName?: string;
+  containerClassName?: string;
 }
 
-const TextFieldComponent: React.FC<TextFieldComponentProps> = ({
+const TextField = forwardRef<HTMLInputElement, TextFieldProps>(({
   label,
-  placeholder,
   type = "text",
-  value,
-  onChange,
   error,
-  disabled = false,
-  required = false,
-  className = "",
-  id,
   helperText,
   startIcon,
   endIcon,
-}) => {
-  const inputId = id || `input-${Math.random().toString(36).substring(2, 9)}`;
-  
+  required,
+  disabled,
+  fullWidth = false,
+  className,
+  inputClassName,
+  labelClassName,
+  containerClassName,
+  id = `input-${Math.random().toString(36).slice(2)}`,
+  ...props
+}, ref) => {
   return (
-    <div className={`space-y-2 w-full ${className}`}>
+    <div 
+      className={cn(
+        "space-y-2",
+        fullWidth ? "w-full" : "w-auto",
+        containerClassName
+      )}
+    >
       {label && (
-        <Label htmlFor={inputId} className="flex items-center gap-1">
+        <Label 
+          htmlFor={id} 
+          className={cn(
+            "flex items-center gap-1",
+            disabled && "opacity-50",
+            labelClassName
+          )}
+        >
           {label}
-          {required && <span className="text-red-500">*</span>}
+          {required && <span className="text-destructive">*</span>}
         </Label>
       )}
       
       <div className="relative">
         {startIcon && (
-          <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
             {startIcon}
           </div>
         )}
         
         <Input
-          id={inputId}
+          ref={ref}
+          id={id}
           type={type}
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
           disabled={disabled}
           required={required}
-          className={`
-            w-full 
-            ${startIcon ? 'pl-10' : ''} 
-            ${endIcon ? 'pr-10' : ''}
-            ${error ? 'border-red-500 focus-visible:ring-red-500' : ''}
-          `}
+          aria-describedby={error ? `${id}-error` : helperText ? `${id}-helper` : undefined}
+          className={cn(
+            startIcon && "pl-10",
+            endIcon && "pr-10",
+            error && "border-destructive focus-visible:ring-destructive",
+            inputClassName,
+            className
+          )}
+          {...props}
         />
         
         {endIcon && (
-          <div className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
             {endIcon}
           </div>
         )}
       </div>
       
       {error && (
-        <p className="text-red-500 text-xs mt-1">{error}</p>
+        <p 
+          id={`${id}-error`}
+          className="text-destructive text-sm"
+          role="alert"
+        >
+          {error}
+        </p>
       )}
       
       {helperText && !error && (
-        <p className="text-gray-500 text-xs mt-1">{helperText}</p>
+        <p 
+          id={`${id}-helper`}
+          className="text-muted-foreground text-sm"
+        >
+          {helperText}
+        </p>
       )}
     </div>
   );
-};
+});
 
-export default TextFieldComponent;
+TextField.displayName = "TextField";
+
+export default TextField;

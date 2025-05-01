@@ -1,22 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { ArrowUp, ChevronsUp, Delete, CornerDownLeft, X, Languages, Maximize2, Minimize2, Keyboard } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { Button } from '@/components/ui/button';
 
-// Define keyboard layouts
+type KeyboardLayout = 
+  | 'standard' | 'compact' | 'numpad' | 'phone' 
+  | 'emoji' | 'symbols' | 'math' | 'programming' 
+  | 'dvorak' | 'gaming';
+
+type KeyboardLanguage = 'en' | 'es' | 'fr' | 'de' | 'ru' | 'ar' | 'zh';
+type KeyboardView = 'default' | 'shift' | 'numbers';
+type KeyboardTheme = 'default' | 'minimal' | 'rounded';
+
+interface VirtualKeyboardProps {
+  onKeyPress?: (key: string) => void;
+  onEnter?: (text: string) => void;
+  value?: string;
+  onChange?: (value: string) => void;
+  layout?: KeyboardLayout;
+  darkMode?: boolean;
+  theme?: KeyboardTheme;
+  showCloseButton?: boolean;
+  inputClassName?: string;
+  className?: string;
+  onClose?: () => void;
+  alwaysVisible?: boolean;
+  inputPlaceholder?: string;
+  showLayoutSelector?: boolean;
+  showLanguageSelector?: boolean;
+  language?: KeyboardLanguage;
+  showTooltips?: boolean;
+  transparentKeys?: boolean;
+  animateKeys?: boolean;
+  fullscreenMode?: boolean;
+}
+
 const LAYOUTS = {
   standard: {
     default: [
@@ -34,142 +54,48 @@ const LAYOUTS = {
       ['numbers', 'space', 'enter']
     ],
     numbers: [
-      ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-      ['-', '/', ':', ';', '(', ')', '$', '&', '@', '"'],
-      ['.', ',', '?', '!', "'", '\`', '~', '+', '='],
-      ['#+=', '%', '*', '[', ']', '{', '}', '<', '>'],
+      ['1', '2', '3', '+', '-'],
+      ['4', '5', '6', '*', '/'],
+      ['7', '8', '9', '(', ')'],
+      ['0', '.', ',', 'backspace'],
       ['abc', 'space', 'enter']
-    ]
-  },
-  compact: {
-    default: [
-      ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-      ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
-      ['shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace'],
-      ['numbers', 'space', 'enter']
-    ],
-    shift: [
-      ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-      ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-      ['shift', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', 'backspace'],
-      ['numbers', 'space', 'enter']
-    ],
-    numbers: [
-      ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
-      ['-', '/', ':', ';', '(', ')', '$', '&', '@'],
-      ['#+=', '.', ',', '?', '!', "'", 'backspace'],
-      ['abc', 'space', 'enter']
-    ]
-  },
-  numpad: {
-    default: [
-      ['7', '8', '9'],
-      ['4', '5', '6'],
-      ['1', '2', '3'],
-      ['0', '.', 'backspace'],
-      ['enter']
-    ]
-  },
-  phone: {
-    default: [
-      ['1', '2', '3'],
-      ['4', '5', '6'],
-      ['7', '8', '9'],
-      ['*', '0', '#'],
-      ['enter']
-    ]
-  },
-  emoji: {
-    default: [
-      ['😀', '😂', '😍', '🥰', '😊', '😎', '🤔', '😴', '🥺'],
-      ['👍', '👎', '👏', '🙌', '🤝', '👋', '✌️', '🤞', '🖐️'],
-      ['❤️', '🔥', '⭐', '🎉', '🎂', '🎁', '🏆', '🌈', '🍕'],
-      ['abc', 'space', 'backspace']
-    ]
-  },
-  symbols: {
-    default: [
-      ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '_', '+'],
-      ['~', '\`', '{', '}', '|', '\\\\', ':', ';', '"', "'", '<', '>'],
-      ['₿', '€', '£', '¥', '₹', '§', '©', '®', '™', '°', '†', '‡'],
-      ['abc', 'space', 'backspace']
-    ]
-  },
-  math: {
-    default: [
-      ['π', '∑', '∫', '√', '∞', '≈', '≠', '≤', '≥', '±'],
-      ['÷', '×', '−', '+', '=', '%', '(', ')', 'ⁿ', '²'],
-      ['sin', 'cos', 'tan', 'log', 'ln', '|x|', 'e', 'lim', '∂', 'Δ'],
-      ['abc', 'space', 'backspace']
-    ]
-  },
-  programming: {
-    default: [
-      ['(', ')', '{', '}', '[', ']', '<', '>', '=', '?'],
-      ['/', '\\\\', '|', '&', ';', ':', '.', ',', '_', '-'],
-      ['if', 'for', 'const', 'let', 'var', 'function', '=>', 'return'],
-      ['abc', 'space', 'backspace']
-    ]
-  },
-  dvorak: {
-    default: [
-      ["'", ',', '.', 'p', 'y', 'f', 'g', 'c', 'r', 'l'],
-      ['a', 'o', 'e', 'u', 'i', 'd', 'h', 't', 'n', 's'],
-      ['shift', ';', 'q', 'j', 'k', 'x', 'b', 'm', 'w', 'v', 'z', 'backspace'],
-      ['numbers', 'space', 'enter']
-    ],
-    shift: [
-      ['"', '<', '>', 'P', 'Y', 'F', 'G', 'C', 'R', 'L'],
-      ['A', 'O', 'E', 'U', 'I', 'D', 'H', 'T', 'N', 'S'],
-      ['shift', ':', 'Q', 'J', 'K', 'X', 'B', 'M', 'W', 'V', 'Z', 'backspace'],
-      ['numbers', 'space', 'enter']
-    ]
-  },
-  gaming: {
-    default: [
-      ['Q', 'W', 'E', 'R', 'T', '1', '2', '3', '4', '5'],
-      ['A', 'S', 'D', 'F', 'G', '6', '7', '8', '9', '0'],
-      ['Z', 'X', 'C', 'V', 'B', 'ESC', 'CTRL', 'ALT', 'SHIFT'],
-      ['space', 'enter', 'backspace']
     ]
   }
-};
+} as const;
 
-// Language mappings
 const LANGUAGE_LAYOUTS = {
-  en: {row1: ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], row2: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'], row3: ['z', 'x', 'c', 'v', 'b', 'n']},
-  es: {row1: ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], row2: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ñ'], row3: ['z', 'x', 'c', 'v', 'b', 'n']},
-  fr: {row1: ['a', 'z', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], row2: ['q', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm'], row3: ['w', 'x', 'c', 'v', 'b', 'n']},
-  de: {row1: ['q', 'w', 'e', 'r', 't', 'z', 'u', 'i', 'o', 'p', 'ü'], row2: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ö', 'ä'], row3: ['y', 'x', 'c', 'v', 'b', 'n', 'm']},
-  ru: {row1: ['й', 'ц', 'у', 'к', 'е', 'н', 'г', 'ш', 'щ', 'з', 'х'], row2: ['ф', 'ы', 'в', 'а', 'п', 'р', 'о', 'л', 'д', 'ж', 'э'], row3: ['я', 'ч', 'с', 'м', 'и', 'т', 'ь', 'б', 'ю']},
-  ar: {row1: ['ض', 'ص', 'ث', 'ق', 'ف', 'غ', 'ع', 'ه', 'خ', 'ح', 'ج'], row2: ['ش', 'س', 'ي', 'ب', 'ل', 'ا', 'ت', 'ن', 'م', 'ك', 'ط'], row3: ['ئ', 'ء', 'ؤ', 'ر', 'لا', 'ى', 'ة', 'و', 'ز', 'ظ']},
-  zh: {row1: ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'], row2: ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'], row3: ['z', 'x', 'c', 'v', 'b', 'n', 'm']}
-};
+  en: LAYOUTS.standard,
+  es: {
+    default: [
+      ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
+      ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+      ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'ñ'],
+      ['shift', 'z', 'x', 'c', 'v', 'b', 'n', 'm', 'backspace'],
+      ['numbers', 'space', 'enter']
+    ]
+  }
+} as const;
 
-interface VirtualKeyboardProps {
-  onKeyPress?: (key: string) => void;
-  onEnter?: (text: string) => void;
-  value?: string;
-  onChange?: (value: string) => void;
-  layout?: 'standard' | 'compact' | 'numpad' | 'phone' | 'emoji' | 'symbols' | 'math' | 'programming' | 'dvorak' | 'gaming';
-  darkMode?: boolean;
-  theme?: 'default' | 'minimal' | 'rounded';
-  showCloseButton?: boolean;
-  inputClassName?: string;
-  className?: string;
-  onClose?: () => void;
-  alwaysVisible?: boolean;
-  inputPlaceholder?: string;
-  showLayoutSelector?: boolean;
-  showLanguageSelector?: boolean;
-  language?: 'en' | 'es' | 'fr' | 'de' | 'ru' | 'ar' | 'zh';
-  showTooltips?: boolean;
-  transparentKeys?: boolean;
-  animateKeys?: boolean;
-  fullscreenMode?: boolean;
-}
+const THEME_STYLES = {
+  dark: {
+    background: 'bg-slate-900',
+    button: {
+      base: 'bg-slate-800 text-white hover:bg-slate-700',
+      special: 'bg-blue-600 hover:bg-blue-700 text-white'
+    },
+    border: 'border-slate-700'
+  },
+  light: {
+    background: 'bg-white',
+    button: {
+      base: 'bg-slate-100 text-slate-900 hover:bg-slate-200',
+      special: 'bg-blue-500 hover:bg-blue-600 text-white'
+    },
+    border: 'border-slate-200'
+  }
+} as const;
 
-const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
+const VirtualKeyboard: React.FC<VirtualKeyboardProps> = React.memo(({
   onKeyPress,
   onEnter,
   value = '',
@@ -191,26 +117,23 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
   animateKeys = false,
   fullscreenMode = false
 }) => {
-  const [currentLayout, setCurrentLayout] = useState<string>(layout);
-  const [currentView, setCurrentView] = useState<string>('default');
+  const [currentLayout, setCurrentLayout] = useState<KeyboardLayout>(layout);
+  const [currentView, setCurrentView] = useState<KeyboardView>('default');
   const [inputValue, setInputValue] = useState<string>(value);
   const [isFocused, setIsFocused] = useState<boolean>(false);
-  const [currentLanguage, setCurrentLanguage] = useState<string>(language);
+  const [currentLanguage, setCurrentLanguage] = useState<KeyboardLanguage>(language);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(fullscreenMode);
 
-  useEffect(() => {
-    setInputValue(value);
-  }, [value]);
+  const themeStyles = THEME_STYLES[darkMode ? 'dark' : 'light'];
 
-  const getKeyboardView = () => {
-    if (LAYOUTS[currentLayout as keyof typeof LAYOUTS]) {
-      const layoutViews = LAYOUTS[currentLayout as keyof typeof LAYOUTS];
-      return layoutViews[currentView as keyof typeof layoutViews] || layoutViews.default;
-    }
-    return LAYOUTS.standard.default;
-  };
+  const getKeyboardView = useCallback(() => {
+    const layoutData = LANGUAGE_LAYOUTS[currentLanguage]?.[currentView] || 
+                      LAYOUTS[currentLayout]?.[currentView] || 
+                      LAYOUTS.standard.default;
+    return layoutData;
+  }, [currentLanguage, currentLayout, currentView]);
 
-  const handleKeyPress = (key: string) => {
+  const handleKeyPress = useCallback((key: string) => {
     if (onKeyPress) {
       onKeyPress(key);
     }
@@ -222,12 +145,10 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
         newValue = inputValue.slice(0, -1);
         break;
       case 'enter':
-        if (onEnter) {
-          onEnter(inputValue);
-        }
+        onEnter?.(inputValue);
         return;
       case 'shift':
-        setCurrentView(currentView === 'shift' ? 'default' : 'shift');
+        setCurrentView(prev => prev === 'shift' ? 'default' : 'shift');
         return;
       case 'numbers':
         setCurrentView('numbers');
@@ -238,61 +159,32 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
       case 'space':
         newValue += ' ';
         break;
-      case 'ESC':
-      case 'CTRL':
-      case 'ALT':
-      case 'SHIFT':
-        return;
       default:
-        if (key.length > 3 && ['sin', 'cos', 'tan', 'log', 'ln', 'if', 'for', 'var', 'let', 'const', 'function', '=>', 'return'].includes(key)) {
-          newValue += key + ' ';
-        } else {
-          newValue += key;
-        }
+        newValue += key;
     }
 
     setInputValue(newValue);
-    
-    if (onChange) {
-      onChange(newValue);
-    }
-    
-    if (currentView === 'shift' && key.length === 1) {
-      setCurrentView('default');
-    }
-  };
+    onChange?.(newValue);
+  }, [inputValue, onChange, onEnter, onKeyPress]);
 
-  const getButtonClassName = (key: string) => {
+  const getButtonClassName = useCallback((key: string) => {
     const baseClasses = cn(
-      "flex items-center justify-center rounded select-none transition-colors",
-      darkMode 
-        ? "bg-slate-800 text-white hover:bg-slate-700" 
-        : "bg-slate-100 text-slate-900 hover:bg-slate-200",
-      theme === 'default' ? "border" : "",
-      theme === 'rounded' ? "rounded-full" : "rounded",
+      "transition-all rounded font-medium",
+      themeStyles.button.base,
+      theme === 'rounded' && "rounded-full",
       animateKeys && "transition-transform active:scale-90",
-      transparentKeys && "bg-opacity-50 hover:bg-opacity-70",
-      key === 'backspace' || key === 'enter' || key === 'shift' || key === 'space' || key === 'numbers' || key === 'abc'
-        ? "font-medium" 
-        : ""
+      transparentKeys && "bg-opacity-50 hover:bg-opacity-70"
     );
 
     switch (key) {
       case 'space':
         return cn(baseClasses, "col-span-3 px-12 py-3");
       case 'enter':
-        return cn(baseClasses, "col-span-2 px-4 py-3", 
-          darkMode ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-500 hover:bg-blue-600 text-white"
-        );
+        return cn(baseClasses, "col-span-2 px-4 py-3", themeStyles.button.special);
       case 'backspace':
-        return cn(baseClasses, "px-4 py-3");
       case 'shift':
       case 'numbers':
       case 'abc':
-      case 'ESC':
-      case 'CTRL':
-      case 'ALT':
-      case 'SHIFT':
         return cn(baseClasses, "col-span-2 px-4 py-3");
       default:
         return cn(
@@ -300,9 +192,9 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
           key.length > 3 ? "px-2 py-3 text-xs" : "px-3 py-3 min-w-10",
         );
     }
-  };
+  }, [theme, animateKeys, transparentKeys, themeStyles.button]);
 
-  const renderKeyContent = (key: string) => {
+  const renderKeyContent = useCallback((key: string) => {
     switch (key) {
       case 'backspace':
         return <Delete className="h-4 w-4" />;
@@ -319,95 +211,77 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
       default:
         return key;
     }
-  };
+  }, [currentView]);
 
-  const renderLayoutSelector = () => {
-    if (!showLayoutSelector) return null;
-    
-    return (
-      <div className="mb-2">
-        <Select value={currentLayout} onValueChange={(value) => {
-          setCurrentLayout(value);
-          setCurrentView('default');
-        }}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select layout" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="standard">Standard</SelectItem>
-            <SelectItem value="compact">Compact</SelectItem>
-            <SelectItem value="numpad">Numeric</SelectItem>
-            <SelectItem value="phone">Phone</SelectItem>
-            <SelectItem value="emoji">Emoji</SelectItem>
-            <SelectItem value="symbols">Symbols</SelectItem>
-            <SelectItem value="math">Math</SelectItem>
-            <SelectItem value="programming">Programming</SelectItem>
-            <SelectItem value="dvorak">Dvorak</SelectItem>
-            <SelectItem value="gaming">Gaming</SelectItem>
-          </SelectContent>
-        </Select>
+  const renderControls = () => (
+    <div className="flex justify-between items-center mb-2">
+      <div className="flex items-center">
+        {showLayoutSelector && (
+          <Select value={currentLayout} onValueChange={(value) => setCurrentLayout(value as KeyboardLayout)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select layout" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="standard">Standard</SelectItem>
+              <SelectItem value="compact">Compact</SelectItem>
+              <SelectItem value="numpad">Numeric</SelectItem>
+              <SelectItem value="phone">Phone</SelectItem>
+              <SelectItem value="emoji">Emoji</SelectItem>
+              <SelectItem value="symbols">Symbols</SelectItem>
+              <SelectItem value="math">Math</SelectItem>
+              <SelectItem value="programming">Programming</SelectItem>
+              <SelectItem value="dvorak">Dvorak</SelectItem>
+              <SelectItem value="gaming">Gaming</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
+
+        {showLanguageSelector && ['standard', 'compact', 'dvorak'].includes(currentLayout) && (
+          <Select value={currentLanguage} onValueChange={(value) => setCurrentLanguage(value as KeyboardLanguage)}>
+            <SelectTrigger className="w-[120px] ml-2">
+              <Languages className="mr-2 h-4 w-4" />
+              <SelectValue placeholder="Language" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="en">English</SelectItem>
+              <SelectItem value="es">Spanish</SelectItem>
+              <SelectItem value="fr">French</SelectItem>
+              <SelectItem value="de">German</SelectItem>
+              <SelectItem value="ru">Russian</SelectItem>
+              <SelectItem value="ar">Arabic</SelectItem>
+              <SelectItem value="zh">Chinese</SelectItem>
+            </SelectContent>
+          </Select>
+        )}
       </div>
-    );
-  };
 
-  const renderLanguageSelector = () => {
-    if (!showLanguageSelector || !['standard', 'compact', 'dvorak'].includes(currentLayout)) return null;
-    
-    return (
-      <div className="mb-2 ml-2">
-        <Select value={currentLanguage} onValueChange={(value) => setCurrentLanguage(value)}>
-          <SelectTrigger className="w-[120px]">
-            <Languages className="mr-2 h-4 w-4" />
-            <SelectValue placeholder="Language" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="en">English</SelectItem>
-            <SelectItem value="es">Spanish</SelectItem>
-            <SelectItem value="fr">French</SelectItem>
-            <SelectItem value="de">German</SelectItem>
-            <SelectItem value="ru">Russian</SelectItem>
-            <SelectItem value="ar">Arabic</SelectItem>
-            <SelectItem value="zh">Chinese</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-    );
-  };
-
-  const renderControls = () => {
-    return (
-      <div className="flex justify-between items-center mb-2">
-        <div className="flex items-center">
-          {renderLayoutSelector()}
-          {renderLanguageSelector()}
-        </div>
-        
-        <div className="flex items-center">
-          {showCloseButton && onClose && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="h-8 w-8 p-0 ml-1"
-            >
-              <span className="sr-only">Close</span>
-              <X className="h-4 w-4" />
-            </Button>
-          )}
-          
+      <div className="flex items-center">
+        {showCloseButton && onClose && (
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setIsFullscreen(!isFullscreen)}
+            onClick={onClose}
             className="h-8 w-8 p-0 ml-1"
           >
-            <span className="sr-only">{isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}</span>
-            {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+            <span className="sr-only">Close</span>
+            <X className="h-4 w-4" />
           </Button>
-        </div>
+        )}
+        
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setIsFullscreen(!isFullscreen)}
+          className="h-8 w-8 p-0 ml-1"
+        >
+          <span className="sr-only">
+            {isFullscreen ? 'Exit Fullscreen' : 'Enter Fullscreen'}
+          </span>
+          {isFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+        </Button>
       </div>
-    );
-  };
+    </div>
+  );
 
   const showKeyboard = alwaysVisible || isFocused;
 
@@ -420,12 +294,14 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
             value={inputValue}
             onChange={(e) => {
               setInputValue(e.target.value);
-              if (onChange) onChange(e.target.value);
+              onChange?.(e.target.value);
             }}
             onFocus={() => setIsFocused(true)}
             className={cn(
               "w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2",
-              darkMode ? "bg-slate-800 text-white border-slate-700 focus:ring-blue-600" : "bg-white border-slate-300 focus:ring-blue-500",
+              darkMode 
+                ? "bg-slate-800 text-white border-slate-700 focus:ring-blue-600" 
+                : "bg-white border-slate-300 focus:ring-blue-500",
               inputClassName
             )}
             placeholder={inputPlaceholder}
@@ -436,9 +312,11 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
       {showKeyboard && (
         <div className={cn(
           "p-2 rounded-lg shadow-lg transition-all", 
-          darkMode ? "bg-slate-900" : "bg-white border",
+          themeStyles.background,
           theme === 'minimal' ? "shadow-sm" : "shadow-lg",
-          isFullscreen ? "fixed inset-0 z-50 rounded-none" : ""
+          isFullscreen ? "fixed inset-0 z-50 rounded-none" : "",
+          "border",
+          themeStyles.border
         )}>
           {(showLayoutSelector || showLanguageSelector || showCloseButton) && renderControls()}
           
@@ -480,6 +358,8 @@ const VirtualKeyboard: React.FC<VirtualKeyboardProps> = ({
       )}
     </div>
   );
-};
+});
+
+VirtualKeyboard.displayName = "VirtualKeyboard";
 
 export default VirtualKeyboard;

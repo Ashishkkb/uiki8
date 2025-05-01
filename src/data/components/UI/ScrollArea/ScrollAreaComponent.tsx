@@ -1,41 +1,64 @@
-
-import React from 'react';
-import { ScrollArea } from "@/components/ui/scroll-area";
+import React, { forwardRef } from 'react';
 import { cn } from "@/lib/utils";
+import { ScrollArea as UIScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+
+type ScrollAreaOrientation = "vertical" | "horizontal" | "both";
 
 interface ScrollAreaProps {
   children: React.ReactNode;
   className?: string;
+  viewportClassName?: string;
   height?: string;
-  orientation?: "vertical" | "horizontal" | "both";
+  maxHeight?: string;
+  orientation?: ScrollAreaOrientation;
   showScrollbar?: boolean;
 }
 
-const ScrollAreaComponent: React.FC<ScrollAreaProps> = ({
+const ScrollArea = forwardRef<HTMLDivElement, ScrollAreaProps>(({
   children,
   className,
-  height = "400px",
+  viewportClassName,
+  height = "100%",
+  maxHeight,
   orientation = "vertical",
   showScrollbar = true
-}) => {
-  // The orientation prop is not available on ScrollArea from shadcn/ui
-  // We'll implement it with CSS and data attributes instead
+}, ref) => {
+  const shouldShowHorizontal = orientation === "horizontal" || orientation === "both";
+  const shouldShowVertical = orientation === "vertical" || orientation === "both";
+
   return (
-    <ScrollArea 
+    <UIScrollArea
+      ref={ref}
       className={cn(
-        "rounded-md border", 
-        showScrollbar ? "p-4" : "", 
-        className,
-        orientation === "horizontal" ? "overflow-x-auto" : "",
-        orientation === "vertical" ? "overflow-y-auto" : "",
-        orientation === "both" ? "overflow-auto" : ""
+        "relative overflow-hidden",
+        maxHeight && `max-h-[${maxHeight}]`,
+        className
       )}
       style={{ height }}
-      data-orientation={orientation}
     >
-      {children}
-    </ScrollArea>
+      <div className={cn("h-full w-full", viewportClassName)}>
+        {children}
+      </div>
+      {showScrollbar && (
+        <>
+          {shouldShowVertical && (
+            <ScrollBar 
+              orientation="vertical" 
+              className="transition-opacity" 
+            />
+          )}
+          {shouldShowHorizontal && (
+            <ScrollBar 
+              orientation="horizontal" 
+              className="transition-opacity" 
+            />
+          )}
+        </>
+      )}
+    </UIScrollArea>
   );
-};
+});
 
-export default ScrollAreaComponent;
+ScrollArea.displayName = "ScrollArea";
+
+export default ScrollArea;

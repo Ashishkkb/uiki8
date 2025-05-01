@@ -220,65 +220,6 @@ const Components = () => {
                         ))
                       )}
                     </div>
-
-                    {/* Code Usage Example */}
-                    <div className="mt-24 rounded-xl border border-border/50 bg-muted/50 p-6 md:p-10">
-                      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
-                        <div>
-                          <h3 className="text-2xl font-bold">Usage</h3>
-                          <p className="text-muted-foreground mt-1">
-                            How to use the components
-                          </p>
-                        </div>
-                        <Button variant="outline" className="gap-2">
-                          <Github className="h-4 w-4" />
-                          <span>View on GitHub</span>
-                        </Button>
-                      </div>
-
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div className="space-y-4">
-                          <h4 className="text-lg font-semibold">Import the component</h4>
-                          <div className="relative">
-                            <CodeBlock>
-                              <div className="text-sm font-mono">
-                                import {"{ Button }"} from '@/components/ui/button';
-                              </div>
-                            </CodeBlock>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="absolute top-2 right-2 h-8 w-8 opacity-70 hover:opacity-100"
-                            >
-                              <Copy className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-
-                        <div className="space-y-4">
-                          <h4 className="text-lg font-semibold">Use in your component</h4>
-                          <div className="relative">
-                            <CodeBlock>
-                              <div className="text-sm font-mono">
-                                <div>import {"{ Button }"} from '@/components/ui/button';</div>
-                                <div className="mt-2">
-                                  export default function App() {"{"}
-                                </div>
-                                <div className="ml-4">return &lt;Button&gt;Click me&lt;/Button&gt;;</div>
-                                <div>{"}"}</div>
-                              </div>
-                            </CodeBlock>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="absolute top-2 right-2 h-8 w-8 opacity-70 hover:opacity-100"
-                            >
-                              <Copy className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>

@@ -1,4 +1,3 @@
-
 import { ComponentItem } from "@/types/component";
 import TabCardComponent from "./TabCardComponent";
 import { Info, Settings, Users, Bell } from 'lucide-react';
@@ -32,14 +31,15 @@ const TabCardComponentItem: ComponentItem = {
                       type="text" 
                       className="mt-1 w-full rounded-md border border-input px-3 py-2" 
                       defaultValue="John" 
+                      placeholder="Enter your first name"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium">Last Name</label>
                     <input 
                       type="text" 
                       className="mt-1 w-full rounded-md border border-input px-3 py-2" 
                       defaultValue="Smith" 
+                      placeholder="Enter your last name"
                     />
                   </div>
                 </div>
@@ -64,7 +64,11 @@ const TabCardComponentItem: ComponentItem = {
                     <p className="text-sm text-muted-foreground">Receive emails about account activity</p>
                   </div>
                   <label className="relative inline-flex cursor-pointer items-center">
-                    <input type="checkbox" className="peer sr-only" defaultChecked />
+                    <label className="relative inline-flex cursor-pointer items-center">
+                      <span className="sr-only">Enable email notifications</span>
+                      <input type="checkbox" className="peer sr-only" defaultChecked />
+                      <div className="peer h-6 w-11 rounded-full bg-muted after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none"></div>
+                    </label>
                     <div className="peer h-6 w-11 rounded-full bg-muted after:absolute after:left-[2px] after:top-[2px] after:h-5 after:w-5 after:rounded-full after:border after:border-gray-300 after:bg-white after:transition-all after:content-[''] peer-checked:bg-primary peer-checked:after:translate-x-full peer-checked:after:border-white peer-focus:outline-none"></div>
                   </label>
                 </div>
@@ -85,7 +89,8 @@ const TabCardComponentItem: ComponentItem = {
               <div className="space-y-4 pt-4">
                 <div>
                   <label className="text-sm font-medium">Language</label>
-                  <select className="mt-1 w-full rounded-md border border-input px-3 py-2">
+                  <label htmlFor="language-select" className="text-sm font-medium">Language</label>
+                  <select id="language-select" className="mt-1 w-full rounded-md border border-input px-3 py-2">
                     <option>English</option>
                     <option>Spanish</option>
                     <option>French</option>

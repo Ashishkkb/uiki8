@@ -111,16 +111,18 @@ const InputNumberComponent: React.FC<InputNumberProps> = ({
               onClick={handleIncrement}
               disabled={disabled || (max !== undefined && value >= max)}
               className="flex items-center justify-center h-5 w-6 bg-muted/50 hover:bg-muted text-muted-foreground border-b border-input rounded-tr-md disabled:opacity-50"
+              title="Increase value"
             >
               <ChevronUp className="h-3 w-3" />
-            </button>
             <button
               type="button"
               onClick={handleDecrement}
               disabled={disabled || (min !== undefined && value <= min)}
               className="flex items-center justify-center h-5 w-6 bg-muted/50 hover:bg-muted text-muted-foreground rounded-br-md disabled:opacity-50"
+              title="Decrease value"
             >
               <ChevronDown className="h-3 w-3" />
+            </button>
             </button>
           </div>
         )}

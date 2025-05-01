@@ -69,6 +69,7 @@ const TagInput: React.FC<TagInputProps> = ({
               type="button"
               onClick={() => handleRemoveTag(tag)}
               className="text-muted-foreground hover:text-foreground"
+              title={`Remove tag ${tag}`}
             >
               <X className="h-3 w-3" />
             </button>
