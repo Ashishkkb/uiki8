@@ -181,6 +181,12 @@ import FileUploaderComponentItem from './UI/FileUploader';
 import NotificationCenterComponentItem from './UI/NotificationCenter';
 import StepperComponentItem from './UI/Stepper';
 
+// 10 New Amazing Components
+import SeparatorComponentItem from './UI/Separator';
+import InfiniteCarouselComponentItem from './UI/InfiniteCarousel';
+import ActivityCalendarComponentItem from './DataDisplay/ActivityCalendar';
+import ChatMessageComponentItem from './UI/ChatMessage';
+
 export const getAllComponents = (): ComponentItem[] => [
   // UI Components
   ButtonComponent,
@@ -251,6 +257,10 @@ export const getAllComponents = (): ComponentItem[] => [
   DialogComponentItem,
   CalendarComponentItem,
   DrawerComponentItem,
+  // 10 New Amazing Components
+  SeparatorComponentItem,
+  InfiniteCarouselComponentItem,
+  ChatMessageComponentItem,
   
   // Layout Components
   ContainerComponent,
@@ -314,6 +324,7 @@ export const getAllComponents = (): ComponentItem[] => [
   AreaChartComponentItem,
   RadarChartComponentItem,
   ScatterChartComponentItem,
+  ActivityCalendarComponentItem,
   
   // Media Components
   VideoGalleryComponentItem,

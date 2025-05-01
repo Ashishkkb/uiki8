@@ -1,62 +1,112 @@
 
 import React from 'react';
-import { ComponentItem } from "@/types/component";
-import KbdComponent from "./KbdComponent";
+import KbdComponent from './KbdComponent';
+import { ComponentItem } from '@/types/component';
 
 const KbdComponentItem: ComponentItem = {
-  id: 107,
+  id: 109,
   name: "Keyboard Key",
   category: "UI",
   framework: "React",
-  description: "A component for displaying keyboard keys and shortcuts in a stylized format.",
-  code: `import React from 'react';
+  description: "A component for displaying keyboard shortcuts or key combinations.",
+  component: () => (
+    <div className="space-y-8 w-full max-w-md">
+      <div>
+        <p className="text-sm mb-3 text-muted-foreground">Default Kbd</p>
+        <div className="flex flex-wrap gap-2">
+          <KbdComponent>A</KbdComponent>
+          <KbdComponent>B</KbdComponent>
+          <KbdComponent>C</KbdComponent>
+          <KbdComponent>Shift</KbdComponent>
+          <KbdComponent>Enter</KbdComponent>
+        </div>
+      </div>
+      
+      <div>
+        <p className="text-sm mb-3 text-muted-foreground">Keyboard Combinations</p>
+        <div className="flex items-center gap-1 flex-wrap">
+          <KbdComponent>⌘</KbdComponent>
+          <span className="text-xs text-muted-foreground mx-1">+</span>
+          <KbdComponent>K</KbdComponent>
+          <span className="text-xs text-muted-foreground mx-2">or</span>
+          <KbdComponent>Ctrl</KbdComponent>
+          <span className="text-xs text-muted-foreground mx-1">+</span>
+          <KbdComponent>K</KbdComponent>
+        </div>
+      </div>
+      
+      <div>
+        <p className="text-sm mb-3 text-muted-foreground">Outlined Style</p>
+        <div className="flex flex-wrap gap-2">
+          <KbdComponent variant="outlined">Tab</KbdComponent>
+          <KbdComponent variant="outlined">Esc</KbdComponent>
+          <KbdComponent variant="outlined">Space</KbdComponent>
+        </div>
+      </div>
+      
+      <div>
+        <p className="text-sm mb-3 text-muted-foreground">Subtle Style</p>
+        <div className="flex flex-wrap gap-2">
+          <KbdComponent variant="subtle">↑</KbdComponent>
+          <KbdComponent variant="subtle">→</KbdComponent>
+          <KbdComponent variant="subtle">↓</KbdComponent>
+          <KbdComponent variant="subtle">←</KbdComponent>
+        </div>
+      </div>
+      
+      <div>
+        <p className="text-sm mb-3 text-muted-foreground">Different Sizes</p>
+        <div className="flex items-end gap-2">
+          <KbdComponent size="sm">S</KbdComponent>
+          <KbdComponent size="md">M</KbdComponent>
+          <KbdComponent size="lg">L</KbdComponent>
+        </div>
+      </div>
+    </div>
+  ),
+  code: `import React, { forwardRef } from 'react';
 import { cn } from "@/lib/utils";
 
-interface KbdProps {
-  children: React.ReactNode;
-  className?: string;
-  size?: 'sm' | 'md' | 'lg';
-  variant?: 'default' | 'outlined' | 'subtle';
+type KbdSize = 'sm' | 'md' | 'lg';
+type KbdVariant = 'default' | 'outlined' | 'subtle';
+
+interface KbdProps extends React.HTMLAttributes<HTMLElement> {
+  size?: KbdSize;
+  variant?: KbdVariant;
 }
 
-const Kbd: React.FC<KbdProps> = ({
+const Kbd = forwardRef<HTMLElement, KbdProps>(({
   children,
   className,
   size = 'md',
-  variant = 'default'
-}) => {
-  const sizeClasses = {
-    sm: "text-xs px-1 py-0.5 min-w-[1.2rem]",
-    md: "text-xs px-1.5 py-1 min-w-[1.6rem]",
-    lg: "text-sm px-2 py-1 min-w-[2rem]"
-  };
-
-  const variantClasses = {
-    default: "bg-muted border border-border shadow-sm",
-    outlined: "bg-transparent border border-border",
-    subtle: "bg-muted/50 border-none"
-  };
-
+  variant = 'default',
+  ...props
+}, ref) => {
   return (
     <kbd
+      ref={ref}
       className={cn(
-        "inline-flex items-center justify-center rounded font-mono font-medium",
-        sizeClasses[size],
-        variantClasses[variant],
+        "inline-flex items-center justify-center rounded font-mono font-medium transition-colors",
+        size === 'sm' && "text-xs px-1 py-0.5 min-w-[1.2rem]",
+        size === 'md' && "text-xs px-1.5 py-1 min-w-[1.6rem]",
+        size === 'lg' && "text-sm px-2 py-1 min-w-[2rem]",
+        variant === 'default' && "bg-muted border border-border shadow-sm",
+        variant === 'outlined' && "bg-transparent border border-border",
+        variant === 'subtle' && "bg-muted/50 border-none",
         className
       )}
+      {...props}
     >
       {children}
     </kbd>
   );
-};
+});
+
+Kbd.displayName = "Kbd";
 
 export default Kbd;`,
-  component: KbdComponent,
-  tags: ["UI", "keyboard", "shortcuts", "accessibility"],
+  tags: ["ui", "keyboard", "shortcut", "key"],
   isNew: true,
-  fileSize: "0.8 KB",
-  complexity: "simple"
 };
 
 export default KbdComponentItem;
