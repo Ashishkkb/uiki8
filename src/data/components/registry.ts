@@ -1,4 +1,3 @@
-
 import { ComponentItem } from "@/types/component";
 
 // UI Components
@@ -167,6 +166,21 @@ import SecureFileUploadComponentItem from './Security/SecureFileUpload';
 import HeatMapComponentItem from './DataDisplay/HeatMap';
 import KanbanBoardComponentItem from './UI/KanbanBoard';
 
+// New 20 Components Added
+import BarGraphComponentItem from './DataDisplay/BarGraph';
+import LineChartComponentItem from './DataDisplay/LineChart';
+import PieChartComponentItem from './DataDisplay/PieChart';
+import AreaChartComponentItem from './DataDisplay/AreaChart';
+import RadarChartComponentItem from './DataDisplay/RadarChart';
+import ScatterChartComponentItem from './DataDisplay/ScatterChart';
+import AutocompleteComponentItem from './Form/Autocomplete';
+import RangeSliderComponentItem from './Form/RangeSlider';
+import PhoneInputComponentItem from './Form/PhoneInput';
+import ImageGalleryComponentItem from './UI/ImageGallery';
+import FileUploaderComponentItem from './UI/FileUploader';
+import NotificationCenterComponentItem from './UI/NotificationCenter';
+import StepperComponentItem from './UI/Stepper';
+
 export const getAllComponents = (): ComponentItem[] => [
   // UI Components
   ButtonComponent,
@@ -270,6 +284,9 @@ export const getAllComponents = (): ComponentItem[] => [
   InputCurrencyComponentItem,
   InputNumberComponentItem,
   ComboBoxComponentItem,
+  AutocompleteComponentItem,
+  RangeSliderComponentItem,
+  PhoneInputComponentItem,
   
   // Navigation Components
   BreadcrumbsComponent,
@@ -291,6 +308,12 @@ export const getAllComponents = (): ComponentItem[] => [
   StatCardComponentItem,
   DataGridComponentItem,
   HeatMapComponentItem,
+  BarGraphComponentItem,
+  LineChartComponentItem,
+  PieChartComponentItem,
+  AreaChartComponentItem,
+  RadarChartComponentItem,
+  ScatterChartComponentItem,
   
   // Media Components
   VideoGalleryComponentItem,
@@ -301,6 +324,7 @@ export const getAllComponents = (): ComponentItem[] => [
   MediaCarouselComponentItem,
   VideoPlayerComponentItem,
   PDFViewerComponentItem,
+  ImageGalleryComponentItem,
   
   // 15 New Components
   CookieConsentComponentItem,
@@ -324,7 +348,10 @@ export const getAllComponents = (): ComponentItem[] => [
   PasswordStrengthSecurityComponentItem,
   SecureFileUploadComponentItem,
   
-  // New Amazing Hard Components (Phase 1)
+  // New UI Components
+  FileUploaderComponentItem,
+  NotificationCenterComponentItem,
+  StepperComponentItem,
   KanbanBoardComponentItem
 ];
 
